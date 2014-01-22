@@ -1,0 +1,38 @@
+
+back.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cow left back
+  rotate: false
+  xy: 460, 85
+  size: 384, 501
+  orig: 384, 501
+  offset: 0, 0
+  index: -1
+cow right back
+  rotate: false
+  xy: 0, 0
+  size: 460, 586
+  orig: 460, 586
+  offset: 0, 0
+  index: -1
+ice cows
+  rotate: false
+  xy: 0, 586
+  size: 1024, 403
+  orig: 1024, 403
+  offset: 0, 0
+  index: -1
+
+back2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+back cow body back
+  rotate: false
+  xy: 0, 0
+  size: 347, 375
+  orig: 347, 375
+  offset: 0, 0
+  index: -1

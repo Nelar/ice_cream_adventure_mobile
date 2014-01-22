@@ -1,0 +1,1 @@
+{"bones":[{"name":"root"},{"name":"bone1","parent":"root","x":320.88,"y":494.98}],"slots":[{"name":"arch","bone":"bone1"}],"skins":{"default":{"arch":{"arch":{"x":21.08,"y":363.03,"width":694,"height":764}}}},"animations":{"animation":{},"animation-copy":{"slots":{"arch":{"attachment":[{"time":8,"name":"arch"}]}}}}}

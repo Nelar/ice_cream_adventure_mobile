@@ -1,0 +1,24 @@
+
+front.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+candy-forest end front
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: -1
+
+front2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+candy-forest end front cave
+  rotate: false
+  xy: 0, 0
+  size: 2048, 914
+  orig: 2048, 914
+  offset: 0, 0
+  index: -1

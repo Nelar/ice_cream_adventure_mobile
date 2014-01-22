@@ -1,0 +1,12 @@
+
+arials.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arials
+  rotate: false
+  xy: 0, 0
+  size: 1588, 520
+  orig: 1588, 520
+  offset: 0, 0
+  index: -1

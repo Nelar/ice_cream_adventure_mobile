@@ -1,0 +1,24 @@
+
+top.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+top 3r
+  rotate: false
+  xy: 0, 0
+  size: 1183, 2048
+  orig: 1183, 2048
+  offset: 0, 0
+  index: -1
+
+top2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+top 3l
+  rotate: false
+  xy: 0, 0
+  size: 884, 2048
+  orig: 884, 2048
+  offset: 0, 0
+  index: -1

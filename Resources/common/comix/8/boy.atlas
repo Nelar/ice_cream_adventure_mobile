@@ -1,0 +1,89 @@
+
+boy.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 1130, 375
+  size: 124, 137
+  orig: 124, 137
+  offset: 0, 0
+  index: -1
+body contour
+  rotate: false
+  xy: 819, 327
+  size: 175, 185
+  orig: 175, 185
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 432, 103
+  size: 387, 409
+  orig: 387, 409
+  offset: 0, 0
+  index: -1
+head contour
+  rotate: false
+  xy: 0, 54
+  size: 432, 458
+  orig: 432, 458
+  offset: 0, 0
+  index: -1
+left arm
+  rotate: false
+  xy: 432, 0
+  size: 85, 103
+  orig: 85, 103
+  offset: 0, 0
+  index: -1
+left arm contour
+  rotate: false
+  xy: 994, 360
+  size: 136, 152
+  orig: 136, 152
+  offset: 0, 0
+  index: -1
+left leg
+  rotate: true
+  xy: 819, 121
+  size: 51, 85
+  orig: 51, 85
+  offset: 0, 0
+  index: -1
+left leg contour
+  rotate: false
+  xy: 1254, 378
+  size: 102, 134
+  orig: 102, 134
+  offset: 0, 0
+  index: -1
+right arm
+  rotate: false
+  xy: 1460, 406
+  size: 83, 106
+  orig: 83, 106
+  offset: 0, 0
+  index: -1
+right arm contour
+  rotate: false
+  xy: 819, 172
+  size: 134, 155
+  orig: 134, 155
+  offset: 0, 0
+  index: -1
+right leg
+  rotate: true
+  xy: 0, 1
+  size: 53, 83
+  orig: 53, 83
+  offset: 0, 0
+  index: -1
+right leg contour
+  rotate: false
+  xy: 1356, 380
+  size: 104, 132
+  orig: 104, 132
+  offset: 0, 0
+  index: -1

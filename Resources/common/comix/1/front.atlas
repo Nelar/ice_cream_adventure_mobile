@@ -1,0 +1,12 @@
+
+front.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arch
+  rotate: false
+  xy: 0, 0
+  size: 694, 764
+  orig: 694, 764
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,12 @@
+
+front.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+icecream-city front
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: -1

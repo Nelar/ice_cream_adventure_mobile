@@ -1,0 +1,83 @@
+<Level background="1" targetScore="45000" width="9" height="9" type="ice" movesCount="30" colorNumber="5">
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="1"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="3"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="5"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="n"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="s" index="2"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="s" index="4"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="s" index="6"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+  <c t="si"/>
+</Level>

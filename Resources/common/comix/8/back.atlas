@@ -1,0 +1,36 @@
+
+back.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+icecream-city back
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: -1
+
+back2.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+icecream-city back back
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: -1
+
+back3.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+clouds
+  rotate: false
+  xy: 0, 0
+  size: 1341, 384
+  orig: 1341, 384
+  offset: 0, 0
+  index: -1

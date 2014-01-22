@@ -1,0 +1,12 @@
+
+mountains forward.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mountains forward
+  rotate: false
+  xy: 0, 0
+  size: 2048, 1158
+  orig: 2048, 1158
+  offset: 0, 0
+  index: -1

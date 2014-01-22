@@ -1,0 +1,48 @@
+
+back.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mountains back
+  rotate: false
+  xy: 0, 0
+  size: 2048, 2048
+  orig: 2048, 2048
+  offset: 0, 0
+  index: -1
+
+back2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mountains sky
+  rotate: false
+  xy: 0, 0
+  size: 2048, 1900
+  orig: 2048, 2048
+  offset: 0, 148
+  index: -1
+
+back3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mountains back back
+  rotate: false
+  xy: 0, 0
+  size: 2048, 1611
+  orig: 2048, 1616
+  offset: 0, 0
+  index: -1
+
+back4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+clouds
+  rotate: false
+  xy: 0, 0
+  size: 1583, 696
+  orig: 1583, 696
+  offset: 0, 0
+  index: -1

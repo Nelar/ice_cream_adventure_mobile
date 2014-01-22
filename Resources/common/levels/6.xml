@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Level background = "1" targetScore = "4500" width = "8" height = "5" type = "ice" movesCount = "22" colorNumber = "5">
+    <c t = "s"/> <c t = "s"/>           <c t = "s" color="r"/> <c t = "s"/>             <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/>
+    <c t = "s"/> <c t = "s" color="g"/> <c t = "s" color="g"/> <c t = "s" color="y"/>   <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/>
+    <c t = "s"/> <c t = "s"/>           <c t = "i" color="r"/> <c t = "i"/>             <c t = "i"/>            <c t = "i"/>            <c t = "s"/>            <c t = "s"/>
+    <c t = "s"/> <c t = "s"/>           <c t = "i" color="r"/> <c t = "i"  color="r"/>  <c t = "i"  color="g"/> <c t = "i"  color="r"/> <c t = "s"  color="r"/> <c t = "s"/>
+    <c t = "s"/> <c t = "s"/>           <c t = "i" color="g"/> <c t = "i"/>             <c t = "i"/>            <c t = "i"/>            <c t = "s"/>            <c t = "s"/>
+</Level>

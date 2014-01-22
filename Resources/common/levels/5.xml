@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<Level background = "1" targetScore = "600" width = "8" height = "9" type = "score" movesCount = "15" colorNumber = "5">
+  <c t = "s"/>           <c t = "s"/>           <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s" color="g"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s"  color="r"/> <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s" color="r"/> <c t = "s" color="r"/> <c t = "s"/>            <c t = "s" color="r"/>  <c t = "s" color="r"/>  <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s" color="g"/>  <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+  <c t = "s"/>           <c t = "s"/>           <c t = "s"/>            <c t = "s"/>            <c t = "s"/>            <c t = "s"/> <c t = "s"/> <c t = "s"/>
+</Level>

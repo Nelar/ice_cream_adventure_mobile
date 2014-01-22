@@ -1,0 +1,24 @@
+
+icecream-city.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+icecream-city2 new
+  rotate: false
+  xy: 0, 0
+  size: 1017, 895
+  orig: 1017, 895
+  offset: 0, 0
+  index: -1
+
+icecream-city2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ice cookie
+  rotate: false
+  xy: 0, 0
+  size: 272, 257
+  orig: 272, 257
+  offset: 0, 0
+  index: -1

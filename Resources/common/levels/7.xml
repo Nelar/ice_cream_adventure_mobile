@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<Level background = "1" targetScore = "2000" width = "9" height = "8" type = "ice" movesCount = "22" colorNumber = "5" secondStar = "3000" thirdStar = "4000">
+    <c t = "i"/>                    <c t = "s"/>                    <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/>
+    <c t = "s"/>                    <c t = "s"/>                    <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/>
+    <c t = "i"/>                    <c t = "i"/>                    <c t = "i"/> <c t = "i"/> <c t = "i"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/>
+    <c t = "s"/>                    <c t = "s"/>                    <c t = "s"/> <c t = "s"/> <c t = "i"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/>
+    <c t = "s"/>                    <c t = "s" color="g"/>          <c t = "s"/> <c t = "i"/> <c t = "i"/> <c t = "i"/> <c t = "s"/> <c t = "s"/> <c t = "s"/>
+    <c t = "i" color="r"/>          <c t = "i" color="o"/>          <c t = "i"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/> <c t = "s"/>
+    <c t = "s"/>                    <c t = "i" color="r"/>          <c t = "i"/> <c t = "i"/> <c t = "i"/> <c t = "i"/> <c t = "i"/> <c t = "s"/> <c t = "s"/>
+    <c t = "s" color="g" oT = "v"/> <c t = "s" color="r"/>          <c t = "s" color="g" oT="b"/> <c t = "s" color="g"/> <c t = "s"/> <c t = "s"/> <c t = "i"/> <c t = "s"/> <c t = "s"/>
+    <c t = "s"/> <c t = "i"/>       <c t = "s"/> <c t = "i"/>       <c t = "s"/> <c t = "s"/> <c t = "i"/> <c t = "s"/> <c t = "n"/>
+</Level>

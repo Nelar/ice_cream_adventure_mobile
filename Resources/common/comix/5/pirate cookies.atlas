@@ -1,0 +1,82 @@
+
+pirate cookies.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+body
+  rotate: false
+  xy: 749, 134
+  size: 286, 353
+  orig: 286, 353
+  offset: 0, 0
+  index: -1
+body contour
+  rotate: false
+  xy: 412, 85
+  size: 337, 402
+  orig: 337, 402
+  offset: 0, 0
+  index: -1
+coockies sample
+  rotate: false
+  xy: 0, 28
+  size: 412, 459
+  orig: 412, 459
+  offset: 0, 0
+  index: -1
+left arm
+  rotate: false
+  xy: 1613, 364
+  size: 62, 123
+  orig: 62, 123
+  offset: 0, 0
+  index: -1
+left arm contour
+  rotate: false
+  xy: 1386, 299
+  size: 128, 188
+  orig: 128, 188
+  offset: 0, 0
+  index: -1
+left leg
+  rotate: true
+  xy: 412, 52
+  size: 33, 88
+  orig: 33, 88
+  offset: 0, 0
+  index: -1
+left leg contour
+  rotate: false
+  xy: 1514, 334
+  size: 99, 153
+  orig: 99, 153
+  offset: 0, 0
+  index: -1
+sabre hand
+  rotate: false
+  xy: 1236, 263
+  size: 150, 224
+  orig: 150, 224
+  offset: 0, 0
+  index: -1
+sabre hand contour
+  rotate: false
+  xy: 1035, 214
+  size: 201, 273
+  orig: 201, 273
+  offset: 0, 0
+  index: -1
+stick
+  rotate: true
+  xy: 0, 0
+  size: 28, 106
+  orig: 28, 106
+  offset: 0, 0
+  index: -1
+stick contour
+  rotate: true
+  xy: 1035, 134
+  size: 80, 155
+  orig: 80, 155
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,13 @@
+//gui
+btn_back.png = "btn_back.png";
+btn_ok.png = "btn_ok.png";
+btn_cancel.png = "btn_cancel.png";
+btn_play.png = "btn_play.png";
+btn_next.png = "btn_next.png";
+excellent.png = "excellent.png";
+
+//texts
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ITUNES_CONNECTION_ERROR = "iTunes connection error, \n please check your connection \n and try again!";
+MOSAIC_TOOLTIP = "You can open hidden parts of the image by tapping on the blocked parts. \n It will cost you some coins though!";
+DDESTINY_INFORMATION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tincidunt tempor massa at tincidunt. Nulla facilisi. Etiam bibendum est a odio condimentum, non pretium leo suscipit. Donec vulputate quis elit sed pellentesque.\n\n Praesent sit amet placerat tortor. Donec sit amet purus at neque posuere fringilla id in est. Cras ullamcorper mauris metus, nec dapibus sem ultrices nec. In ac ligula eros. \n\n Duis lobortis ligula in ligula suscipit, ac pellentesque magna dictum. Donec ac nisl eu nulla sagittis varius vel sit amet justo. Phasellus adipiscing, turpis sed luctus tempus, urna nibh tempus libero, eget placerat sem mauris quis tellus. Donec pretium fermentum lacinia. Suspendisse id volutpat lectus, et vulputate elit. Mauris laoreet erat non malesuada gravida.";

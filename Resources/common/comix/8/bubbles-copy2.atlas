@@ -1,0 +1,26 @@
+
+bubbles-copy2.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bubble big
+  rotate: false
+  xy: 0, 0
+  size: 665, 502
+  orig: 665, 502
+  offset: 0, 0
+  index: -1
+bubble small1
+  rotate: false
+  xy: 665, 358
+  size: 181, 144
+  orig: 181, 144
+  offset: 0, 0
+  index: -1
+bubble small2
+  rotate: false
+  xy: 665, 270
+  size: 106, 88
+  orig: 106, 88
+  offset: 0, 0
+  index: -1

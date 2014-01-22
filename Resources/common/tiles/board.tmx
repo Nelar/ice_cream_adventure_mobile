@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="27" height="92" tilewidth="138" tileheight="138">
+ <tileset firstgid="1" name="boardLeft" tilewidth="138" tileheight="138">
+  <image source="boardLeft.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="2" name="boardDown" tilewidth="138" tileheight="138">
+  <image source="boardDown.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="3" name="boardRight" tilewidth="138" tileheight="138">
+  <image source="boardRight.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="4" name="boardUp" tilewidth="138" tileheight="138">
+  <image source="boardUp.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="5" name="boardLeftDown" tilewidth="138" tileheight="138">
+  <image source="boardLeftDown.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="6" name="boardRightDown" tilewidth="138" tileheight="138">
+  <image source="boardRightDown.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="7" name="boardRightUp" tilewidth="138" tileheight="138">
+  <image source="boardRightUp.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="8" name="boardUpLeft" tilewidth="138" tileheight="138">
+  <image source="boardUpLeft.png" width="138" height="138"/>
+ </tileset>
+ <tileset firstgid="9" name="sgib-1" tilewidth="138" tileheight="138">
+  <image source="sgib-1.png" width="138" height="138"/>
+ </tileset>
+ <layer name="1" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztzQEJAAAMA6C9f+m3GAy0gEnPuVwul8vlcrlcLpfL5XK5XC6Xy+VyuVwul8vlcrlcLpdr6mp6DMUAWw==
+  </data>
+ </layer>
+ <layer name="2" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztw7EJAAAIA7Di/0dLD3B1SiAJAAAAAAAAAAAA3OZhLTHAADM=
+  </data>
+ </layer>
+ <layer name="3" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztzQEJAAAIA7CD/TvLYyhbgSX/jMvlcrlcLpfL5XK5XC6Xy+VyuVwul8vlcrlcLpfL5XK5Tl21avABDw==
+  </data>
+ </layer>
+ <layer name="4" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztw7ENAAAIwKAO/n+zHzg6QULVPAQAAAAAAAAAAIDLAjyhAGU=
+  </data>
+ </layer>
+ <layer name="5" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztzSEBAAAMAjAM/StT4PpqK7AEAAAAAAAAAAAAbn28BijsAAY=
+  </data>
+ </layer>
+ <layer name="6" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztwzENAAAMA6Be9S+5c7EHEhIAAAAAAAAAAAD41Tsm6AAH
+  </data>
+ </layer>
+ <layer name="7" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztzTEJAAAMA7B+8+94LgqFxECSjis9AAAAAAAAAAAAbHoztwAI
+  </data>
+ </layer>
+ <layer name="8" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJztwSEBAAAAAiCj/xc7wwI0AAAAAAAAAAAA8DddXwAJ
+  </data>
+ </layer>
+ <layer name="9" width="27" height="92">
+  <data encoding="base64" compression="zlib">
+   eJzt18EJAAAIAzG/7r+wKwiCD03gdmgjAICvciEAAGZsNgAAoMN3AACuKAWPAqQ=
+  </data>
+ </layer>
+</map>

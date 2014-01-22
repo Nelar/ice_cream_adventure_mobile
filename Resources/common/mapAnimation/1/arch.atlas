@@ -1,0 +1,19 @@
+
+arch.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arch
+  rotate: false
+  xy: 926, 143
+  size: 486, 535
+  orig: 486, 535
+  offset: 0, 0
+  index: -1
+vanilasky (2)
+  rotate: false
+  xy: 0, 0
+  size: 926, 678
+  orig: 926, 678
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,1 @@
+{"bones":[{"name":"root"},{"name":"bone1","parent":"root","x":548.65,"y":-95.2}],"slots":[{"name":"mountains forward","bone":"bone1","attachment":"mountains forward"}],"skins":{"default":{"mountains forward":{"mountains forward":{"x":-103.92,"y":570.63,"scaleX":1.015,"scaleY":1.015,"width":2048,"height":1158}}}},"animations":{"animation":{},"animation-copy":{}}}

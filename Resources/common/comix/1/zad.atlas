@@ -1,0 +1,24 @@
+
+zad.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+vanilasky sq emp
+  rotate: false
+  xy: 0, 0
+  size: 2046, 2046
+  orig: 2046, 2046
+  offset: 0, 0
+  index: -1
+
+front.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arch
+  rotate: false
+  xy: 0, 0
+  size: 694, 764
+  orig: 694, 764
+  offset: 0, 0
+  index: -1

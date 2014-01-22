@@ -1,0 +1,75 @@
+
+cookie.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 312, 231
+  size: 244, 274
+  orig: 244, 274
+  offset: 0, 0
+  index: -1
+body contour
+  rotate: false
+  xy: 0, 166
+  size: 312, 339
+  orig: 312, 339
+  offset: 0, 0
+  index: -1
+left arm
+  rotate: false
+  xy: 188, 43
+  size: 62, 123
+  orig: 62, 123
+  offset: 0, 0
+  index: -1
+left arm contour
+  rotate: false
+  xy: 556, 317
+  size: 128, 188
+  orig: 128, 188
+  offset: 0, 0
+  index: -1
+left leg
+  rotate: true
+  xy: 556, 284
+  size: 33, 88
+  orig: 33, 88
+  offset: 0, 0
+  index: -1
+left leg contour
+  rotate: false
+  xy: 684, 352
+  size: 99, 153
+  orig: 99, 153
+  offset: 0, 0
+  index: -1
+right arm
+  rotate: true
+  xy: 312, 167
+  size: 64, 123
+  orig: 64, 123
+  offset: 0, 0
+  index: -1
+right arm contour
+  rotate: true
+  xy: 0, 35
+  size: 131, 188
+  orig: 131, 188
+  offset: 0, 0
+  index: -1
+right leg
+  rotate: true
+  xy: 0, 0
+  size: 35, 87
+  orig: 35, 87
+  offset: 0, 0
+  index: -1
+right leg contour
+  rotate: false
+  xy: 783, 355
+  size: 101, 150
+  orig: 101, 150
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,26 @@
+
+boat.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+boat
+  rotate: false
+  xy: 0, 292
+  size: 1036, 502
+  orig: 1036, 502
+  offset: 0, 0
+  index: -1
+boat wave
+  rotate: false
+  xy: 0, 0
+  size: 1103, 119
+  orig: 1105, 167
+  offset: 1, 28
+  index: -1
+boat wave contour
+  rotate: false
+  xy: 0, 119
+  size: 1145, 173
+  orig: 1145, 173
+  offset: 0, 0
+  index: -1

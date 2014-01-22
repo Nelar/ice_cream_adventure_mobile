@@ -1,0 +1,1 @@
+{"bones":[{"name":"root"},{"name":"tap 1","parent":"root","x":614.18,"y":-174.2}],"slots":[{"name":"tap 1","bone":"tap 1","attachment":"tap 1"}],"skins":{"default":{"tap 1":{"tap 1":{"x":10.15,"y":874.3,"width":1663,"height":2039}}}},"animations":{"animation":{},"animation-copy":{}}}

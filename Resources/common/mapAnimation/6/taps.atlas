@@ -1,0 +1,64 @@
+
+taps.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ice ball
+  rotate: false
+  xy: 247, 34
+  size: 62, 58
+  orig: 62, 58
+  offset: 0, 0
+  index: -1
+ice ball 1
+  rotate: false
+  xy: 187, 31
+  size: 61, 61
+  orig: 61, 61
+  offset: 0, 0
+  index: -1
+ice balls
+  rotate: false
+  xy: 0, 0
+  size: 187, 92
+  orig: 187, 92
+  offset: 0, 0
+  index: -1
+tap back new
+  rotate: false
+  xy: 0, 92
+  size: 512, 377
+  orig: 512, 377
+  offset: 0, 0
+  index: -1
+
+taps2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bath
+  rotate: false
+  xy: 0, 193
+  size: 421, 239
+  orig: 421, 239
+  offset: 0, 0
+  index: -1
+tap without bath back
+  rotate: true
+  xy: 0, 0
+  size: 193, 377
+  orig: 193, 377
+  offset: 0, 0
+  index: -1
+
+taps3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tap without bath
+  rotate: false
+  xy: 0, 0
+  size: 138, 324
+  orig: 138, 324
+  offset: 0, 0
+  index: -1

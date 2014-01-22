@@ -1,0 +1,19 @@
+
+front cows.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cow left
+  rotate: true
+  xy: 1034, 54
+  size: 722, 956
+  orig: 722, 956
+  offset: 0, 0
+  index: -1
+cow right
+  rotate: true
+  xy: 0, 0
+  size: 776, 1034
+  orig: 776, 1034
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,52 @@
+
+giant.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+body contour
+  rotate: false
+  xy: 0, 175
+  size: 534, 809
+  orig: 542, 809
+  offset: 17, 0
+  index: -1
+left arm
+  rotate: false
+  xy: 534, 374
+  size: 141, 290
+  orig: 175, 323
+  offset: 10, 22
+  index: -1
+left arm contour
+  rotate: true
+  xy: 0, 0
+  size: 175, 323
+  orig: 175, 323
+  offset: 0, 0
+  index: -1
+right arm
+  rotate: false
+  xy: 707, 698
+  size: 139, 286
+  orig: 174, 318
+  offset: 10, 22
+  index: -1
+right arm contour
+  rotate: false
+  xy: 534, 665
+  size: 173, 318
+  orig: 173, 318
+  offset: 0, 0
+  index: -1
+
+giant2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+body
+  rotate: false
+  xy: 0, 0
+  size: 500, 775
+  orig: 500, 775
+  offset: 0, 0
+  index: -1

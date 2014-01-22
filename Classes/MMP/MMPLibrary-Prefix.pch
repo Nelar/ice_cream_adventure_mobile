@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'MMPLibrary' target in the 'MMPLibrary' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

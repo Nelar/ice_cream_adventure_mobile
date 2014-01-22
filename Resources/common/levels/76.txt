@@ -1,0 +1,83 @@
+<Level background="1" targetScore="13000" width="9" height="9" type="bringDown" movesCount="35" colorNumber="5" bringDownCount="3">
+  <c t="s" index="10"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="n"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="1"/>
+  <c t="s" index="12"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="n"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="3"/>
+  <c t="s" index="14"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="n"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="5"/>
+  <c t="s" index="16"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="n"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="7"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="n"/>
+  <c t="s" index="2"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="9"/>
+  <c t="s" index="4"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="11"/>
+  <c t="s" index="6"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="13"/>
+  <c t="s" index="8"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s" index="15"/>
+</Level>

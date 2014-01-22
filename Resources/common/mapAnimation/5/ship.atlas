@@ -1,0 +1,64 @@
+
+ship.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ship back
+  rotate: false
+  xy: 0, 78
+  size: 649, 635
+  orig: 649, 635
+  offset: 2, 5
+  index: -1
+ship background/waves front
+  rotate: false
+  xy: 0, 0
+  size: 564, 78
+  orig: 566, 113
+  offset: 1, 12
+  index: -1
+
+ship2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ship
+  rotate: false
+  xy: 0, 97
+  size: 631, 617
+  orig: 631, 617
+  offset: 0, 0
+  index: -1
+ship background/waves back
+  rotate: false
+  xy: 0, 0
+  size: 649, 97
+  orig: 649, 97
+  offset: 0, 0
+  index: -1
+ship wave
+  rotate: true
+  xy: 631, 275
+  size: 439, 75
+  orig: 439, 75
+  offset: 0, 0
+  index: -1
+
+ship3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ship background/clouds
+  rotate: false
+  xy: 0, 0
+  size: 570, 213
+  orig: 570, 213
+  offset: 0, 0
+  index: -1
+ship background/ship background
+  rotate: false
+  xy: 0, 213
+  size: 716, 316
+  orig: 716, 316
+  offset: 0, 3
+  index: -1

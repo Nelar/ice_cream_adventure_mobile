@@ -1,0 +1,96 @@
+
+icecream.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+body
+  rotate: false
+  xy: 1106, 53
+  size: 84, 77
+  orig: 84, 77
+  offset: 0, 0
+  index: -1
+body contour
+  rotate: false
+  xy: 1106, 130
+  size: 135, 126
+  orig: 135, 126
+  offset: 0, 0
+  index: -1
+head
+  rotate: true
+  xy: 790, 53
+  size: 203, 316
+  orig: 203, 316
+  offset: 0, 0
+  index: -1
+head contour
+  rotate: true
+  xy: 425, 2
+  size: 254, 365
+  orig: 254, 365
+  offset: 0, 0
+  index: -1
+icecream
+  rotate: true
+  xy: 0, 2
+  size: 254, 425
+  orig: 254, 425
+  offset: 0, 0
+  index: -1
+left hand
+  rotate: false
+  xy: 790, 21
+  size: 26, 32
+  orig: 26, 32
+  offset: 0, 0
+  index: -1
+left hand contour
+  rotate: false
+  xy: 1241, 175
+  size: 77, 81
+  orig: 77, 81
+  offset: 0, 0
+  index: -1
+left leg
+  rotate: true
+  xy: 790, 0
+  size: 21, 18
+  orig: 21, 18
+  offset: 0, 0
+  index: -1
+left leg contour
+  rotate: false
+  xy: 1400, 189
+  size: 72, 67
+  orig: 72, 67
+  offset: 0, 0
+  index: -1
+right hand
+  rotate: false
+  xy: 1190, 97
+  size: 25, 33
+  orig: 25, 33
+  offset: 0, 0
+  index: -1
+right hand contour
+  rotate: true
+  xy: 1318, 180
+  size: 76, 82
+  orig: 76, 82
+  offset: 0, 0
+  index: -1
+right leg
+  rotate: true
+  xy: 808, 0
+  size: 21, 18
+  orig: 21, 18
+  offset: 0, 0
+  index: -1
+right leg contour
+  rotate: false
+  xy: 1472, 189
+  size: 72, 67
+  orig: 72, 67
+  offset: 0, 0
+  index: -1

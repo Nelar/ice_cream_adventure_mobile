@@ -1,0 +1,12 @@
+
+tap front.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tap 1
+  rotate: false
+  xy: 0, 0
+  size: 1663, 2039
+  orig: 1663, 2039
+  offset: 0, 0
+  index: -1

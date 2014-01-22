@@ -1,0 +1,33 @@
+
+back cow.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+back cow body
+  rotate: false
+  xy: 0, 316
+  size: 552, 612
+  orig: 552, 612
+  offset: 0, 0
+  index: -1
+leg left
+  rotate: false
+  xy: 0, 0
+  size: 149, 316
+  orig: 149, 316
+  offset: 0, 0
+  index: -1
+leg right
+  rotate: false
+  xy: 552, 613
+  size: 145, 315
+  orig: 145, 315
+  offset: 0, 0
+  index: -1
+tail
+  rotate: false
+  xy: 149, 38
+  size: 55, 278
+  orig: 55, 278
+  offset: 0, 0
+  index: -1

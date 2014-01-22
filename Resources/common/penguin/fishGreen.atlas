@@ -1,0 +1,12 @@
+
+fishGreen.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+penguin-orange
+  rotate: false
+  xy: 0, 0
+  size: 139, 149
+  orig: 139, 149
+  offset: 0, 0
+  index: -1
