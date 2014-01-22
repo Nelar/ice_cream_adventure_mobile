@@ -12,6 +12,8 @@ public:
     }
     
 private:
+    
+    ////////////////
     FB(){};
     FB(FB const&);
     void operator=(FB const&);
