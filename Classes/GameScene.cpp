@@ -5664,43 +5664,7 @@ void GameScene::help(CCNode* sender)
 {
 }
 
-void GameScene::updateMenu(CCNode* sender)
-{
-    if (leftDownMenu->isLock())
-    {
-        leftDownMenu->setLock(true);
-        dark->setVisible(true);
-        dark->runAction(CCFadeTo::create(0.5f, 155));
-        menu->booster_1_Button->setEnabled(false);
-        menu->booster_2_Button->setEnabled(false);
-        menu->booster_3_Button->setEnabled(false);
-        menu->snow->setEnabled(false);
-        
-        if (leftDownMenu->exitPress)
-        {
-            if (firstAction)
-            {
-                leftDownMenu->exitPress = false;
-                leftDownMenu->setVisible(false);
-                menu->popupExit(iceTarget, iceCount);
-            }
-            else
-            {
-                CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(-1));
-            }
-        }
-    }
-    else if (!leftDownMenu->isLock())
-    {
-        leftDownMenu->setLock(false);
-        dark->runAction(CCFadeTo::create(0.5f, 0));
-        menu->booster_1_Button->setEnabled(true);
-        menu->booster_2_Button->setEnabled(true);
-        menu->booster_3_Button->setEnabled(true);
-        menu->snow->setEnabled(true);
-    }
-    this->runAction(CCSequence::create(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(GameScene::updateMenu)), NULL));
-}
+
 
 void GameScene::update(float delta)
 {
@@ -6167,6 +6131,44 @@ bool GameScene::endConditionCheck()
     }
 }
 
+void GameScene::updateMenu(CCNode* sender)
+{
+    if (leftDownMenu->isLock())
+    {
+        leftDownMenu->setLock(true);
+        dark->setVisible(true);
+        dark->runAction(CCFadeTo::create(0.5f, 155));
+        menu->booster_1_Button->setEnabled(false);
+        menu->booster_2_Button->setEnabled(false);
+        menu->booster_3_Button->setEnabled(false);
+        menu->snow->setEnabled(false);
+        
+        if (leftDownMenu->exitPress)
+        {
+            if (firstAction)
+            {
+                leftDownMenu->exitPress = false;
+                leftDownMenu->setVisible(false);
+                menu->popupExit(iceTarget, iceCount);
+            }
+            else
+            {
+                CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(-1));
+            }
+        }
+    }
+    else if (!leftDownMenu->isLock())
+    {
+        leftDownMenu->setLock(false);
+        dark->runAction(CCFadeTo::create(0.5f, 0));
+        menu->booster_1_Button->setEnabled(true);
+        menu->booster_2_Button->setEnabled(true);
+        menu->booster_3_Button->setEnabled(true);
+        menu->snow->setEnabled(true);
+    }
+    this->runAction(CCSequence::create(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(GameScene::updateMenu)), NULL));
+}
+
 void GameScene::popupExitWithDelay(CCNode* sender)
 {
     menu->popupExit(iceTarget, iceCount);
@@ -6598,7 +6600,6 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 					idxSelectedObject = i;
 				}
 				else {
-//                    gameObjects[i]->sprite->stopAllActions();
 					gameObjects[i]->sprite->runAction(CCScaleTo::create(0.3f, ELEMENT_SCALE));
 					gameObjects[i]->sprite->setRotation(0.0f);
 					gameObjects[i]->isSelected = false;
@@ -6609,7 +6610,6 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 			{
 				if (i != idxSelectedObject)
 				{
-//                    gameObjects[idxSelectedObject]->sprite->stopAllActions();
 					gameObjects[idxSelectedObject]->sprite->runAction(CCScaleTo::create(0.3f, ELEMENT_SCALE));
 					gameObjects[idxSelectedObject]->sprite->setRotation(0.0f);
 					gameObjects[idxSelectedObject]->isSelected = false;
@@ -6932,10 +6932,10 @@ void GameScene::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         idxSelectedObject = -1;
     }
     
-//    for (int i = 0; i < gameObjects.size(); i++)
-//        gameObjects[i]->unlock(NULL);
-    
+
     return;
+    
+    
     if (menu->isLock())
 		return;
 	if (!menu->getCountMoves())
