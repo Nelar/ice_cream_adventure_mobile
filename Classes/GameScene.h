@@ -153,6 +153,7 @@ public:
     bool lock;
     
     bool timesLock = false;
+    bool timesLeftDownLock = false;
 private:
     
     bool endConditionCheck();

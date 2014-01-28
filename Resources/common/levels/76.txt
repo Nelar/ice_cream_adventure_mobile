@@ -1,5 +1,5 @@
 <Level background="1" targetScore="13000" width="9" height="9" type="bringDown" movesCount="35" colorNumber="5" bringDownCount="3">
-  <c t="s" index="10"/>
+  <c t="s" index="10" oT="cookie"/>
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>

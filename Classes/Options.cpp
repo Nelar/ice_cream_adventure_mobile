@@ -481,6 +481,112 @@ void Options::load()
     levels[48].levelType = Ice;
     levels[48].targetScore = 30000;
     
+    levels[49].levelType = BringDown;
+    levels[49].targetScore = 12000;
+    
+    levels[50].levelType = BringDown;
+    levels[50].targetScore = 40000;
+
+    levels[51].levelType = BringDown;
+    levels[51].targetScore = 20000;
+
+    levels[52].levelType = Ice;
+    levels[52].targetScore = 15000;
+
+    levels[53].levelType = Ice;
+    levels[53].targetScore = 15000;
+    
+    levels[54].levelType = Ice;
+    levels[54].targetScore = 20000;
+    
+    levels[55].levelType = BringDown;
+    levels[55].targetScore = 10000;
+
+    levels[56].levelType = BringDown;
+    levels[56].targetScore = 15000;
+
+    levels[57].levelType = Ice;
+    levels[57].targetScore = 20000;
+
+    levels[58].levelType = BringDown;
+    levels[58].targetScore = 5000;
+    
+    levels[59].levelType = Ice;
+    levels[59].targetScore = 10000;
+    
+    levels[60].levelType = Time;
+    levels[60].targetScore = 8000;
+
+    levels[61].levelType = BringDown;
+    levels[61].targetScore = 50000;
+
+    levels[62].levelType = Ice;
+    levels[62].targetScore = 10000;
+    
+    levels[63].levelType = BringDown;
+    levels[63].targetScore = 15000;
+    
+    levels[64].levelType = Ice;
+    levels[64].targetScore = 40000;
+
+    levels[65].levelType = Time;
+    levels[65].targetScore = 20000;
+
+    levels[66].levelType = Ice;
+    levels[66].targetScore = 40000;
+
+    levels[67].levelType = BringDown;
+    levels[67].targetScore = 5000;
+
+    levels[68].levelType = Ice;
+    levels[68].targetScore = 40000;
+    
+    levels[69].levelType = Ice;
+    levels[69].targetScore = 20000;
+    
+    levels[70].levelType = Ice;
+    levels[70].targetScore = 20000;
+    
+    levels[71].levelType = BringDown;
+    levels[71].targetScore = 8000;
+    
+    levels[72].levelType = Ice;
+    levels[72].targetScore = 40000;
+    
+    levels[73].levelType = Ice;
+    levels[73].targetScore = 40000;
+    
+    levels[74].levelType = Ice;
+    levels[74].targetScore = 60000;
+    
+    levels[75].levelType = BringDown;
+    levels[75].targetScore = 13000;
+    
+    levels[76].levelType = Ice;
+    levels[76].targetScore = 40000;
+    
+    levels[77].levelType = BringDown;
+    levels[77].targetScore = 40000;
+    
+    levels[78].levelType = Ice;
+    levels[78].targetScore = 90000;
+    
+    levels[79].levelType = Time;
+    levels[79].targetScore = 10000;
+    
+    levels[80].levelType = Ice;
+    levels[80].targetScore = 40000;
+    
+    levels[81].levelType = Ice;
+    levels[81].targetScore = 45000;
+    
+    levels[82].levelType = Ice;
+    levels[82].targetScore = 45000;
+    
+    levels[83].levelType = Ice;
+    levels[83].targetScore = 30000;
+
+    
     levels[106].levelType = Ice;
     levels[106].targetScore = 50000;
 }

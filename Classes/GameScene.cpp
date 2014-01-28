@@ -1189,6 +1189,7 @@ void GameScene::setTutorial_2_2()
 
 void GameScene::setTutorial_3_1()
 {
+    return;
     tutorialNumber = 5;
     isTutorial = true;
     tutorialCell.push_back(ccp(2, 2));
@@ -1287,6 +1288,7 @@ void GameScene::setTutorial_3_1()
 
 void GameScene::setTutorial_3_2()
 {
+    return;
     tutorialNumber = 6;
     isTutorial = true;
     tutorialCell.push_back(ccp(3, 2));
@@ -3135,15 +3137,27 @@ void GameScene::afterDeleting()
             if (gameObjects[allDeletedChain[i]]->delayDestroy == 0.0f)
                 gameObjects[allDeletedChain[i]]->delayDestroy = countSpecial*0.5f;
             countSpecial++;
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x - 1,gameObjects[allDeletedChain[i]]->y);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x - 1,gameObjects[allDeletedChain[i]]->y);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x + 1,gameObjects[allDeletedChain[i]]->y);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x + 1,gameObjects[allDeletedChain[i]]->y);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y - 1);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y - 1);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y + 1);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y + 1);
+
+            
             for (int j = 0; j < rowCount; j++)
             {
                 float delayDestroy = abs(j - gameObjects[allDeletedChain[i]]->x)*0.04f;
                 checkCellSimple(j,gameObjects[allDeletedChain[i]]->y);
                 checkCellLock(j,gameObjects[allDeletedChain[i]]->y);
-                
                 if (j == gameObjects[allDeletedChain[i]]->x)
                     continue;
-                
                 if (findGameObject(j, gameObjects[allDeletedChain[i]]->y) >= 0)
                 {
                     checkCellSimple(j, gameObjects[allDeletedChain[i]]->y);
@@ -3223,6 +3237,19 @@ void GameScene::afterDeleting()
                 timeDestroying = 0.5f;
             
             timesLock = true;
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x - 1,gameObjects[allDeletedChain[i]]->y);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x - 1,gameObjects[allDeletedChain[i]]->y);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x + 1,gameObjects[allDeletedChain[i]]->y);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x + 1,gameObjects[allDeletedChain[i]]->y);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y - 1);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y - 1);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y + 1);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y + 1);
+
             
             if (gameObjects[allDeletedChain[i]]->delayDestroy == 0.0f)
                 gameObjects[allDeletedChain[i]]->delayDestroy = countSpecial*0.5f;
@@ -3360,6 +3387,19 @@ void GameScene::afterDeleting()
             if (gameObjects[allDeletedChain[i]]->delayDestroy == 0.0f)
                 gameObjects[allDeletedChain[i]]->delayDestroy = countSpecial*0.5f;
             countSpecial++;
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x - 1,gameObjects[allDeletedChain[i]]->y);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x - 1,gameObjects[allDeletedChain[i]]->y);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x + 1,gameObjects[allDeletedChain[i]]->y);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x + 1,gameObjects[allDeletedChain[i]]->y);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y - 1);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y - 1);
+            
+            checkCellSimple(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y + 1);
+            checkCellLock(gameObjects[allDeletedChain[i]]->x,gameObjects[allDeletedChain[i]]->y + 1);
+            
             if (gameObjects[allDeletedChain[i]]->isMegaBombHorizontal)
             {
                 isMegaBomb2 = true;
@@ -5707,7 +5747,7 @@ bool GameScene::addChocolate()
             int x = chocolats[i].x;
             int y = chocolats[i].y;
             if (x > 0 && (gameField[x-1][y] == SimpleCell || gameField[x-1][y] == IceCell || gameField[x-1][y] == SuperIceCell)
-                && (findGameObject(x-1, y) < 0 || ((findGameObject(x-1, y) >= 0 && gameObjects[findGameObject(x-1, y)]->type != Cookie))))
+                && (((findGameObject(x-1, y) >= 0 && gameObjects[findGameObject(x-1, y)]->type != Cookie))))
             {
                 x = x - 1;
                 y = y;
@@ -5741,7 +5781,7 @@ bool GameScene::addChocolate()
             }
             
             if (x < rowCount - 1 && (gameField[x+1][y] == SimpleCell || gameField[x+1][y] == IceCell || gameField[x+1][y] == SuperIceCell)
-                && (findGameObject(x+1, y) < 0 || ((findGameObject(x+1, y) >= 0 && gameObjects[findGameObject(x+1, y)]->type != Cookie))))
+                && (((findGameObject(x+1, y) >= 0 && gameObjects[findGameObject(x+1, y)]->type != Cookie))))
             {
                 x = x + 1;
                 y = y;
@@ -5774,7 +5814,7 @@ bool GameScene::addChocolate()
             }
             
             if (y > 0 && (gameField[x][y - 1] == SimpleCell || gameField[x][y - 1] == IceCell || gameField[x][y - 1] == SuperIceCell)
-                && (findGameObject(x, y - 1) < 0 || ((findGameObject(x, y - 1) >= 0 && gameObjects[findGameObject(x, y - 1)]->type != Cookie))))
+                && (((findGameObject(x, y - 1) >= 0 && gameObjects[findGameObject(x, y - 1)]->type != Cookie))))
             {
                 x = x;
                 y = y - 1;
@@ -5806,7 +5846,7 @@ bool GameScene::addChocolate()
             }
             
             if (y < columnCount - 1 && (gameField[x][y + 1] == SimpleCell || gameField[x][y + 1] == IceCell || gameField[x][y + 1] == SuperIceCell)
-                && (findGameObject(x, y + 1) < 0 || ((findGameObject(x, y + 1) >= 0 && gameObjects[findGameObject(x, y + 1)]->type != Cookie))))
+                && (((findGameObject(x, y + 1) >= 0 && gameObjects[findGameObject(x, y + 1)]->type != Cookie))))
             {
                 x = x;
                 y = y + 1;
@@ -6135,6 +6175,7 @@ void GameScene::updateMenu(CCNode* sender)
 {
     if (leftDownMenu->isLock())
     {
+        timesLeftDownLock = true;
         leftDownMenu->setLock(true);
         dark->setVisible(true);
         dark->runAction(CCFadeTo::create(0.5f, 155));
@@ -6159,6 +6200,7 @@ void GameScene::updateMenu(CCNode* sender)
     }
     else if (!leftDownMenu->isLock())
     {
+        timesLeftDownLock = false;
         leftDownMenu->setLock(false);
         dark->runAction(CCFadeTo::create(0.5f, 0));
         menu->booster_1_Button->setEnabled(true);
@@ -6931,10 +6973,7 @@ void GameScene::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         isSelectedGameObject = -1;
         idxSelectedObject = -1;
     }
-    
-
     return;
-    
     
     if (menu->isLock())
 		return;

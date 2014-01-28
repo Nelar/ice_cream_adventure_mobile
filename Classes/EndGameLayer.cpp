@@ -525,7 +525,7 @@ void EndGameLayer::postOnWall(CCNode* pSender)
             }
         }
         
-        if (!(currentLevel%7))
+        if (!(currentLevel%12))
         {
             popaplayer->popupPost("Post on wall", "Post on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
                                   this, callfuncN_selector(EndGameLayer::endStage), this, callfuncN_selector(EndGameLayer::unclockMenu));
@@ -562,7 +562,6 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
     FacebookPtr->setPointsInLevel(countScore, currentLevel);
     
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::postOnWall))));
-    
     
     if (currentLevel == OptionsPtr->getCurrentLevel())
     {

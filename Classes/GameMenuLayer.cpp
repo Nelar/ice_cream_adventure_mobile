@@ -732,7 +732,7 @@ void GameMenuLayer::startTime()
 
 void GameMenuLayer::timeCallback(CCNode* sender)
 {
-    if (!isDialog && !(((GameScene*)getParent())->timesLock) && !isBannerLock)
+    if (!isDialog && !(((GameScene*)getParent())->timesLock) && !isBannerLock && !(((GameScene*)getParent())->timesLeftDownLock))
         time--;
 	if (time > 0)
 		this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(GameMenuLayer::timeCallback))));
