@@ -25,7 +25,7 @@ Options::Options()
 
 Options::~Options()
 {
-
+    
 }
 
 int	Options::getCurrentLevel()

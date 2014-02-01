@@ -17,5 +17,7 @@ void goToLink(const char* link);
 
 void sendlocalNotification(float second);
 void removeAllNotification();
+const char* getCountry();
+bool getNetworkStatus();
 
 #endif /* defined(__IceCream__utils__) */

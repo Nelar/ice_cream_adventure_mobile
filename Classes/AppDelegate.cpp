@@ -3,6 +3,7 @@
 #include "AppDelegate.h"
 #include "SimpleAudioEngine.h"
 #include "GameScene.h"
+#include "LoadingScene.h"
 #include "MainMenuScene.h"
 #include "GameMapLayer.h"
 #include "Options.h"
@@ -117,7 +118,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     SimpleAudioEngine::sharedEngine()->preloadEffect("sound/transformation.mp3");
 	
     // create a scene. it's an autorelease object
-    CCScene *pScene = MainMenuScene::scene();
+    CCScene *pScene = LoadingScene::scene();
     
 	//CCScene *pScene = GameMapLayer::scene();
     // run

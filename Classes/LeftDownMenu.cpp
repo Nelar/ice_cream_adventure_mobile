@@ -290,14 +290,16 @@ bool LeftDownMenuScene::isLock()
 
 void LeftDownMenuScene::lock()
 {
+    islock = true;
     this->setTouchEnabled(false);
     menu->setTouchEnabled(false);
     tutorialMenu->setEnabled(false);
-    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.6f), CCCallFuncN::create(this, callfuncN_selector(LeftDownMenuScene::unlock))));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(LeftDownMenuScene::unlock))));
 }
 
 void LeftDownMenuScene::unlock(CCNode* sender)
 {
+    islock = false;
     menu->setTouchEnabled(true);
     tutorialMenu->setEnabled(true);
     this->setTouchEnabled(true);
@@ -391,18 +393,15 @@ void LeftDownMenuScene::settingFinished(CCNode* sender)
     invite->setVisible(true);
 	invite->setScale(0.1f);
 	invite->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)));
-
-    
-    islock = false;
 }
 
 void LeftDownMenuScene::menuSettingCallback(CCObject* pSender)
 {
     if (islock)
         return;
+    lock();
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     
-    lock();
 	if (isSetting)
 	{
 		settingBlob->runAction(CCMoveBy::create(0.3f, ccp(-settingBlob->getContentSize().width, -settingBlob->getContentSize().height)));
@@ -486,7 +485,6 @@ void LeftDownMenuScene::helpCallback(CCObject* pSender)
 
 	menuSettingCallback(NULL);
 	menu->setEnabled(false);
-    islock = true;
 }
 
 void LeftDownMenuScene::cogwheelCallback(CCObject* pSender)

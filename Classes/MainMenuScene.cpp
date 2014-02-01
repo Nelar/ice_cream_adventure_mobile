@@ -65,7 +65,6 @@ bool MainMenuScene::init()
     Options* options = new Options();
 	OptionsPtr->load();
     
-    
     vector<sRequestData> requests = OptionsPtr->appRequests;
     
     isSound = OptionsPtr->useSounds();
@@ -85,6 +84,10 @@ bool MainMenuScene::init()
     
     social = SocialLayer::create();
     this->addChild(social, 300);
+    
+    moreGamesLayer = MoreGamesLayer::create();
+    moreGamesLayer->setPosition(ccp(0.0f, 0.0f));
+    this->addChild(moreGamesLayer, 301);
     
 
 	label = NULL;
@@ -184,12 +187,21 @@ bool MainMenuScene::init()
 	invite = CCMenuItemSprite::create(inviteNormal, inviteSelected, this, menu_selector(MainMenuScene::inviteCallback));
 	invite->setPosition(ccp(invite->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f - settingBlob->getContentSize().width / 20.0f,
                             -invite->getContentSize().height/1.3f - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height/0.99f));
+    
+    CCSprite* moreGamesNormal = CCSprite::create("inviteFriends.png");
+	CCSprite* moreGamesSelected = CCSprite::create("inviteFriends.png");
+    moreGamesSelected->setColor(ccGRAY);
+    
+    moreGamesSelected->setScale(0.9f);
+	moreGamesSelected->setPosition(ccp(moreGamesSelected->getContentSize().width/20.0f, moreGamesSelected->getContentSize().height/20.0f));
+	moreGames = CCMenuItemSprite::create(moreGamesNormal, moreGamesSelected, this, menu_selector(MainMenuScene::moreGamesCallback));
+	moreGames->setPosition(ccp(WINSIZE.width/2.0f - moreGames->getContentSize().width/1.5f, -WINSIZE.height/2.0f + moreGames->getContentSize().height/1.5f));
 
 
 	CCSprite* soundNormal = CCSprite::createWithSpriteFrameName("common/sound.png");
 	CCSprite* soundSelected = CCSprite::createWithSpriteFrameName("common/sound_selected.png");
 	
-	soundSelected->setScale(0.9f);	
+	soundSelected->setScale(0.9f);
 	soundSelected->setPosition(ccp(soundSelected->getContentSize().width/20.0f, soundSelected->getContentSize().height/20.0f));
 	sound = CCMenuItemSprite::create(soundNormal, soundSelected, this, menu_selector(MainMenuScene::soundCallback));
 	sound->setPosition(ccp(sound->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f  + settingBlob->getContentSize().width / 5.0f,
@@ -252,7 +264,7 @@ bool MainMenuScene::init()
 	heapIce->setPosition(ccp(heapIce->getContentSize().width/2.0f, heapIce->getContentSize().height/2.0f));
 	this->addChild(heapIce,1);
 
-	menu = CCMenu::create(play, facebook, setting, sound, music, ask, cogwheel, invite, NULL);
+	menu = CCMenu::create(play, facebook, setting, sound, music, ask, cogwheel, invite, moreGames, NULL);
 	this->addChild(menu, 10);
 
 	popup = CCSprite::createWithSpriteFrameName("common/panel.png");
@@ -413,6 +425,11 @@ bool MainMenuScene::init()
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::facebookCheck))));
     
 	return true;
+}
+
+void MainMenuScene::moreGamesCallback(CCObject* pSender)
+{
+    moreGamesLayer->showMessageboard();
 }
 
 void MainMenuScene::inviteCallback(CCObject* pSender)

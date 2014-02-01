@@ -7,6 +7,7 @@
 #include "cGlobal.h"
 #include "cPopupLayer.h"
 #include "cSocialMenu.h"
+#include "cMoreGamesLayer.h"
 
 using namespace std;
 using namespace cocos2d;
@@ -39,6 +40,7 @@ public:
 	void helpCallback(CCObject* pSender);
 	void cogwheelCallback(CCObject* pSender);
     void inviteCallback(CCObject* pSender);
+    void moreGamesCallback(CCObject* pSender);
 
 	void closeSettingCallback(CCObject* pSender);
 	void howToPlaySettingCallback(CCObject* pSender);
@@ -96,6 +98,7 @@ private:
 	CCMenuItemSprite* ask;
 	CCMenuItemSprite* cogwheel;
     CCMenuItemSprite* invite;
+    CCMenuItemSprite* moreGames;
 
 	CCMenuItemSprite* close;
 	CCMenuItemSprite* tutorialClose;
@@ -155,6 +158,7 @@ private:
     
     float popupScale;
     SocialLayer* social;
+    MoreGamesLayer* moreGamesLayer;
 };
 
 #endif

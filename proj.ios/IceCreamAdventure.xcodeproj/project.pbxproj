@@ -120,6 +120,8 @@
 		B08FFDB0183611B5008C8FDC /* libGoogleAnalytics_debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B08FFDAF183611B5008C8FDC /* libGoogleAnalytics_debug.a */; };
 		B08FFDBA18365E16008C8FDC /* EndGameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B08FFDB818365E16008C8FDC /* EndGameLayer.cpp */; };
 		B0911608182A8DE300407809 /* cSocialMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0911606182A8DE300407809 /* cSocialMenu.cpp */; };
+		B09639FE189A5678003A8589 /* cMoreGamesLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09639FD189A5678003A8589 /* cMoreGamesLayer.cpp */; };
+		B0963A03189A89D1003A8589 /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0963A02189A89D1003A8589 /* LoadingScene.cpp */; };
 		B0974BAD1823772200D0716D /* cFacebook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0974BAB1823772200D0716D /* cFacebook.cpp */; };
 		B0974BB118238E5E00D0716D /* ImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B0974BAF18238E5E00D0716D /* ImageFetcher.m */; };
 		B0974BCD1823C45200D0716D /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = B0974BB51823C45200D0716D /* NSObject+SBJson.m */; };
@@ -466,6 +468,10 @@
 		B08FFDB918365E16008C8FDC /* EndGameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EndGameLayer.h; path = ../Classes/EndGameLayer.h; sourceTree = "<group>"; };
 		B0911606182A8DE300407809 /* cSocialMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cSocialMenu.cpp; path = ../Classes/cSocialMenu.cpp; sourceTree = "<group>"; };
 		B0911607182A8DE300407809 /* cSocialMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cSocialMenu.h; path = ../Classes/cSocialMenu.h; sourceTree = "<group>"; };
+		B09639FC189A5669003A8589 /* cMoreGamesLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = cMoreGamesLayer.h; path = ../Classes/cMoreGamesLayer.h; sourceTree = "<group>"; };
+		B09639FD189A5678003A8589 /* cMoreGamesLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cMoreGamesLayer.cpp; path = ../Classes/cMoreGamesLayer.cpp; sourceTree = "<group>"; };
+		B0963A01189A89C4003A8589 /* LoadingScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LoadingScene.h; path = ../Classes/LoadingScene.h; sourceTree = "<group>"; };
+		B0963A02189A89D1003A8589 /* LoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadingScene.cpp; path = ../Classes/LoadingScene.cpp; sourceTree = "<group>"; };
 		B0974BAB1823772200D0716D /* cFacebook.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp.preprocessed; fileEncoding = 4; name = cFacebook.cpp; path = ../Classes/cFacebook.cpp; sourceTree = "<group>"; };
 		B0974BAC1823772200D0716D /* cFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cFacebook.h; path = ../Classes/cFacebook.h; sourceTree = "<group>"; };
 		B0974BAE18238E5E00D0716D /* ImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageFetcher.h; path = ../Classes/ImageFetcher.h; sourceTree = "<group>"; };
@@ -1178,6 +1184,10 @@
 				B0911607182A8DE300407809 /* cSocialMenu.h */,
 				B08FFDB818365E16008C8FDC /* EndGameLayer.cpp */,
 				B08FFDB918365E16008C8FDC /* EndGameLayer.h */,
+				B09639FC189A5669003A8589 /* cMoreGamesLayer.h */,
+				B09639FD189A5678003A8589 /* cMoreGamesLayer.cpp */,
+				B0963A01189A89C4003A8589 /* LoadingScene.h */,
+				B0963A02189A89D1003A8589 /* LoadingScene.cpp */,
 			);
 			name = icecream;
 			sourceTree = "<group>";
@@ -1745,6 +1755,7 @@
 				15A3DA521682F826002FB0C5 /* CCControlUtils.cpp in Sources */,
 				15A3DA531682F826002FB0C5 /* CCInvocation.cpp in Sources */,
 				B0446E11182133CB00D6B11A /* cComixScene.cpp in Sources */,
+				B0963A03189A89D1003A8589 /* LoadingScene.cpp in Sources */,
 				B09E7B5218228A29004C2BE1 /* MMPBannerRequest.cpp in Sources */,
 				15A3DA541682F826002FB0C5 /* CCScale9Sprite.cpp in Sources */,
 				15A3DA551682F826002FB0C5 /* CCEditBox.cpp in Sources */,
@@ -1765,6 +1776,7 @@
 				B09E7B5E18228A29004C2BE1 /* Reachability.m in Sources */,
 				B0EE141A1821354A00740069 /* Animation.cpp in Sources */,
 				15A3DAEC1682F8A6002FB0C5 /* CDOpenALSupport.m in Sources */,
+				B09639FE189A5678003A8589 /* cMoreGamesLayer.cpp in Sources */,
 				15A3DAED1682F8A6002FB0C5 /* CocosDenshion.m in Sources */,
 				15A3DAEE1682F8A6002FB0C5 /* SimpleAudioEngine.mm in Sources */,
 				B0974BD61823C45200D0716D /* SBJsonTokeniser.m in Sources */,

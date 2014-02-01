@@ -8,6 +8,7 @@
 
 #include "utils.h"
 #import <AdSupport/ASIdentifierManager.h>
+#import "Reachability.h"
 
 
 const char* version()
@@ -33,6 +34,7 @@ void sendlocalNotification(float second)
     UILocalNotification *localNotif = [[UILocalNotification alloc] init];
     if (localNotif == nil)
         return;
+    
     localNotif.fireDate = setTime;
     localNotif.timeZone = [NSTimeZone defaultTimeZone];
     
@@ -51,4 +53,25 @@ void removeAllNotification()
     NSArray *notifications = [app scheduledLocalNotifications];
     if ([notifications count] > 0)
         [app presentLocalNotificationNow:notifications[0]];
+}
+
+const char* getCountry()
+{
+    NSLocale *currentLocale = [NSLocale currentLocale];
+    NSString *countryCode = [currentLocale objectForKey:NSLocaleCountryCode];
+    NSString *countryCodeLow = [countryCode lowercaseString];
+    return [countryCodeLow UTF8String];
+}
+
+bool getNetworkStatus()
+{
+    Reachability* reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if(remoteHostStatus == NotReachable)
+        return false;
+    else if (remoteHostStatus == ReachableViaWiFi || remoteHostStatus == ReachableViaWWAN)
+        return true;
+    
+    return false;
 }

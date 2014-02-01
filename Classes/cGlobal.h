@@ -2,6 +2,8 @@
 #define __GLOBAL_H__
 
 #include "cSingleton.h"
+#include "cocos2d.h"
+#include "cMoreGamesLayer.h"
 
 #define IPHONE_4 (CCDirector::sharedDirector()->getWinSize().height == 960 || CCDirector::sharedDirector()->getWinSize().width == 960)
 #define IPAD_MINI (CCDirector::sharedDirector()->getWinSize().height == 1024 || CCDirector::sharedDirector()->getWinSize().width == 1024)
@@ -37,6 +39,7 @@
 
 #define  LANDSCAPE CCDirector::sharedDirector()->getWinSize().height < CCDirector::sharedDirector()->getWinSize().width
 
+static const cocos2d::ccColor3B IceCreamPink={0x29, 0x29, 0x93};
 
 enum IceCreamScene
 {
@@ -53,6 +56,7 @@ public:
 	Globals():iceCreamScene(Invalid) {};
 	~Globals(){};
     IceCreamScene iceCreamScene;
+    vector<sMoreGames> globalMoreGames;
 };
 
 #define GlobalsPtr	Globals::GetSingletonPtr()
