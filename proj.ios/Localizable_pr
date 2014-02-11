@@ -1,0 +1,36 @@
+//gui
+btn_back.png = "btn_back_pr.png";
+btn_ok.png = "btn_ok.png";
+btn_cancel.png = "cancel_pr.png";
+btn_play.png = "play_pr.png";
+btn_next.png = "next_pr.png";
+excellent.png = "excellent_pr.png";
+facebook.png = "f-connect_pr.png";
+facePost.png = "facePost_pr.png";
+btn_select_level.png = "btn_select_level_pr.png";
+winEnd.png = "winEnd_pr.png";
+install.png = "install_pr.png";
+see.png = "see_pr.png";
+go.png = "go_pr.png";
+
+//texts
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ITUNES_CONNECTION_ERROR = "Erro de conexão com iTunes";
+MOSAIC_TOOLTIP = "Você pode abrir partes escondidas\n da imagem tocando nas partes bloqueadas.";
+REMOVE_HELP = "Deseja remover uma letra incorreta\n por 50 moedas?";
+REVEAL_HELP = "Deseja mostrar uma letra correta\n por 100 moedas?";
+FACEBOOK_HELP = "Deseja pedir ajuda a amigos?";
+PHOTO_POST = "Ajude-me a adivinhar a palavra";
+POST_TITLE = "Estou completando o nível %d";
+POST_TEXT = "Eu adivinhei uma palavra difícil";
+DDESTINY_INFORMATION = "Copyright © 2000-2014 Dreamstime.\n Todas as imagens do jogo retiradas de: www.dreamstime.com";
+INAPP_WAIT = "Awaiting response store...";
+TUTORIAL_TEXT = "Parabéns! Você completou o tutorial";
+FIRST_POST_TEXT = "Conecte-se ao Facebook\n e ganhe um bônus de 100 moedas";
+LEARN_MORE = "Conheça mais jogos nossos";
+SEE_TEXT = "Você enviou um pedido de ajuda";
+LEVELS = "Fases";
+FREE = "Grátis";
+PUSH_MESSAGE  =  "Entre no jogo hoje e ganhe um bônus";
+NETWORK_MESSAGE = "Sem conexão à internet.\n Tente novamente mais tarde";
+GO_TEXT = "Não há moedas suficientes.\n Deseja comprar mais na Loja?";

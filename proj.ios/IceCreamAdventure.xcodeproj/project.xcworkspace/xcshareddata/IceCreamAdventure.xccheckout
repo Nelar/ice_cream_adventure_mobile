@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>844DEE85-872E-406C-BC83-387D67C8257D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>IceCreamAdventure</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>978CB981-832B-4468-9547-B127B8AE860B</key>
+		<string>https://github.com/jtdk/ice_cream_adventure_mobile.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>proj.ios/IceCreamAdventure.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>978CB981-832B-4468-9547-B127B8AE860B</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/jtdk/ice_cream_adventure_mobile.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>978CB981-832B-4468-9547-B127B8AE860B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>978CB981-832B-4468-9547-B127B8AE860B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ice_cream_adventure_mobile</string>
+		</dict>
+	</array>
+</dict>
+</plist>

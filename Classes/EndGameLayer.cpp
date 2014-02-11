@@ -144,8 +144,8 @@ bool EndGameLayer::init()
 	close->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + popup->getContentSize().width /2.5f,
                        popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + popup->getContentSize().height /2.4f);
     
-	CCSprite* playNormal = CCSprite::createWithSpriteFrameName("common/play.png");
-	CCSprite* playSelected = CCSprite::createWithSpriteFrameName("common/play_selected.png");
+	CCSprite* playNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* playSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
 	play = CCMenuItemSprite::create(playNormal,
                                     playSelected, this, menu_selector(EndGameLayer::playCallback));
 	play->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
@@ -154,16 +154,16 @@ bool EndGameLayer::init()
 	play->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
     
     
-    retry = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/retry.png"),
-                                     CCSprite::createWithSpriteFrameName("common/retryDown.png"), this, menu_selector(EndGameLayer::retryCallback));
+    retry = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/redButton.png"),
+                                     CCSprite::createWithSpriteFrameName("common/redButton.png"), this, menu_selector(EndGameLayer::retryCallback));
 	retry->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f - retry->getContentSize().width/1.8f,
                        popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f
                        - popup->getContentSize().height /2.3f + play->getContentSize().height/2.0f);
     retry->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
     
     
-	next = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/next.png"),
-                                    CCSprite::createWithSpriteFrameName("common/nextDown.png"), this, menu_selector(EndGameLayer::nextCallback));
+	next = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/redButton.png"),
+                                    CCSprite::createWithSpriteFrameName("common/redButton.png"), this, menu_selector(EndGameLayer::nextCallback));
 	next->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + next->getContentSize().width/1.8f,
                       popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f
                       - popup->getContentSize().height /2.3f + play->getContentSize().height/2.0f);
@@ -213,7 +213,7 @@ bool EndGameLayer::init()
     if (!IPAD)
         guiFailed->setScale(0.5f);
     
-    failed = CCSprite::createWithSpriteFrameName("common/failed.png");
+    failed = CCLabelTTF::create("FAILED", FONT_COMMON, FONT_SIZE_140);
 	failed->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.35f));
 	popup->addChild(failed);
     
@@ -677,8 +677,6 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
         
         temp->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCFadeOut::create(0.01f)));
         temp2->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.5f), CCFadeOut::create(0.01f)));
-        
-        
 	}
 	else if (countStart >= 3)
 	{

@@ -124,18 +124,40 @@ bool LeftDownMenuScene::init()
 		CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(LeftDownMenuScene::closeTutorialCallback));
 	tutorialClose->setPosition(tutorialPopup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + tutorialPopup->getContentSize().width /2.5f, 
 		tutorialPopup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + tutorialPopup->getContentSize().height /2.3f);
+    
+    CCSprite *tutorialNextButton = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite *tutorialNextButtonDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    tutorialNextButtonDown->setColor(ccGRAY);
 
-	tutorialNext = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/next.png"),
-		CCSprite::createWithSpriteFrameName("common/nextDown.png"), this, menu_selector(LeftDownMenuScene::tutorialCallback));
+	tutorialNext = CCMenuItemSprite::create(tutorialNextButton,
+		tutorialNextButtonDown, this, menu_selector(LeftDownMenuScene::tutorialCallback));
 	tutorialNext->setPosition(tutorialPopup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(tutorialPopup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - tutorialNext->getContentSize().height*1.2f* 3.0f));
     tutorialNext->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialNext->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
-	tutorialSprite = CCSprite::create("1_1.png");
+	tutorialSprite = CCSprite::createWithSpriteFrameName("common/1.png");
 	tutorialSprite->setPosition(ccp(tutorialPopup->getContentSize().width / 2.7f, tutorialPopup->getContentSize().height / 1.27f));
 	tutorialPopup->addChild(tutorialSprite);
 	tutorialSprite->setOpacity(0);
 	tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCFadeIn::create(0.5f)));
+    
+    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    tutorialText->setColor(IceCreamBrown);
+    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialSprite->addChild(tutorialText);
+    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
+    
+    tutorialHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
+    tutorialHeader->setColor(IceCreamPink);
+    tutorialHeader->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialPopup->addChild(tutorialHeader);
+    tutorialHeader->setPosition(ccp(tutorialHeader->getParent()->getContentSize().width/2.0f, tutorialHeader->getParent()->getContentSize().height/1.1f));
 
 	tutorialMenu = CCMenu::create(tutorialClose, tutorialNext, NULL);
 
@@ -319,41 +341,74 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
 	if (tutorialNum == 3)
 	{
         tutorialNum = 0;
-        ((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/next.png"));
-        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/nextDown.png"));
+        ((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+        
 		closeTutorialCallback(pSender);
 	}
     if (tutorialNum == 2)
 	{
-		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/ok.png"));
-        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/okDown.png"));
+		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
     
 	tutorialSprite->removeFromParentAndCleanup(true);
     
 	if (tutorialNum == 0)
 	{
-		tutorialSprite = CCSprite::create("1_1.png");
+		tutorialSprite = CCSprite::createWithSpriteFrameName("common/1.png");
 		tutorialSprite->setPosition(ccp(tutorialPopup->getContentSize().width / 2.7f, tutorialPopup->getContentSize().height / 1.27f));
 		tutorialPopup->addChild(tutorialSprite);
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialSprite->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
 	}
 	else if (tutorialNum == 1)
 	{
-		tutorialSprite = CCSprite::create("2_2.png");
+		tutorialSprite = CCSprite::createWithSpriteFrameName("common/2.png");
 		tutorialSprite->setPosition(ccp(tutorialPopup->getContentSize().width / 1.9f, tutorialPopup->getContentSize().height / 1.55f));
 		tutorialPopup->addChild(tutorialSprite);
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialSprite->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
 	}
 	else if (tutorialNum == 2)
 	{
-		tutorialSprite = CCSprite::create("3_3.png");
+		tutorialSprite = CCSprite::createWithSpriteFrameName("common/3.png");
 		tutorialSprite->setPosition(ccp(tutorialPopup->getContentSize().width / 2.1f, tutorialPopup->getContentSize().height / 1.4f));
 		tutorialPopup->addChild(tutorialSprite);
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialSprite->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
 	}
 }
 

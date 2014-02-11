@@ -186,9 +186,6 @@ void LoadingScene::iconsServerResponse(CCHttpClient * client, CCHttpResponse * r
     image->initWithImageData(response->getResponseData()->data(), response->getResponseData()->size(), CCImage::kFmtPng);
     image->saveToFile(writeFile.c_str(), false);
     
-    CCSprite* temp = CCSprite::create(writeFile.c_str());
-    this->addChild(temp, 1000);
-    
     if( outfile.good() )
     {
         CCLOG( "Icon: Banner good");

@@ -103,8 +103,8 @@ private:
 	CCSprite* startCenter;
 	CCSprite* startLeft;
 	CCSprite* startRight;
-	CCLabelBMFont* targetTitle;
-	CCLabelBMFont* levelTitle;
+	CCLabelTTF* targetTitle;
+	CCLabelTTF* levelTitle;
 
 	int currentLevel;
     
@@ -137,7 +137,7 @@ private:
     
     CCLayerColor* livesLayer;
     
-    CCLabelBMFont* livesCount;
+    CCLabelTTF* livesCount;
     
     CCSprite* panelLivesLayer;
     CCMenu* heartMenu;
@@ -159,11 +159,13 @@ private:
     
     void updateFacebookCallback(CCNode* pSender);
     
-    CCLabelBMFont* livesTimePopap;
+    CCLabelTTF* livesTimePopap;
     CCMenuItemSprite* notif_1_Button;
     
     SocialLayer* social;
     Banner* bannerMMP;
+    
+    CCLabelTTF* labelTTF;
     
     int levelNumForPost = 0;
 };

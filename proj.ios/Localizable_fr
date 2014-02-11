@@ -1,0 +1,36 @@
+//gui
+btn_back.png = "btn_back_fr.png";
+btn_ok.png = "btn_ok.png";
+btn_cancel.png = "cancel_fr.png";
+btn_play.png = "play_fr.png";
+btn_next.png = "next_fr.png";
+excellent.png = "excellent_fr.png";
+facebook.png = "f-connect_fr.png";
+facePost.png = "facePost_fr.png";
+btn_select_level.png = "btn_select_level_fr.png";
+winEnd.png = "winEnd_fr.png";
+install.png = "install_fr.png";
+see.png = "see_fr.png";
+go.png = "go_fr.png";
+
+//texts
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ITUNES_CONNECTION_ERROR = "Erreur de connexion iTunes";
+MOSAIC_TOOLTIP = "Tu peux afficher les parties masquées de l'illustration\n en touchant les zones bloquées.";
+REMOVE_HELP = "Veux-tu retirer une lettre\n erronée contre 50 pièces?";
+REVEAL_HELP = "Veux-tu afficher une bonne lettre\n contre 100 pièces ?";
+FACEBOOK_HELP = "Veux-tu demander de l'aide à des amis ?";
+PHOTO_POST = "Aide-moi à trouver le mot";
+POST_TITLE = "J'ai terminé le niveau %d";
+POST_TEXT = "J'ai deviné un mot difficile";
+DDESTINY_INFORMATION = "Copyright © 2000-2014 Dreamstime.\n Toutes les captures d'écran proviennent de : www.dreamstime.com";
+INAPP_WAIT = "Awaiting response store...";
+TUTORIAL_TEXT = "Félicitations ! Tu as terminé le didacticiel";
+FIRST_POST_TEXT = "Connecte-toi à Facebook\n et obtiens un bonus de 100 pièces";
+LEARN_MORE = "Découvrez nos autres jeux";
+SEE_TEXT = "You have sent a request to help guess the word";
+LEVELS = "Niveaux";
+FREE = "Gratuit";
+PUSH_MESSAGE =  "Connectez-vous au jeu aujourd'hui et obtenez un bonus";
+NETWORK_MESSAGE = "Aucune connexion Internet.\n Veuillez réessayer ultérieurement";
+GO_TEXT = "Pas assez de pièces ! En acheter plus au magasin ?";

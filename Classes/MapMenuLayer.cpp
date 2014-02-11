@@ -16,6 +16,8 @@
 #include "utils.h"
 
 #include "SimpleAudioEngine.h"
+#include "CCLocalizedString.h"
+
 using namespace CocosDenshion;
 
 using namespace Core;
@@ -128,7 +130,7 @@ bool MapMenuLayer::init()
     else
         fontSize = 36;
 
-	targetTitle = CCLabelBMFont::create("Init", "fonts/Script MT Bold 22.fnt");
+	targetTitle = CCLabelTTF::create("Init", FONT_COMMON, FONT_SIZE_22);
 	targetTitle->setPosition(ccp(targetSubstrate->getContentSize().width/2.0f, targetSubstrate->getContentSize().height/2.0f));
 
     if (!IPAD)
@@ -136,7 +138,7 @@ bool MapMenuLayer::init()
 
 	targetSubstrate->addChild(targetTitle);
 
-	CCLabelBMFont* boosterTitle = CCLabelBMFont::create("Select boosters", "fonts/Script MT Bold 22.fnt");
+	CCLabelTTF* boosterTitle = CCLabelTTF::create(CCLocalizedString("SELECT_BOOSTER"), FONT_COMMON, FONT_SIZE_22);
 	boosterTitle->setPosition(ccp(popup->getContentSize().width/2.0f, popup->getContentSize().height/2.1f));
 	ccColor3B color;
 	color.r = 0x4b;
@@ -154,7 +156,7 @@ bool MapMenuLayer::init()
     else
         fontSize = 50;
 
-	levelTitle = CCLabelBMFont::create("Init", "fonts/Script MT Bold 22.fnt");
+	levelTitle = CCLabelTTF::create("Init", FONT_COMMON, FONT_SIZE_64);
 	levelTitle->setPosition(ccp(popup->getContentSize().width/2.0f, popup->getContentSize().height/1.1f));
 	color.r = 0xba;
 	color.g = 0x29;
@@ -171,15 +173,24 @@ bool MapMenuLayer::init()
 	close->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + popup->getContentSize().width /2.5f, 
 		popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + popup->getContentSize().height /2.4f);
 
-	CCSprite* playNormal = CCSprite::createWithSpriteFrameName("common/play.png");
-	CCSprite* playSelected = CCSprite::createWithSpriteFrameName("common/play_selected.png");
-	play = CCMenuItemSprite::create(playNormal, 
-		playSelected, this, menu_selector(MapMenuLayer::playCallback));
+	
+	
+    CCSprite* playSpriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* playSpriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    playSpriteSelected->setColor(ccGRAY);
+    
+    play = CCMenuItemSprite::create(playSpriteNormal,
+		playSpriteSelected, this, menu_selector(MapMenuLayer::playCallback));
 	play->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f
 		- popup->getContentSize().height /2.3f + play->getContentSize().height/2.0f);
 	//play->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 
+    labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    play->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
 	boosterPlus_1 = CCSprite::createWithSpriteFrameName("common/plus.png");
 	boosterPlus_2 = CCSprite::createWithSpriteFrameName("common/plus.png");
@@ -270,7 +281,7 @@ bool MapMenuLayer::init()
 
     if (OptionsPtr->getLifeCount() >= 5)
     {
-        livesTime = CCSprite::createWithSpriteFrameName("gameMap/full.png");
+        livesTime = CCLabelTTF::create(CCLocalizedString("FULL"), FONT_COMMON, FONT_SIZE_64);
         livesTime->setPosition(ccp(livesPanel->getContentSize().width/1.6f, livesPanel->getContentSize().height/2.6f));
         livesPanel->addChild(livesTime);
     }
@@ -278,7 +289,7 @@ bool MapMenuLayer::init()
     {
         char buf[255];
         sprintf(buf, "%0*d:%0*d", 2, (int)(1800 - second)/60, 2, (int)(1800 - second)%60);
-        livesTime = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+        livesTime = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_64);
         if (!IPAD)
             livesTime->setScale(0.5f);
         livesTime->setAnchorPoint(ccp(0.0f, 0.5f));
@@ -291,7 +302,7 @@ bool MapMenuLayer::init()
     int temp = OptionsPtr->getLifeCount();
     sprintf(buf, "%d", OptionsPtr->getLifeCount());
     
-    livesCount = CCLabelBMFont::create(buf, "fonts/Script MT Bold 36.fnt");
+    livesCount = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_200);
     if (!IPAD)
         livesCount->setScale(0.5f);
     livesCount->setAnchorPoint(ccp(0.5f, 0.5f));
@@ -518,7 +529,7 @@ void MapMenuLayer::timeCallback(CCNode* sender)
     
     if (OptionsPtr->getLifeCount() >= 5)
     {
-        livesTime = CCSprite::createWithSpriteFrameName("gameMap/full.png");
+        livesTime = CCLabelTTF::create(CCLocalizedString("FULL"), FONT_COMMON, FONT_SIZE_64);
         livesTime->setPosition(ccp(livesPanel->getContentSize().width/1.6f, livesPanel->getContentSize().height/2.6f));
         livesPanel->addChild(livesTime);
     }
@@ -526,7 +537,7 @@ void MapMenuLayer::timeCallback(CCNode* sender)
     {
         char buf[255];
         sprintf(buf, "%0*d:%0*d", 2, (int)(1800 - second)/60, 2, (int)(1800 - second)%60);
-        livesTime = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+        livesTime = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_64);
         if (!IPAD)
             livesTime->setScale(0.5f);
         livesTime->setAnchorPoint(ccp(0.0f, 0.5f));
@@ -544,7 +555,7 @@ void MapMenuLayer::timeCallback(CCNode* sender)
     int temp = OptionsPtr->getLifeCount();
     sprintf(buf, "%d", OptionsPtr->getLifeCount());
     
-    livesCount = CCLabelBMFont::create(buf, "fonts/Script MT Bold 36.fnt");
+    livesCount = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_200);
     if (!IPAD)
         livesCount->setScale(0.5f);
     livesCount->setAnchorPoint(ccp(0.5f, 0.5f));
@@ -605,11 +616,11 @@ void MapMenuLayer::popupLives()
     livesLayer->addChild(panelLivesLayer);
     panelLivesLayer->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME,ccp(-WINSIZE.width, 0.0f))));
     
-    CCLabelBMFont* heartLabel;
+    CCLabelTTF* heartLabel;
     if (OptionsPtr->getLifeCount() > 0)
-        heartLabel = CCLabelBMFont::create("Get more lives!", "fonts/Script MT Bold 22.fnt");
+        heartLabel = CCLabelTTF::create(CCLocalizedString("GET_MORE_LIVES", NULL), FONT_COMMON, FONT_SIZE_64);
     else
-        heartLabel = CCLabelBMFont::create("No more lives!", "fonts/Script MT Bold 22.fnt");
+        heartLabel = CCLabelTTF::create(CCLocalizedString("NO_MORE_LIVES", NULL), FONT_COMMON, FONT_SIZE_64);
     
     heartLabel->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, 8.0f*panelLivesLayer->getContentSize().height/9.0f));
 
@@ -633,15 +644,39 @@ void MapMenuLayer::popupLives()
     heartMenu->setAnchorPoint(ccp(0.0f, 0.0f));
     heartMenu->setPosition(ccp(0.0f, 0.0f));
     
-    askFriend = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("gameMap/askFriend.png"),
-                                     CCSprite::createWithSpriteFrameName("gameMap/askFriendDown.png"), this, menu_selector(MapMenuLayer::askFriendCallback));
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    askFriend = CCMenuItemSprite::create(spriteNormal,
+                                     spriteSelected, this, menu_selector(MapMenuLayer::askFriendCallback));
     askFriend->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, panelLivesLayer->getContentSize().height/6.0f));
     heartMenu->addChild(askFriend);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("ASK_FRIEND", NULL), FONT_COMMON, FONT_SIZE_32);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    askFriend->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
+    
+    
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
     
     moreLives = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("gameMap/moreLives.png"),
                                                            CCSprite::createWithSpriteFrameName("gameMap/moreLivesDown.png"), this, menu_selector(MapMenuLayer::moreLivesCallback));
     moreLives->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, panelLivesLayer->getContentSize().height/6.0f + askFriend->getContentSize().height));
     heartMenu->addChild(moreLives);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("MORE_LIVES", NULL), FONT_COMMON, FONT_SIZE_32);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    moreLives->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
     
     if (OptionsPtr->getLifeCount() >0)
     {
@@ -659,7 +694,7 @@ void MapMenuLayer::popupLives()
     
     
     
-    CCLabelBMFont* labelNotif = CCLabelBMFont::create("Time to next life:", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* labelNotif = CCLabelTTF::create(CCLocalizedString("TIME_NEXT_LIVE", NULL), FONT_COMMON, FONT_SIZE_86);
 	labelNotif->setPosition(ccp(panelLivesLayer->getContentSize().width / 2.0f, panelLivesLayer->getContentSize().height / 1.75f));
 	panelLivesLayer->addChild(labelNotif);
 	livesLayer->setOpacity(0);
@@ -678,25 +713,63 @@ void MapMenuLayer::popupLives()
         labelNotif->setVisible(true);
     
     
-    livesTimePopap = CCLabelBMFont::create("  ", "fonts/Script MT Bold 22.fnt");
+    livesTimePopap = CCLabelTTF::create("  ", FONT_COMMON, FONT_SIZE_86);
     if (!IPAD)
         livesTimePopap->setScale(0.5f);
     livesTimePopap->setAnchorPoint(ccp(0.0f, 0.5f));
     livesTimePopap->setPosition(ccp(panelLivesLayer->getContentSize().width / 2.4f, panelLivesLayer->getContentSize().height / 2.0f));
     panelLivesLayer->addChild(livesTimePopap);
     
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/onButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/onButton.png");
+    spriteSelected->setColor(ccGRAY);
     
-    notif_1_Button = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/off.png"),
-                                                                CCSprite::createWithSpriteFrameName("common/on.png"), this, menu_selector(MapMenuLayer::notif_1_Callback));
+    
+    CCLabelTTF* labelOn = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelOn->setColor(ccWHITE);
+    labelOn->enableShadow(CCSize(5, -5), 255, 8.0f);
+    spriteNormal->addChild(labelOn);
+    labelOn->setPosition(ccp(labelOn->getParent()->getContentSize().width/2.0f, labelOn->getParent()->getContentSize().height/2.0f));
+    
+    CCLabelTTF* labelOff = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelOff->setColor(ccWHITE);
+    labelOff->enableShadow(CCSize(5, -5), 255, 8.0f);
+    spriteSelected->addChild(labelOff);
+    labelOff->setPosition(ccp(labelOff->getParent()->getContentSize().width/2.0f, labelOff->getParent()->getContentSize().height/2.0f));
+
+    
+    
+    notif_1_Button = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::notif_1_Callback));
 	notif_1_Button->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, panelLivesLayer->getContentSize().height/2.5f));
     notif_1_Button->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 	heartMenu->addChild(notif_1_Button);
 	notif_1_Button->setOpacity(0);
 	notif_1_Button->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/onButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/onButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    
+    labelOn = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelOn->setColor(ccWHITE);
+    labelOn->enableShadow(CCSize(5, -5), 255, 8.0f);
+    spriteNormal->addChild(labelOn);
+    labelOn->setPosition(ccp(labelOn->getParent()->getContentSize().width/2.0f, labelOn->getParent()->getContentSize().height/2.0f));
+    
+    labelOff = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelOff->setColor(ccWHITE);
+    labelOff->enableShadow(CCSize(5, -5), 255, 8.0f);
+    spriteSelected->addChild(labelOff);
+    labelOff->setPosition(ccp(labelOff->getParent()->getContentSize().width/2.0f, labelOff->getParent()->getContentSize().height/2.0f));
+
+    
+    
     if (OptionsPtr->isNotification())
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/on.png"));
+		notif_1_Button->setNormalImage(spriteNormal);
 	else
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/off.png"));
+		notif_1_Button->setNormalImage(spriteSelected);
     
     if (OptionsPtr->getLifeCount() > 0)
         notif_1_Button->setVisible(false);
@@ -712,16 +785,33 @@ void MapMenuLayer::popupLives()
 
 void MapMenuLayer::notif_1_Callback(CCObject* pSender)
 {
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/onButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/onButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    
+    CCLabelTTF* labelOn = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelOn->setColor(ccWHITE);
+    labelOn->enableShadow(CCSize(5, -5), 255, 8.0f);
+    spriteNormal->addChild(labelOn);
+    labelOn->setPosition(ccp(labelOn->getParent()->getContentSize().width/2.0f, labelOn->getParent()->getContentSize().height/2.0f));
+    
+    CCLabelTTF* labelOff = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelOff->setColor(ccWHITE);
+    labelOff->enableShadow(CCSize(5, -5), 255, 8.0f);
+    spriteSelected->addChild(labelOff);
+    labelOff->setPosition(ccp(labelOff->getParent()->getContentSize().width/2.0f, labelOff->getParent()->getContentSize().height/2.0f));
+    
 	if (OptionsPtr->isNotification())
 	{
         OptionsPtr->setNotification(false);
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/off.png"));
+		notif_1_Button->setNormalImage(spriteSelected);
         removeAllNotification();
 	}
 	else
 	{
         OptionsPtr->setNotification(true);
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/on.png"));
+		notif_1_Button->setNormalImage(spriteSelected);
 	}
     OptionsPtr->save();
 }

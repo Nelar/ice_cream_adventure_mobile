@@ -208,7 +208,6 @@ bool GameMapLayer::init(int nextLevel)
     
     layerGradient->setRubberEffectRatio(0.05f);
     layerGradient->setrubberEffectRecoveryTime(0.1f);
-//    layerGradient->recoverPositionAndScale();
 	this->addChild(layerGradient);
     
     
@@ -511,8 +510,8 @@ bool GameMapLayer::init(int nextLevel)
 
 		char buf[64];
 		sprintf(buf, "%d", i + 1);
-		CCLabelBMFont* labelNormal = CCLabelBMFont::create(buf, "fonts/Script MT Bold 36.fnt");
-		CCLabelBMFont* labelSelect = CCLabelBMFont::create(buf, "fonts/Script MT Bold 36.fnt");
+		CCLabelTTF* labelNormal = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_140);
+		CCLabelTTF* labelSelect = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_140);
 		labelNormal->setPosition(ccp(normal->getContentSize().width/2.0f, normal->getContentSize().height/2.0f));
 		labelSelect->setPosition(ccp(select->getContentSize().width/2.0f, select->getContentSize().height/2.0f));
 		labelSelect->setColor(ccGRAY);
@@ -1128,7 +1127,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_1 = CCSprite::createWithSpriteFrameName("gameMap/lent_1.png");
     lenta_1->setPosition(ccp(path[3].x, path[3].y + 300*multiplier));
     lenta_1->setScale(1.0f);
-    CCLabelBMFont* label_1 = CCLabelBMFont::create("Valley ice creame", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_1 = CCLabelTTF::create(CCLocalizedString("VALLEY", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_1->addChild(label_1);
     label_1->setPosition(ccp(lenta_1->getContentSize().width/2.0f, lenta_1->getContentSize().height/2.0f));
     label_1->setRotation(-4.0f);
@@ -1138,7 +1137,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_2 = CCSprite::createWithSpriteFrameName("gameMap/lent_2.png");
     lenta_2->setPosition(ccp(path[14].x - 300*multiplier, path[14].y + 500*multiplier));
     lenta_2->setScale(1.0f);
-    CCLabelBMFont* label_2 = CCLabelBMFont::create("Sweet forest", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_2 = CCLabelTTF::create(CCLocalizedString("FOREST", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_2->addChild(label_2);
     label_2->setPosition(ccp(lenta_2->getContentSize().width/2.0f, lenta_2->getContentSize().height/2.0f));
     label_2->setRotation(-4.0f);
@@ -1148,7 +1147,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_4 = CCSprite::createWithSpriteFrameName("gameMap/lent_3.png");
     lenta_4->setPosition(ccp(path[25].x - 200*multiplier, path[25].y + 250*multiplier));
     lenta_4->setScale(1.0f);
-    CCLabelBMFont* label_4 = CCLabelBMFont::create("Mountain giants", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_4 = CCLabelTTF::create(CCLocalizedString("MOUNTAIN", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_4->addChild(label_4);
     label_4->setPosition(ccp(lenta_4->getContentSize().width/2.0f, lenta_4->getContentSize().height/2.0f));
     label_4->setRotation(-4.0f);
@@ -1158,7 +1157,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_5 = CCSprite::createWithSpriteFrameName("gameMap/lent_4.png");
     lenta_5->setPosition(ccp(path[37].x - 80*multiplier, path[37].y + 200*multiplier));
     lenta_5->setScale(1.0f);
-    CCLabelBMFont* label_5 = CCLabelBMFont::create("Pistachio sea", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_5 = CCLabelTTF::create(CCLocalizedString("SEA", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_5->addChild(label_5);
     label_5->setPosition(ccp(lenta_5->getContentSize().width/2.0f, lenta_5->getContentSize().height/2.0f));
     label_5->setRotation(-4.0f);
@@ -1168,7 +1167,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_6 = CCSprite::createWithSpriteFrameName("gameMap/lent_1.png");
     lenta_6->setPosition(ccp(path[52].x, path[52].y + 250*multiplier));
     lenta_6->setScale(1.0f);
-    CCLabelBMFont* label_6 = CCLabelBMFont::create("Caramel meadows", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_6 = CCLabelTTF::create(CCLocalizedString("MEADOWS", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_6->addChild(label_6);
     label_6->setPosition(ccp(lenta_6->getContentSize().width/2.0f, lenta_6->getContentSize().height/2.0f));
     label_6->setRotation(-4.0f);
@@ -1178,7 +1177,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_7 = CCSprite::createWithSpriteFrameName("gameMap/lent_2.png");
     lenta_7->setPosition(ccp(path[63].x - 200*multiplier, path[63].y + 200*multiplier));
     lenta_7->setScale(1.0f);
-    CCLabelBMFont* label_7 = CCLabelBMFont::create("Farm ice Cream", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_7 = CCLabelTTF::create(CCLocalizedString("FARM", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_7->addChild(label_7);
     label_7->setPosition(ccp(lenta_7->getContentSize().width/2.0f, lenta_7->getContentSize().height/2.0f));
     label_7->setRotation(-4.0f);
@@ -1188,7 +1187,7 @@ void GameMapLayer::levelLabelsDraw()
     CCSprite* lenta_8 = CCSprite::createWithSpriteFrameName("gameMap/lent_3.png");
     lenta_8->setPosition(ccp(path[77].x, path[77].y + 850*multiplier));
     lenta_8->setScale(1.0f);
-    CCLabelBMFont* label_8 = CCLabelBMFont::create("Ice city", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label_8 = CCLabelTTF::create(CCLocalizedString("CITY", NULL), FONT_COMMON, FONT_SIZE_64);
     lenta_8->addChild(label_8);
     label_8->setPosition(ccp(lenta_8->getContentSize().width/2.0f, lenta_8->getContentSize().height/2.0f));
     label_8->setRotation(-4.0f);

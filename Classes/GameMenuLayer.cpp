@@ -455,14 +455,14 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     menuExit->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
     
     if (((GameScene*)getParent())->isEndDialog)
-        playOn = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/pl on.png"), CCSprite::createWithSpriteFrameName("common/pl on 2.png"), this, menu_selector(GameMenuLayer::playOnCallback));
+        playOn = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/redButton.png"), CCSprite::createWithSpriteFrameName("common/redButton.png"), this, menu_selector(GameMenuLayer::playOnCallback));
     else
-        playOn = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/pl on red.png"), CCSprite::createWithSpriteFrameName("common/pl on red 2.png"), this, menu_selector(GameMenuLayer::playOnCallback));
+        playOn = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/redButton.png"), CCSprite::createWithSpriteFrameName("common/redButton.png"), this, menu_selector(GameMenuLayer::playOnCallback));
     
     playOn->setPosition(ccp(WINSIZE.width/2.0f + playOn->getContentSize().width/2.0f, WINSIZE.height/3.0f));
     menuExit->addChild(playOn);
     
-    exitOn = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/end g.png"), CCSprite::createWithSpriteFrameName("common/end g 2.png"), this, menu_selector(GameMenuLayer::exitOnCallback));
+    exitOn = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/greenButton.png"), CCSprite::createWithSpriteFrameName("common/greenButton.png"), this, menu_selector(GameMenuLayer::exitOnCallback));
     exitOn->setPosition(ccp(WINSIZE.width/2.0f + playOn->getContentSize().width/2.0f, WINSIZE.height/3.0f - playOn->getContentSize().height*1.5f));
     menuExit->addChild(exitOn);
     

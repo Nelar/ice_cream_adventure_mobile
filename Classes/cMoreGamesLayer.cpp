@@ -11,6 +11,7 @@
 #include "Options.h"
 #include "SimpleAudioEngine.h"
 #include "GameMapLayer.h"
+#include "CCLocalizedString.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -51,6 +52,8 @@ void MoreGamesLayer::showMessageboard()
 {
     messageboard = createMessageboard();
     messageboard->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f + WINSIZE.height));
+    if (LANDSCAPE)
+        messageboard->setScale(0.75f);
     messageboard->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -WINSIZE.height))));
     isMessageBoard = true;
     this->addChild(messageboard);
@@ -73,13 +76,12 @@ CCNode* MoreGamesLayer::createMessageboard()
 {
     CCNode* layer = CCNode::create();
     CCSprite* background = CCSprite::createWithSpriteFrameName("common/panel.png");
-    CCSprite* greyBack = CCSprite::create("message/greyPlate.png");
+    CCSprite* greyBack = CCSprite::create("message/moreGamesPlate.png");
     layer->addChild(background);
     background->addChild(greyBack);
     greyBack->setPosition(ccp(background->getContentSize().width/2.03f, background->getContentSize().height/2.1f));
-    greyBack->setScaleY(1.75f);
     
-    title = CCLabelTTF::create("Learn more our other games", "Script MT Bold", 48);
+    title = CCLabelTTF::create(CCLocalizedString("LEARN_MORE", NULL), FONT_COMMON, FONT_SIZE_64);
     title->setColor(IceCreamPink);
     title->setPosition(ccp(background->getContentSize().width/2.0f, background->getContentSize().height/1.1f));
     background->addChild(title);
@@ -97,13 +99,13 @@ CCNode* MoreGamesLayer::createMessageboard()
     
     float fontSize = 40;
     
-    if(CCDirector::sharedDirector()->getWinSize().height < 2048)
+    if(IPAD_MINI)
         fontSize /= 2;
     
-    if(CCDirector::sharedDirector()->getWinSize().width == 320)
+    if(IPHONE_4 || IPHONE_5)
         fontSize /= 1.8f;
     
-    CCScrollView* scrollView = CCScrollView::create(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height/1.25f));
+    CCScrollView* scrollView = CCScrollView::create(CCSize(greyBack->getContentSize().width, greyBack->getContentSize().height));
     scrollView->setDirection(kCCScrollViewDirectionVertical);
     scrollView->setClippingToBounds(true);
     
@@ -113,7 +115,7 @@ CCNode* MoreGamesLayer::createMessageboard()
     int sizeMoreGames = GlobalsPtr->globalMoreGames.size();
     CCLog("Count more games %d", GlobalsPtr->globalMoreGames.size());
     float containerHeight = panelTemp->getContentSize().height*1.1f * GlobalsPtr->globalMoreGames.size();
-    container->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, containerHeight));
+    container->setContentSize(CCSize(greyBack->getContentSize().width, containerHeight));
     
     float scaleNode = 1.08f;
     
@@ -134,38 +136,52 @@ CCNode* MoreGamesLayer::createMessageboard()
         string iconFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("icon") + buf + string(".png");
         
         CCSprite* iconMoreGames = CCSprite::create(iconFile.c_str());
-        CCSprite* nodeIcon = CCSprite::createWithSpriteFrameName("common/greenPlate.png");
-        nodeIcon->setScaleX(scaleNode);
+        CCNode* nodeIcon = CCNode::create();
+        CCSprite* plate = CCSprite::createWithSpriteFrameName("common/greenPlate.png");
+        nodeIcon->setContentSize(CCSize(plate->getContentSize().width, plate->getContentSize().height/1.2f));
+        nodeIcon->addChild(plate);
+        nodeIcon->setAnchorPoint(ccp(0.5f, 0.5f));
+        plate->setPosition(ccp(nodeIcon->getContentSize().width/2.0f, nodeIcon->getContentSize().height/2.0f));
+        plate->setScaleY(0.8333f);
         
         nodeIcon->addChild(iconMoreGames);
         CCSize size = CCSize(nodeIcon->getContentSize().height/1.8f, nodeIcon->getContentSize().height/1.8f);
-        
-        iconMoreGames->setScaleX(size.width/iconMoreGames->getContentSize().width /1.05f);
+        iconMoreGames->setPosition(ccp(nodeIcon->getContentSize().width/4.5f,  nodeIcon->getContentSize().height/1.6f));
+        iconMoreGames->setScaleX(size.width/iconMoreGames->getContentSize().width);
         iconMoreGames->setScaleY(size.height/iconMoreGames->getContentSize().height);
-        iconMoreGames->setPosition(ccp(nodeIcon->getContentSize().width/5.0f,  nodeIcon->getContentSize().height/1.7f));
         
         CCMenu* menu = CCMenu::create();
         menu->setContentSize(nodeIcon->getContentSize());
         menu->setAnchorPoint(ccp(0.0f, 0.0f));
         menu->setPosition(nodeIcon->getPosition());
-        CCMenuItemLabel* nameLabel = CCMenuItemLabel::create(CCLabelTTF::create(GlobalsPtr->globalMoreGames[i].name.c_str(), "Script MT Bold", fontSize*1.2f) , NULL, NULL);
+        CCMenuItemLabel* nameLabel = CCMenuItemLabel::create(CCLabelTTF::create(GlobalsPtr->globalMoreGames[i].name.c_str(), FONT_COMMON, FONT_SIZE_40) , NULL, NULL);
         nameLabel->setAnchorPoint(ccp(0.0f, 1.0f));
-        nameLabel->setScaleX(1.0f/scaleNode);
         
-        CCMenuItemLabel* descLabel = CCMenuItemLabel::create(CCLabelTTF::create(GlobalsPtr->globalMoreGames[i].description.c_str(), "Script MT Bold", fontSize*0.7f, CCSize(nodeIcon->getContentSize().width/1.7f, nodeIcon->getContentSize().height/2.0f), kCCTextAlignmentLeft) , NULL, NULL);
+        CCMenuItemLabel* descLabel = CCMenuItemLabel::create(CCLabelTTF::create(GlobalsPtr->globalMoreGames[i].description.c_str(), FONT_COMMON, FONT_SIZE_26, CCSize(nodeIcon->getContentSize().width/1.9f, nodeIcon->getContentSize().height/2.0f), kCCTextAlignmentLeft) , NULL, NULL);
         descLabel->setAnchorPoint(ccp(0.0f, 1.0f));
         descLabel->setColor(ccWHITE);
-        descLabel->setScaleX(1.0f/scaleNode);
         
-        CCMenuItemSprite* installLabel = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/play.png"), CCSprite::createWithSpriteFrameName("common/play_selected.png"), this, menu_selector(MoreGamesLayer::messageCallback));
+        CCSprite* installButton = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+        CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("FREE", NULL), FONT_COMMON, FONT_SIZE_64);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        installButton->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+        CCSprite* installButtonDown = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+        labelTTF = CCLabelTTF::create(CCLocalizedString("FREE", NULL), FONT_COMMON, FONT_SIZE_64);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        installButtonDown->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+        installButtonDown->setColor(ccGRAY);
+        CCMenuItemSprite* installLabel = CCMenuItemSprite::create(installButton, installButtonDown, this, menu_selector(MoreGamesLayer::messageCallback));
+        installLabel->setScale(0.8f);
         
         installLabel->setTag(i);
         ((CCSprite*)(installLabel->getSelectedImage()))->setColor(ccGRAY);
-        installLabel->setScaleX(1.0f/scaleNode);
         
-        CCMenuItemLabel* genrelLabel = CCMenuItemLabel::create(CCLabelTTF::create("Destiny Development", "Arial", fontSize*0.7f), NULL, NULL);
+        CCMenuItemLabel* genrelLabel = CCMenuItemLabel::create(CCLabelTTF::create("Destiny Development", FONT_COMMON, FONT_SIZE_32), NULL, NULL);
         genrelLabel->setAnchorPoint(ccp(0.0f, 1.0f));
-        genrelLabel->setScaleX(1.0f/scaleNode);
         menu->addChild(nameLabel);
         menu->addChild(installLabel);
         menu->addChild(genrelLabel);
@@ -173,9 +189,9 @@ CCNode* MoreGamesLayer::createMessageboard()
         
         nodeIcon->addChild(menu);
         installLabel->setPosition(ccp(nodeIcon->getContentSize().width/1.15f, nodeIcon->getContentSize().height/11.0f));
-        nameLabel->setPosition(ccp(nodeIcon->getContentSize().width/2.4f, nodeIcon->getContentSize().height/1.18f));
-        descLabel->setPosition(ccp(nodeIcon->getContentSize().width/2.4f, nodeIcon->getContentSize().height/1.7f));
-        genrelLabel->setPosition(ccp(nodeIcon->getContentSize().width/2.4f, nodeIcon->getContentSize().height/1.33f));
+        nameLabel->setPosition(ccp(nodeIcon->getContentSize().width/2.3f, nodeIcon->getContentSize().height/1.10f));
+        descLabel->setPosition(ccp(nodeIcon->getContentSize().width/2.3f, nodeIcon->getContentSize().height/1.5f));
+        genrelLabel->setPosition(ccp(nodeIcon->getContentSize().width/2.3f, nodeIcon->getContentSize().height/1.25f));
         
         installLabel->setPosition(ccp(nodeIcon->getContentSize().width/1.3f, nodeIcon->getContentSize().height/7.0f));
         
@@ -185,28 +201,18 @@ CCNode* MoreGamesLayer::createMessageboard()
             star->setAnchorPoint(ccp(0.5f, 0.5f));
             nodeIcon->addChild(star);
             star->setPosition(ccp(nodeIcon->getContentSize().width/12.0f + star->getContentSize().width/1.5f*j, star->getContentSize().height/1.5f));
-            star->setScaleX(1.0f/scaleNode);
         }
         
-        nodeIcon->setPosition(ccp(background->getContentSize().width/2.0f, background->getContentSize().height/2.0f));
-        background->addChild(nodeIcon, 100);
-        
-     //   container->addChild(nodeIcon, 1);
-       // nodeIcon->setPosition(ccp(container->getContentSize().width/2.0f, container->getContentSize().height - nodeIcon->getContentSize().height/1.9f - nodeIcon->getContentSize().height*1.1f*i));
+        container->addChild(nodeIcon, 1);
+        nodeIcon->setPosition(ccp(container->getContentSize().width/2.0f, container->getContentSize().height - nodeIcon->getContentSize().height/1.8f - nodeIcon->getContentSize().height*1.1f*i));
+        nodeIcon->setScale(1.08f);
     }
-/*    cocos2d::CCUserDefault::sharedUserDefault()->flush();
+    cocos2d::CCUserDefault::sharedUserDefault()->flush();
     scrollView->setContainer(container);
-    background->addChild(scrollView, 100);
-    scrollView->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height*0.1f));
-    scrollView->setVisible(false);
-    if(CCDirector::sharedDirector()->getWinSize().height*CCDirector::sharedDirector()->getContentScaleFactor() == 1024)
-    {
-        scrollView->setContentOffset(ccp(0.0f, panelTemp->getContentSize().height/2.1f));
-    }
-    else if(CCDirector::sharedDirector()->getWinSize().width == 320)
-    {
-        scrollView->setContentOffset(ccp(0.0f, panelTemp->getContentSize().height/2.1f));
-    }*/
+    greyBack->addChild(scrollView, 100);
+    scrollView->setPosition(ccp(0.0f, 0.0f));
+    scrollView->setVisible(true);
+    scrollView->setContentOffset(ccp(0.0f, -(containerHeight - greyBack->getContentSize().height)));
 
     return layer;
 }

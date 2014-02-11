@@ -1,0 +1,36 @@
+//gui
+btn_back.png = "btn_back_de.png";
+btn_ok.png = "btn_ok.png";
+btn_cancel.png = "cancel_de.png";
+btn_play.png = "play_de.png";
+btn_next.png = "next_de.png";
+excellent.png = "excellent_de.png";
+facebook.png = "f-connect_de.png";
+facePost.png = "facePost_de.png";
+btn_select_level.png = "btn_select_level_de.png";
+winEnd.png = "winEnd_de.png";
+install.png = "install_ge.png";
+see.png = "see_ge.png";
+go.png = "go_de.png";
+
+//texts
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ;
+ITUNES_CONNECTION_ERROR = "iTunes-Verbindungsfehler";
+MOSAIC_TOOLTIP = "Sie können verborgene Teile des Bildes offenlegen,\n indem Sie die blockierten Teile antippen.";
+REMOVE_HELP = "Möchten Sie gerne drei falsche\n Buchstaben für 50 Münzen entfernen?";
+REVEAL_HELP = "Möchten Sie gerne einen korrekten\n Buchstaben für 100 Münzen anzeigen?";
+FACEBOOK_HELP = "Möchten Sie Freunde um Hilfe bitten?";
+PHOTO_POST = "Help me guess the word";
+POST_TITLE = "Ich habe %d Level beendet.";
+POST_TEXT = "Ich habe ein schwieriges Wort erraten";
+DDESTINY_INFORMATION = "Copyright © 2000-2014 Dreamstime.\n Sämtliches Bildmaterial im Spiel stammt von: www.dreamstime.com";
+INAPP_WAIT = "Awaiting response store...";
+TUTORIAL_TEXT = "Glückwunsch! Sie haben die Anleitung beendet.";
+FIRST_POST_TEXT = "Verbinden Sie sich mit Facebook\n und erhalten Sie einen Bonus von 100 Münzen.";
+LEARN_MORE = "Erfahre mehr über unsere anderen Spiele";
+SEE_TEXT = "Du hast einen Hilfegesuch gesendet";
+LEVELS = "Levels";
+FREE = "Gratis";
+PUSH_MESSAGE =  "Melde dich heute beim Spiel an und hol dir einen Bonus";
+NETWORK_MESSAGE = "Keine Internetverbindung.\n Bitte versuchen Sie es später erneut.";
+GO_TEXT = "Nicht genügend Münzen.\n Im Store welche kaufen?";

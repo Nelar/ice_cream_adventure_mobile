@@ -51,13 +51,13 @@ void PopupLayer::popup(char* title, char* text, char* buttonText, ePopupColor po
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelBMFont* titleLabel = CCLabelBMFont::create(title, "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_36);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
     if (!IPAD)
         titleLabel->setScale(0.5f);
     plate->addChild(titleLabel);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, "Arial", 25);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_26);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/2.0f));
     plate->addChild(textLabel);
     
@@ -66,23 +66,20 @@ void PopupLayer::popup(char* title, char* text, char* buttonText, ePopupColor po
     close->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     menu->addChild(close);
     
-    CCSprite* butUp = CCSprite::createWithSpriteFrameName("common/button.png");
-    CCLabelBMFont* labelUp = CCLabelBMFont::create(buttonText, "fonts/Script MT Bold 22.fnt");
-    labelUp->setPosition(ccp(butUp->getContentSize().width/2.0f, butUp->getContentSize().height/2.0f));
-    if (!IPAD)
-        labelUp->setScale(0.5f);
-    butUp->addChild(labelUp);
     
-    CCSprite* butDown = CCSprite::createWithSpriteFrameName("common/button_on.png");
-    CCLabelBMFont* labelDown = CCLabelBMFont::create(buttonText, "fonts/Script MT Bold 22.fnt");
-    labelDown->setPosition(ccp(butDown->getContentSize().width/2.0f, butDown->getContentSize().height/2.0f));
-    labelDown->setColor(ccc3(127, 127, 127));
-    if (!IPAD)
-        labelDown->setScale(0.5f);
-    butDown->addChild(labelDown);
+    CCSprite *buttonSprite = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite *buttonSpriteDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    buttonSpriteDown->setColor(ccGRAY);
     
-    CCMenuItemSprite* button = CCMenuItemSprite::create(butUp, butDown, this, menu_selector(PopupLayer::buttonClick));
+    CCMenuItemSprite* button = CCMenuItemSprite::create(buttonSprite, buttonSpriteDown, this, menu_selector(PopupLayer::buttonClick));
     button->setPosition(ccp(0.0f, -plate->getContentSize().height/3.0f));
+    
+    labelTTF = CCLabelTTF::create(buttonText, FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    button->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
     menu->addChild(button);
     
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
@@ -123,7 +120,7 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelBMFont* titleLabel = CCLabelBMFont::create(title, "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_36);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
     if (!IPAD)
         titleLabel->setScale(0.5f);
@@ -154,7 +151,7 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     boost->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/1.4f));
     plate->addChild(boost);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, "Arial", 25);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_26);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/3.0f));
     plate->addChild(textLabel);
     
@@ -163,24 +160,18 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     close->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     menu->addChild(close);
     
-    CCSprite* butUp = CCSprite::createWithSpriteFrameName("common/button.png");
-    CCLabelBMFont* labelUp = CCLabelBMFont::create(buttonText, "fonts/Script MT Bold 22.fnt");
-    labelUp->setPosition(ccp(butUp->getContentSize().width/2.0f, butUp->getContentSize().height/2.0f));
-    if (!IPAD)
-        labelUp->setScale(0.5f);
-    butUp->addChild(labelUp);
+    CCSprite *buttonSprite = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite *buttonSpriteDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    buttonSpriteDown->setColor(ccGRAY);
     
-    CCSprite* butDown = CCSprite::createWithSpriteFrameName("common/button_on.png");
-    CCLabelBMFont* labelDown = CCLabelBMFont::create(buttonText, "fonts/Script MT Bold 22.fnt");
-    labelDown->setPosition(ccp(butDown->getContentSize().width/2.0f, butDown->getContentSize().height/2.0f));
-    labelDown->setColor(ccc3(127, 127, 127));
-    if (!IPAD)
-        labelDown->setScale(0.5f);
-    butDown->addChild(labelDown);
-    
-    CCMenuItemSprite* button = CCMenuItemSprite::create(butUp, butDown, this, menu_selector(PopupLayer::buttonClick));
+    CCMenuItemSprite* button = CCMenuItemSprite::create(buttonSprite, buttonSpriteDown, this, menu_selector(PopupLayer::buttonClick));
     button->setPosition(ccp(0.0f, -plate->getContentSize().height/3.0f));
-    menu->addChild(button);
+    
+    labelTTF = CCLabelTTF::create(buttonText, FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    button->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
 }
@@ -196,8 +187,6 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     selector = nselector;
     closeSelector = ncloseselector;
     closeTarget = ncloseSelectorTarget;
-    
-    //background->setVisible(true);
     
     if (popupColor == GreenPopup)
         plate = CCSprite::createWithSpriteFrameName("common/greenPlate.png");
@@ -215,7 +204,7 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelBMFont* titleLabel = CCLabelBMFont::create(title, "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_36);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
     if (!IPAD)
         titleLabel->setScale(0.5f);
@@ -250,7 +239,7 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     if (!IPAD)
         multiplier = 0.5f;
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, "Script MT Bold", 60*multiplier);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_26);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/3.0f));
     plate->addChild(textLabel);
     
@@ -259,24 +248,18 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     close->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     menu->addChild(close);
     
-    CCSprite* butUp = CCSprite::createWithSpriteFrameName("common/button.png");
-    CCLabelBMFont* labelUp = CCLabelBMFont::create(buttonText, "fonts/Script MT Bold 22.fnt");
-    labelUp->setPosition(ccp(butUp->getContentSize().width/2.0f, butUp->getContentSize().height/2.0f));
-    if (!IPAD)
-        labelUp->setScale(0.5f);
-    butUp->addChild(labelUp);
+    CCSprite *buttonSprite = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite *buttonSpriteDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    buttonSpriteDown->setColor(ccGRAY);
     
-    CCSprite* butDown = CCSprite::createWithSpriteFrameName("common/button_on.png");
-    CCLabelBMFont* labelDown = CCLabelBMFont::create(buttonText, "fonts/Script MT Bold 22.fnt");
-    labelDown->setPosition(ccp(butDown->getContentSize().width/2.0f, butDown->getContentSize().height/2.0f));
-    labelDown->setColor(ccc3(127, 127, 127));
-    if (!IPAD)
-        labelDown->setScale(0.5f);
-    butDown->addChild(labelDown);
-    
-    CCMenuItemSprite* button = CCMenuItemSprite::create(butUp, butDown, this, menu_selector(PopupLayer::buttonClick));
+    CCMenuItemSprite* button = CCMenuItemSprite::create(buttonSprite, buttonSpriteDown, this, menu_selector(PopupLayer::buttonClick));
     button->setPosition(ccp(0.0f, -plate->getContentSize().height/3.0f));
-    menu->addChild(button);
+    
+    labelTTF = CCLabelTTF::create(buttonText, FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    button->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
 }

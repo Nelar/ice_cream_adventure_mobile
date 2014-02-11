@@ -98,6 +98,9 @@ private:
     bool isTutorial;
     
     CCMenuItemSprite* tutorialNext;
+    CCLabelTTF* labelTTF;
+    CCLabelTTF* tutorialHeader;
+    CCLabelTTF* tutorialText;
     
     float popupScale;
     

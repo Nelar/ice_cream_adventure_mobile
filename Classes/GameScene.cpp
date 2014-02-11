@@ -543,16 +543,8 @@ bool GameScene::init(int levNum)
     superIceCells.clear();
     
     
-    if (!IPAD)
-    {
-        batchTexture = CCTextureCache::sharedTextureCache()->addPVRImage("game.pvr.gz");
-        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("game.plist", batchTexture);
-    }
-    else
-    {
-        batchTexture = CCTextureCache::sharedTextureCache()->addPVRImage("common.pvr.ccz");
-        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common.plist", batchTexture);
-    }
+    batchTexture = CCTextureCache::sharedTextureCache()->addPVRImage("common.pvr.ccz");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common.plist", batchTexture);
     
     batchTexture->setAntiAliasTexParameters();
 

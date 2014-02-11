@@ -132,7 +132,7 @@ private:
     int currentlevel;
     bool isWin = false;
     
-    CCSprite* failed;
+    CCLabelTTF* failed;
     CCSkeletonAnimation* guiWin;
     CCSkeletonAnimation* guiFailed;
     CCLabelBMFont* scoreTitle;

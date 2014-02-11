@@ -41,7 +41,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
 
     // turn on display FPS
-    pDirector->setDisplayStats(true);
+    pDirector->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0f / 60.0f);
@@ -143,8 +143,6 @@ bool AppDelegate::applicationDidFinishLaunching()
     MMPInterface::Instance()->Init(appKey, idfaKey);
     MMPInterface::Instance()->StartSession();
     
-    
-    
     vector<string> pi;
     pi.push_back("com.destiny.icecreamadventure.5lives");
     pi.push_back("com.destiny.icecreamadventure.5moves");
@@ -153,7 +151,6 @@ bool AppDelegate::applicationDidFinishLaunching()
     pi.push_back("com.destiny.icecreamadventure.stripedandbomb");
     pi.push_back("com.destiny.icecreamadventure.superelements");
     pi.push_back("com.destiny.icecreamadventure.unlocklevelpack");
-    
     
     IAP::sharedInstance().initWithProductIdentifiers(pi);
     IAP::sharedInstance().provideContentForProductIdentifier = bind(&AppDelegate::provideContentForProductIdentifier, this, std::placeholders::_1);

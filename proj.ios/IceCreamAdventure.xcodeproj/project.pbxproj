@@ -168,6 +168,7 @@
 		B09E7B5F18228A29004C2BE1 /* Updatable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09E7B3318228A29004C2BE1 /* Updatable.cpp */; };
 		B09E7B6018228A29004C2BE1 /* Convert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09E7B3618228A29004C2BE1 /* Convert.cpp */; };
 		B09E7B6118228A29004C2BE1 /* Hasher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09E7B3818228A29004C2BE1 /* Hasher.cpp */; };
+		B0B7C17618A4E23B00B456F7 /* CCLocalizedString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0B7C17418A4E23B00B456F7 /* CCLocalizedString.cpp */; };
 		B0EE13EC1821352D00740069 /* Options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0EE13E81821352D00740069 /* Options.cpp */; };
 		B0EE141A1821354A00740069 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0EE13EF1821354A00740069 /* Animation.cpp */; };
 		B0EE141B1821354A00740069 /* AnimationState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0EE13F11821354A00740069 /* AnimationState.cpp */; };
@@ -571,6 +572,8 @@
 		B09E7B3718228A29004C2BE1 /* Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Convert.h; sourceTree = "<group>"; };
 		B09E7B3818228A29004C2BE1 /* Hasher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hasher.cpp; sourceTree = "<group>"; };
 		B09E7B3918228A29004C2BE1 /* Hasher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hasher.h; sourceTree = "<group>"; };
+		B0B7C17418A4E23B00B456F7 /* CCLocalizedString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCLocalizedString.cpp; path = ../Classes/CCLocalizedString.cpp; sourceTree = "<group>"; };
+		B0B7C17518A4E23B00B456F7 /* CCLocalizedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCLocalizedString.h; path = ../Classes/CCLocalizedString.h; sourceTree = "<group>"; };
 		B0EE13E81821352D00740069 /* Options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Options.cpp; path = ../Classes/Options.cpp; sourceTree = "<group>"; };
 		B0EE13E91821352D00740069 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Options.h; path = ../Classes/Options.h; sourceTree = "<group>"; };
 		B0EE13EF1821354A00740069 /* Animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animation.cpp; sourceTree = "<group>"; };
@@ -1146,6 +1149,8 @@
 		B0446DF41821339F00D6B11A /* icecream */ = {
 			isa = PBXGroup;
 			children = (
+				B0B7C17418A4E23B00B456F7 /* CCLocalizedString.cpp */,
+				B0B7C17518A4E23B00B456F7 /* CCLocalizedString.h */,
 				21A0EB5E1855BFE40048D184 /* cMapScrollLayer.cpp */,
 				21A0EB5F1855BFE40048D184 /* cMapScrollLayer.h */,
 				B08FF1211839EAEE009F0609 /* ClipNode.cpp */,
@@ -1786,6 +1791,7 @@
 				1A27573F1697CF2B00504026 /* CCEditBoxImplAndroid.cpp in Sources */,
 				B0EE142E1821354A00740069 /* spine-cocos2dx.cpp in Sources */,
 				B09E7B3E18228A29004C2BE1 /* EventObserver.cpp in Sources */,
+				B0B7C17618A4E23B00B456F7 /* CCLocalizedString.cpp in Sources */,
 				B09E7B5818228A29004C2BE1 /* MMPRequest.cpp in Sources */,
 				1AC3624916D4A1E8000847F2 /* AppController.mm in Sources */,
 				B0446E14182133CB00D6B11A /* cGameObject.cpp in Sources */,
@@ -1856,8 +1862,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1904,8 +1910,8 @@
 				OTHER_CFLAGS = "-O2";
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "37BCC6F3-0609-456F-86DF-C0EE061B857B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "37BCC6F3-0609-456F-86DF-C0EE061B857B";
+				PROVISIONING_PROFILE = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1920,8 +1926,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1965,8 +1971,8 @@
 				);
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "37BCC6F3-0609-456F-86DF-C0EE061B857B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "37BCC6F3-0609-456F-86DF-C0EE061B857B";
+				PROVISIONING_PROFILE = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1979,7 +1985,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -1997,7 +2003,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_C_LANGUAGE_STANDARD = c99;

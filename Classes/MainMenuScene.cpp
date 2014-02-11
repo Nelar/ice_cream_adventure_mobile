@@ -6,6 +6,7 @@
 #include "cComixScene.h"
 #include "cFacebook.h"
 #include "utils.h"
+#include "CCLocalizedString.h"
 
 #include "cSocialMenu.h"
 
@@ -54,7 +55,7 @@ bool MainMenuScene::init()
 {
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
 	if (!CCLayer::init())
-		return false;
+		return false;    
     
     GlobalsPtr->iceCreamScene = Menu;
     
@@ -148,25 +149,39 @@ bool MainMenuScene::init()
 	settingBlob = CCSprite::createWithSpriteFrameName("common/settingBlob.png");
 	settingBlob->setPosition(ccp(settingBlob->getContentSize().width / 2.0f, settingBlob->getContentSize().height / 2.0f));
 	this->addChild(settingBlob, 10);
-
-
-	CCSprite* playSpriteNormal = CCSprite::createWithSpriteFrameName("common/play.png");
-	CCSprite* playSpriteSelected = CCSprite::createWithSpriteFrameName("common/play_selected.png");
+    
+    CCSprite* playSpriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* playSpriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
 	playSpriteSelected->setScale(0.9f);
 	playSpriteSelected->setAnchorPoint(ccp(0.5f, 0.5f));
+    playSpriteSelected->setColor(ccGRAY);
 	playSpriteSelected->setPosition(ccp(playSpriteSelected->getContentSize().width/20.0f, playSpriteSelected->getContentSize().height/20.0f));
 	play = CCMenuItemSprite::create(playSpriteNormal, playSpriteSelected, this, menu_selector(MainMenuScene::menuPlayCallback));
 	play->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height / 1.4f - CCDirector::sharedDirector()->getWinSize().height/2.0f - logo->getContentSize().height/2.0f - play->getContentSize().height/5.0f));
 	play->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    play->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
-	CCSprite* facebookSpriteNormal = CCSprite::createWithSpriteFrameName("common/facebook.png");
-	CCSprite* facebookSpriteSelected = CCSprite::createWithSpriteFrameName("common/facebook_selected.png");
+	CCSprite* facebookSpriteNormal = CCSprite::createWithSpriteFrameName("common/facebookButtonMainMenu.png");
+	CCSprite* facebookSpriteSelected = CCSprite::createWithSpriteFrameName("common/facebookButtonMainMenu.png");
 	facebookSpriteSelected->setScale(0.9f);
 	facebookSpriteSelected->setAnchorPoint(ccp(0.5f, 0.5f));
+    facebookSpriteSelected->setColor(ccGRAY);
 	facebookSpriteSelected->setPosition(ccp(facebookSpriteSelected->getContentSize().width/20.0f, facebookSpriteSelected->getContentSize().height/20.0f));
 	facebook = CCMenuItemSprite::create(facebookSpriteNormal, facebookSpriteSelected, this, menu_selector(MainMenuScene::menuFacebookCallback));
 	facebook->setPosition(ccp(play->getPositionX(), play->getPositionY() - facebook->getContentSize().height*1.3f));	
 	facebook->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    facebook->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
+
     
     if (FacebookPtr->sessionIsOpened())
         facebook->setVisible(false);
@@ -284,45 +299,157 @@ bool MainMenuScene::init()
 
 	popup->setPosition(posPopup);
 
-	title = CCSprite::createWithSpriteFrameName("common/settingTitle.png");
+	title = CCSprite::createWithSpriteFrameName("common/markWhell.png");
 	title->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.2f));
 	popup->addChild(title);		
 
 	close = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/close.png"),
 		CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(MainMenuScene::closeSettingCallback));
 	close->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + popup->getContentSize().width /2.5f, 
-		popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + popup->getContentSize().height /2.3f);	
+		popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + popup->getContentSize().height /2.3f);
+    
+    
+    CCSprite *buttonFaceConnectMark = CCSprite::createWithSpriteFrameName("common/markFacebook.png");
+    CCSprite *buttonFaceConnectMarkDown = CCSprite::createWithSpriteFrameName("common/markFacebook.png");
+    
+    CCSprite *buttonFaceConnect = CCSprite::create("buttonSetting.png");
+    buttonFaceConnect->setCascadeOpacityEnabled(true);
+    buttonFaceConnect->addChild(buttonFaceConnectMark);
+    buttonFaceConnectMark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    
+    CCSprite *buttonFaceConnectDown = CCSprite::create("buttonSetting.png");
+    buttonFaceConnect->setCascadeOpacityEnabled(true);
+    buttonFaceConnectDown->addChild(buttonFaceConnectMarkDown);
+    buttonFaceConnectMarkDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    buttonFaceConnectDown->setColor(ccGRAY);
 
-	faceConnect = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/facebookConnect.png"),
-		CCSprite::createWithSpriteFrameName("common/facebookConnectDown.png"), this, menu_selector(MainMenuScene::facebookCallback));
+	faceConnect = CCMenuItemSprite::create(buttonFaceConnect, buttonFaceConnectDown, this, menu_selector(MainMenuScene::facebookCallback));
 	faceConnect->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f, 
-		popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + faceConnect->getContentSize().height*1.2f);
-	faceConnect->setScale(0.9f);
+		popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + faceConnect->getContentSize().height*1.5f);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    faceConnect->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
+    CCSprite *mark = CCSprite::createWithSpriteFrameName("common/markInfo.png");
+    CCSprite *markDown = CCSprite::createWithSpriteFrameName("common/markInfo.png");
+    mark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    
+    
+    CCSprite *howPlayButton = CCSprite::create("buttonSetting.png");
+    howPlayButton->setCascadeOpacityEnabled(true);
+    howPlayButton->addChild(mark);
+    
+    CCSprite *howPlayButtonDown = CCSprite::create("buttonSetting.png");
+    howPlayButtonDown->setColor(ccGRAY);
+    howPlayButtonDown->setCascadeOpacityEnabled(true);
+    howPlayButtonDown->addChild(markDown);
 
-	howPlay = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/howPlay.png"),
-		CCSprite::createWithSpriteFrameName("common/howPlayDown.png"), this, menu_selector(MainMenuScene::howToPlaySettingCallback));
-	howPlay->setScale(0.9f);
-	howPlay->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f);
+	howPlay = CCMenuItemSprite::create(howPlayButton, howPlayButtonDown, this, menu_selector(MainMenuScene::howToPlaySettingCallback));
+	howPlay->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    howPlay->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
+    mark = CCSprite::createWithSpriteFrameName("common/markAsk.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/markAsk.png");
+    mark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
 
-	freqAsk = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/freq.png"),
-		CCSprite::createWithSpriteFrameName("common/freqAsked.png"), this, menu_selector(MainMenuScene::askedCallback));
-	freqAsk->setScale(0.9f);
-	freqAsk->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*2.0f);
 
-	restorePurshase = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/restorePurshase.png"),
-		CCSprite::createWithSpriteFrameName("common/restorePurshaseDown.png"), this, menu_selector(MainMenuScene::restoreCallback));
-	restorePurshase->setScale(0.9f);
-	restorePurshase->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*3.0f);
+    CCSprite *freqAskButton = CCSprite::create("buttonSetting.png");
+    freqAskButton->setCascadeOpacityEnabled(true);
+    freqAskButton->addChild(mark);
+    CCSprite *freqAskButtonDown = CCSprite::create("buttonSetting.png");
+    freqAskButtonDown->setCascadeOpacityEnabled(true);
+    freqAskButtonDown->addChild(markDown);
+    freqAskButtonDown->setColor(ccGRAY);
+    
+	freqAsk = CCMenuItemSprite::create(freqAskButton, freqAskButtonDown, this, menu_selector(MainMenuScene::askedCallback));
+	freqAsk->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*2.0f);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_ASK", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    freqAsk->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
+    mark = CCSprite::createWithSpriteFrameName("common/markArrow.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/markArrow.png");
+    mark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
 
-	reset = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/reset.png"),
-		CCSprite::createWithSpriteFrameName("common/resetDown.png"), this, menu_selector(MainMenuScene::resetCallback));
-	reset->setScale(0.9f);
-	reset->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*4.0f);
+    CCSprite *restorePurshaseButton = CCSprite::create("buttonSetting.png");
+    restorePurshaseButton->setCascadeOpacityEnabled(true);
+    restorePurshaseButton->addChild(mark);
+    CCSprite *restorePurshaseButtonDown = CCSprite::create("buttonSetting.png");
+    restorePurshaseButtonDown->setCascadeOpacityEnabled(true);
+    restorePurshaseButtonDown->addChild(markDown);
+    restorePurshaseButtonDown->setColor(ccGRAY);
+    
+	restorePurshase = CCMenuItemSprite::create(restorePurshaseButton, restorePurshaseButtonDown, this, menu_selector(MainMenuScene::restoreCallback));
+	restorePurshase->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*3.0f);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_RESTORE", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    restorePurshase->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    mark = CCSprite::createWithSpriteFrameName("common/markRotate.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/markRotate.png");
+    mark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
 
-	notification = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/notification.png"),
-		CCSprite::createWithSpriteFrameName("common/notificationDown.png"), this, menu_selector(MainMenuScene::notificationCallback));
-	notification->setScale(0.9f);
-	notification->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*5.0f);
+    CCSprite *resetButton = CCSprite::create("buttonSetting.png");
+    resetButton->setCascadeOpacityEnabled(true);
+    resetButton->addChild(mark);
+    CCSprite *resetButtonDown = CCSprite::create("buttonSetting.png");
+    resetButtonDown->setCascadeOpacityEnabled(true);
+    resetButtonDown->addChild(markDown);
+    resetButtonDown->setColor(ccGRAY);
+    
+	reset = CCMenuItemSprite::create(resetButton, resetButtonDown, this, menu_selector(MainMenuScene::resetCallback));
+	reset->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*4.0f);
+    
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_RESET", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    reset->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
+    mark = CCSprite::createWithSpriteFrameName("common/markNotif.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/markNotif.png");
+    mark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
+
+    CCSprite *notificationButton = CCSprite::create("buttonSetting.png");
+    notificationButton->setCascadeOpacityEnabled(true);
+    notificationButton->addChild(mark);
+    CCSprite *notificationButtonDown = CCSprite::create("buttonSetting.png");
+    notificationButtonDown->setCascadeOpacityEnabled(true);
+    notificationButtonDown->addChild(markDown);
+    notificationButtonDown->setColor(ccGRAY);
+    
+	notification = CCMenuItemSprite::create(notificationButton, notificationButtonDown, this, menu_selector(MainMenuScene::notificationCallback));
+	notification->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*5.0f);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_NOTIFICATION", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    notification->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
 	popupMenu = CCMenu::create(close, faceConnect, howPlay, freqAsk, restorePurshase, reset, notification, NULL);
 
@@ -343,17 +470,37 @@ bool MainMenuScene::init()
 	tutorialClose->setPosition(tutorialPopup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + tutorialPopup->getContentSize().width /2.5f, 
 		tutorialPopup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + tutorialPopup->getContentSize().height /2.3f);
 
-	tutorialNext = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/next.png"),
-		CCSprite::createWithSpriteFrameName("common/nextDown.png"), this, menu_selector(MainMenuScene::tutorialCallback));
+    CCSprite *tutorialNextButton = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite *tutorialNextButtonDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    tutorialNextButtonDown->setColor(ccGRAY);
+	tutorialNext = CCMenuItemSprite::create(tutorialNextButton, tutorialNextButtonDown, this, menu_selector(MainMenuScene::tutorialCallback));
 	tutorialNext->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - tutorialNext->getContentSize().height*1.2f* 3.0f));
     tutorialNext->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialNext->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
-	tutorialSprite = CCSprite::create("1_1.png");
+	tutorialSprite = CCSprite::createWithSpriteFrameName("common/1.png");
 	tutorialSprite->setPosition(ccp(popup->getContentSize().width / 2.7f, popup->getContentSize().height / 1.27f));
 	tutorialPopup->addChild(tutorialSprite);
 	tutorialSprite->setOpacity(0);
 	tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCFadeIn::create(0.5f)));
+    
+    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    tutorialText->setColor(IceCreamBrown);
+    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialSprite->addChild(tutorialText);
+    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
+    
+    tutorialHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
+    tutorialHeader->setColor(IceCreamPink);
+    tutorialHeader->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialPopup->addChild(tutorialHeader);
+    tutorialHeader->setPosition(ccp(tutorialHeader->getParent()->getContentSize().width/2.0f, tutorialHeader->getParent()->getContentSize().height/1.1f));
 
 	tutorialMenu = CCMenu::create(tutorialClose, tutorialNext, NULL);
 
@@ -472,7 +619,10 @@ void MainMenuScene::facebookCheck(CCNode* pSender)
 void MainMenuScene::changeOrientation()
 {
     popupLayer->changeOrientation();
+    moreGamesLayer->changeOrientation();
     
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("mainMenu.plist", CCTextureCache::sharedTextureCache()->addPVRImage("mainMenu.pvr.ccz"));
+
     this->setContentSize(WINSIZE);
     menu->setContentSize(WINSIZE);
     
@@ -521,6 +671,8 @@ void MainMenuScene::changeOrientation()
 	cogwheel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + settingBlob->getContentSize().width - cogwheel->getContentSize().width/1.25f,
                               cogwheel->getContentSize().height/2.0f - CCDirector::sharedDirector()->getWinSize().height/2.0f));
     
+    moreGames->setPosition(ccp(WINSIZE.width/2.0f - moreGames->getContentSize().width/1.5f, -WINSIZE.height/2.0f + moreGames->getContentSize().height/1.5f));
+    
     settingBlob->stopAllActions();
     if (!isSetting)
         settingBlob->setPosition(ccp(-settingBlob->getContentSize().width / 2.0f, -settingBlob->getContentSize().height / 2.0f));
@@ -548,15 +700,15 @@ void MainMenuScene::changeOrientation()
 	faceConnect->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
                              popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + faceConnect->getContentSize().height*1.2f);
     
-	howPlay->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f);
+	howPlay->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height);
     
-	freqAsk->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*2.0f);
+	freqAsk->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*2.0f);
     
-	restorePurshase->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*3.0f);
+	restorePurshase->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*3.0f);
     
-	reset->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*4.0f);
+	reset->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*4.0f);
     
-	notification->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*0.9f*5.0f);
+	notification->setPosition(faceConnect->getPositionX(), faceConnect->getPositionY() - faceConnect->getContentSize().height*5.0f);
     
 	tutorialPopup->setPosition(posPopup);
     
@@ -676,35 +828,30 @@ void MainMenuScene::facebookCallback(CCObject* pSender)
     if (settingState != Setting)
         return;
     
-	faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
-    
     settingState = Facebook;
     
 	for (int i = 0; i < popup->getChildrenCount(); i++)
 	{
-		((CCSprite*)popup->getChildren()->objectAtIndex(i))->runAction(CCFadeOut::create(0.2f));				
+		((CCSprite*)popup->getChildren()->objectAtIndex(i))->runAction(CCFadeOut::create(0.2f));
 	}
 	for (int i = 0; i < popupMenu->getChildrenCount(); i++)
 	{
 		if (((CCMenuItem*)popupMenu->getChildren()->objectAtIndex(i)) != close)
-			((CCMenuItem*)popupMenu->getChildren()->objectAtIndex(i))->runAction(CCFadeOut::create(0.2f));				
+        {
+			((CCMenuItem*)popupMenu->getChildren()->objectAtIndex(i))->runAction(CCFadeOut::create(0.2f));
+        }
 	}
 	close->setNormalImage(CCSprite::createWithSpriteFrameName("common/back.png"));
 	close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/back_on.png"));
 	settingState = Facebook;
 
-	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/facebookTitle.png");
+	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/markFacebook.png");
 	facebook->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.2f));
 	popup->addChild(facebook);
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-	label = CCLabelTTF::create("See how your friends are doing!\n Connect to Facebook", fontStd.c_str(), 50);
+	label = CCLabelTTF::create(CCLocalizedString("SETTING_FACEBOOK_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -717,33 +864,65 @@ void MainMenuScene::facebookCallback(CCObject* pSender)
 
     if (!IPAD)
         label->setScale(0.5f);
+    
+    CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/facebookButtonMainMenu.png");
+    CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/facebookButtonMainMenu.png");
+    facebookButtonButtonDown->setColor(ccGRAY);
 
-
-	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/facebook.png"),
-		CCSprite::createWithSpriteFrameName("common/facebook_selected.png"), this, menu_selector(MainMenuScene::menuFacebookCallback));
+	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(facebookButtonButton, facebookButtonButtonDown, this, menu_selector(MainMenuScene::menuFacebookCallback));
 	facebookButton->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - facebookButton->getContentSize().height*1.2f* 3.0f));
     facebookButton->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 	popupMenu->addChild(facebookButton);
 	facebookButton->setOpacity(0);
 	facebookButton->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    facebookButton->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
+}
+
+
+void MainMenuScene::helpFromSetting(CCNode* pSender)
+{
+    SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    isTutorial = true;
+	tutorialMenu->setVisible(true);
+	tutorialPopup->setVisible(true);
+    
+	tutorialPopup->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, tutorialPopup->getContentSize().height))));
+	tutorialMenu->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, tutorialPopup->getContentSize().height))));
+    
+    tutorialClose->stopAllActions();
+    tutorialClose->setScale(0.7f);
+	tutorialClose->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    tutorialNext->stopAllActions();
+    tutorialNext->setScale(0.7f);
+	tutorialNext->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    tutorialText->setColor(IceCreamBrown);
+    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialSprite->addChild(tutorialText);
+    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
+    
+	menu->setEnabled(false);
 }
 
 void MainMenuScene::howToPlaySettingCallback(CCObject* pSender)
 {
+    closeSettingCallback(NULL);
+    this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::helpFromSetting)), NULL));
+    return;
     lock();
     
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     
     if (settingState != Setting)
         return;
-    
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
     
     settingState = HowPlay;
     
@@ -760,7 +939,7 @@ void MainMenuScene::howToPlaySettingCallback(CCObject* pSender)
 	close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/back_on.png"));
 	settingState = HowPlay;
 
-	tutorial = CCSprite::create("1_1.png");
+	tutorial = CCSprite::createWithSpriteFrameName("common/1.png");
 	tutorial->setPosition(ccp(popup->getContentSize().width / 2.7f, popup->getContentSize().height / 1.27f));
 	popup->addChild(tutorial);
 	tutorial->setOpacity(0);
@@ -776,15 +955,38 @@ void MainMenuScene::howToPlaySettingCallback(CCObject* pSender)
     color.b = 0x55;
 	label->setColor(color);
 	label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    CCLabelTTF* howToPlayText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    howToPlayText->setColor(IceCreamBrown);
+    howToPlayText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorial->addChild(howToPlayText);
+    howToPlayText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
+    
+    howToPlayHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
+    howToPlayHeader->setColor(IceCreamPink);
+    howToPlayHeader->enableShadow(CCSize(5, -5), 255, 8.0f);
+    popup->addChild(howToPlayHeader);
+    popup->setCascadeOpacityEnabled(true);
+    howToPlayHeader->setPosition(ccp(howToPlayHeader->getParent()->getContentSize().width/2.0f, howToPlayHeader->getParent()->getContentSize().height/1.1f));
+    
+    
+    CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    facebookButtonButtonDown->setColor(ccGRAY);
 
-	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/next.png"),
-		CCSprite::createWithSpriteFrameName("common/nextDown.png"), this, menu_selector(MainMenuScene::nextCallback));
+	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(facebookButtonButton, facebookButtonButtonDown, this, menu_selector(MainMenuScene::nextCallback));
 	facebookButton->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - facebookButton->getContentSize().height*1.2f* 3.0f));
     facebookButton->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 	popupMenu->addChild(facebookButton);
 	facebookButton->setOpacity(0);
 	facebookButton->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    facebookButton->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
 
 void MainMenuScene::tutorialCallback(CCObject* pSender)
@@ -798,41 +1000,74 @@ void MainMenuScene::tutorialCallback(CCObject* pSender)
 	if (tutorialNum == 3)
 	{
         tutorialNum = 0;
-        ((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/next.png"));
-        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/nextDown.png"));
+        ((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
 		closeTutorialCallback(pSender);
 	}
     if (tutorialNum == 2)
 	{
-		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/ok.png"));
-        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/okDown.png"));
+		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
 
 	tutorialSprite->removeFromParentAndCleanup(true);
 
 	if (tutorialNum == 0)
 	{
-		tutorialSprite = CCSprite::create("1_1.png");
+		tutorialSprite = CCSprite::createWithSpriteFrameName("common/1.png");
 		tutorialSprite->setPosition(ccp(popup->getContentSize().width / 2.7f, popup->getContentSize().height / 1.27f));
 		tutorialPopup->addChild(tutorialSprite);
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialSprite->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
 	}
 	else if (tutorialNum == 1)
 	{
-		tutorialSprite = CCSprite::create("2_2.png");
+		tutorialSprite = CCSprite::createWithSpriteFrameName("common/2.png");
 		tutorialSprite->setPosition(ccp(popup->getContentSize().width / 1.9f, popup->getContentSize().height / 1.55f));
 		tutorialPopup->addChild(tutorialSprite);
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialSprite->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
 	}
 	else if (tutorialNum == 2)
 	{
-		tutorialSprite = CCSprite::create("3_3.png");
+		tutorialSprite = CCSprite::createWithSpriteFrameName("common/3.png");
 		tutorialSprite->setPosition(ccp(popup->getContentSize().width / 2.1f, popup->getContentSize().height / 1.4f));
 		tutorialPopup->addChild(tutorialSprite);
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialSprite->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
 	}
 }
 
@@ -852,7 +1087,7 @@ void MainMenuScene::closeTutorialCallback(CCObject* pSender)
     isTutorial = false;
 	tutorialPopup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -tutorialPopup->getContentSize().height))));
 	tutorialMenu->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -tutorialPopup->getContentSize().height))));
-	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::tutorialFinished))));
+	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::tutorialFinished))));
 
 	menu->setEnabled(true);
 }
@@ -867,42 +1102,71 @@ void MainMenuScene::nextCallback(CCObject* pSender)
 	if (helpNum == 3)
 	{
         helpNum = 0;
-        ((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/next.png"));
-        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/nextDown.png"));
+        ((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+        
 		closeSettingCallback(pSender);
+        tutorialText->setString(" ");
+        tutorial->setVisible(false);
         return;
 	}
     if (helpNum == 2)
 	{
-		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/ok.png"));
-        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/okDown.png"));
+		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
 
 	tutorial->removeFromParentAndCleanup(true);
 
 	if (helpNum == 0)
 	{
-		tutorial = CCSprite::create("1_1.png");
+		tutorial = CCSprite::createWithSpriteFrameName("common/1.png");
 		tutorial->setPosition(ccp(popup->getContentSize().width / 2.7f, popup->getContentSize().height / 1.27f));
 		popup->addChild(tutorial);
 		tutorial->setOpacity(0);
 		tutorial->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
-	}
+    }
 	else if (helpNum == 1)
 	{
-		tutorial = CCSprite::create("2_2.png");
+		tutorial = CCSprite::createWithSpriteFrameName("common/2.png");
 		tutorial->setPosition(ccp(popup->getContentSize().width / 1.9f, popup->getContentSize().height / 1.55f));
 		popup->addChild(tutorial);
 		tutorial->setOpacity(0);
 		tutorial->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorial->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
 	}
 	else if (helpNum == 2)
 	{
-		tutorial = CCSprite::create("3_3.png");
+		tutorial = CCSprite::createWithSpriteFrameName("common/3.png");
 		tutorial->setPosition(ccp(popup->getContentSize().width / 2.1f, popup->getContentSize().height / 1.4f));
 		popup->addChild(tutorial);
 		tutorial->setOpacity(0);
 		tutorial->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+        
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText->setColor(IceCreamBrown);
+        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorial->addChild(tutorialText);
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
 	}
 }
 
@@ -914,13 +1178,6 @@ void MainMenuScene::askedCallback(CCObject* pSender)
     
     if (settingState != Setting)
         return;
-    
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
     
     settingState = AskedQuestions;
     
@@ -937,14 +1194,13 @@ void MainMenuScene::askedCallback(CCObject* pSender)
 	close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/back_on.png"));
 	settingState = AskedQuestions;
 
-	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/askedTitle.png");
+	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/markAsk2.png");
 	facebook->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.2f));
 	popup->addChild(facebook);
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create("Do you have a problem with\n the game or wonder about\n a game mechanic? Check\n out the Grequently Asked Questions!\n"
-                               "(this will minimize the game\n and go to a website)", fontStd.c_str(), 50);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_ASK_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -957,28 +1213,31 @@ void MainMenuScene::askedCallback(CCObject* pSender)
 
     if (!IPAD)
         label->setScale(0.5f);
+    
+    
+    CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    facebookButtonButtonDown->setColor(ccGRAY);
 
 
-	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/go.png"),
-		CCSprite::createWithSpriteFrameName("common/goDown.png"), this, menu_selector(MainMenuScene::goCallback));
+	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(facebookButtonButton, facebookButtonButtonDown, this, menu_selector(MainMenuScene::goCallback));
 	facebookButton->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - facebookButton->getContentSize().height*1.2f* 3.0f));
     facebookButton->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 	popupMenu->addChild(facebookButton);
 	facebookButton->setOpacity(0);
 	facebookButton->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("GO", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    facebookButton->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
 
 void MainMenuScene::goCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
-    
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
 }
 
 void MainMenuScene::restoreCallback(CCObject* pSender)
@@ -989,13 +1248,6 @@ void MainMenuScene::restoreCallback(CCObject* pSender)
     
     if (settingState != Setting)
         return;
-    
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
     
     settingState = Restore;
     
@@ -1012,13 +1264,13 @@ void MainMenuScene::restoreCallback(CCObject* pSender)
 	close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/back_on.png"));
 	settingState = Restore;
 
-	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/restoreTitle.png");
+	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/markArrow2.png");
 	facebook->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.2f));
 	popup->addChild(facebook);
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create("Have you made a purchase in\n the game that does not show up?\n Try restoring In-App purchases", fontStd.c_str(), 50);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_RESTORE_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1031,16 +1283,25 @@ void MainMenuScene::restoreCallback(CCObject* pSender)
 
     if (!IPAD)
         label->setScale(0.5f);
+    
+    CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    facebookButtonButtonDown->setColor(ccGRAY);
 
-
-	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/restore.png"),
-		CCSprite::createWithSpriteFrameName("common/restoreUp.png"), this, menu_selector(MainMenuScene::menuFacebookCallback));
+	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(facebookButtonButton,
+		facebookButtonButtonDown, this, menu_selector(MainMenuScene::menuFacebookCallback));
 	facebookButton->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - facebookButton->getContentSize().height*1.2f* 3.0f));
     facebookButton->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 	popupMenu->addChild(facebookButton);
 	facebookButton->setOpacity(0);
 	facebookButton->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("RESTORE", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    facebookButton->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
 
 void MainMenuScene::resetCallback(CCObject* pSender)
@@ -1051,13 +1312,6 @@ void MainMenuScene::resetCallback(CCObject* pSender)
     
     if (settingState != Setting)
         return;
-    
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
     
     settingState = Reset;
     
@@ -1074,13 +1328,13 @@ void MainMenuScene::resetCallback(CCObject* pSender)
 	close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/back_on.png"));
 	settingState = Reset;
 
-	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/resetTitle.png");
+	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/markRotate2.png");
 	facebook->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.2f));
 	popup->addChild(facebook);
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create("ResetAll in-game progress and\n restart from level 1.\n You will be logged out\n of Facebook,but yor progress\n will be restored if you reconnect", fontStd.c_str(), 50);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_RESET_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1093,10 +1347,14 @@ void MainMenuScene::resetCallback(CCObject* pSender)
 
     if (!IPAD)
         label->setScale(0.5f);
+    
+    
+    CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    facebookButtonButtonDown->setColor(ccGRAY);
 
-
-	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/resetDialog.png"),
-		CCSprite::createWithSpriteFrameName("common/resetDialogDown.png"), this, menu_selector(MainMenuScene::resetPopup));
+	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(facebookButtonButton,
+		facebookButtonButtonDown, this, menu_selector(MainMenuScene::resetPopup));
     
 	facebookButton->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - facebookButton->getContentSize().height*1.2f* 3.0f));
@@ -1104,6 +1362,12 @@ void MainMenuScene::resetCallback(CCObject* pSender)
 	popupMenu->addChild(facebookButton);
 	facebookButton->setOpacity(0);
 	facebookButton->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("RESET", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    facebookButton->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
 
 void MainMenuScene::resetPopup(CCObject* pSender)
@@ -1167,13 +1431,6 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
     if (settingState != Setting)
         return;
     
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
-    
     settingState = Notification;
     
 	for (int i = 0; i < popup->getChildrenCount(); i++)
@@ -1189,13 +1446,13 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
 	close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/back_on.png"));
 	settingState = Notification;
 
-	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/notificationTitle.png");
+	CCSprite* facebook = CCSprite::createWithSpriteFrameName("common/markNotif2.png");
 	facebook->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.2f));
 	popup->addChild(facebook);
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create("Lives full:", fontStd.c_str(), 50);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_NOTIF_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f - popup->getContentSize().width/4.0f, popup->getContentSize().height / 1.75f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1210,8 +1467,8 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
         label->setScale(0.5f);
 
 
-	notif_1_Button = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/off.png"),
-		CCSprite::createWithSpriteFrameName("common/on.png"), this, menu_selector(MainMenuScene::notif_1_Callback));
+	notif_1_Button = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/offButton.png"),
+		CCSprite::createWithSpriteFrameName("common/onButton.png"), this, menu_selector(MainMenuScene::notif_1_Callback));
 	notif_1_Button->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f  + notif_1_Button->getContentSize().width*0.9f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + notif_1_Button->getContentSize().height));
     notif_1_Button->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
@@ -1221,11 +1478,23 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
     
     if (OptionsPtr->isNotification())
 	{
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/on.png"));
+		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/onButton.png"));
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_64);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        notif_1_Button->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
 	else
 	{
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/off.png"));
+		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/offButton.png"));
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_64);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        notif_1_Button->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
 
 }
@@ -1236,14 +1505,26 @@ void MainMenuScene::notif_1_Callback(CCObject* pSender)
 	{
         OptionsPtr->setNotification(false);
 		notif_1 = false;
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/off.png"));
+		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/offButton.png"));
         removeAllNotification();
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_64);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        notif_1_Button->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
 	else
 	{
         OptionsPtr->setNotification(true);
 		notif_1 = true;
-		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/on.png"));
+		notif_1_Button->setNormalImage(CCSprite::createWithSpriteFrameName("common/onButton.png"));
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_64);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        notif_1_Button->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
     OptionsPtr->save();
 }
@@ -1261,22 +1542,19 @@ void MainMenuScene::closeSettingCallback(CCObject* pSender)
     
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     
-    faceConnect->setScale(0.9f);
-	howPlay->setScale(0.9f);
-	freqAsk->setScale(0.9f);
-	restorePurshase->setScale(0.9f);
-	reset->setScale(0.9f);
-	notification->setScale(0.9f);
-
 	if (settingState == Setting)
 	{
         isPopup = false;
 		popup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -popup->getContentSize().height))));
 		popupMenu->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -popup->getContentSize().height))));
-		this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeFinished))));
+		this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeFinished))));
 	}
 	else
 	{
+        tutorialText->setString(" ");
+        if (tutorial)
+            tutorial->setVisible(false);
+        
 		label->removeFromParentAndCleanup(true);
         if (settingState == Notification)
         {
@@ -1440,6 +1718,12 @@ void MainMenuScene::helpCallback(CCObject* pSender)
     tutorialNext->stopAllActions();
     tutorialNext->setScale(0.7f);
 	tutorialNext->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    tutorialText->setColor(IceCreamBrown);
+    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialSprite->addChild(tutorialText);
+    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
 
 	menuSettingCallback(NULL);
 	menu->setEnabled(false);

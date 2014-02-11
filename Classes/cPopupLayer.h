@@ -70,6 +70,7 @@ private:
     float popupScale;
     
     CCSprite* butUp;
+    CCLabelTTF* labelTTF;
     
     bool isPopup = false;
 };

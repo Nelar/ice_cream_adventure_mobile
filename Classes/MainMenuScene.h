@@ -84,11 +84,16 @@ public:
     
     void registerWithTouchDispatcher();
 	virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
+    
+    void helpFromSetting(CCNode* pSender);
 private:
     
     
     void unlock(CCNode* sender);
     void lock();
+    
+    CCLabelTTF* labelTTF = NULL;
+    CCLabelTTF* howToPlayHeader = NULL;
 
 	CCMenuItemSprite* play;
 	CCMenuItemSprite* facebook;
@@ -153,6 +158,9 @@ private:
     CCMenuItemSprite* reset;
     CCMenuItemSprite* notification;
     CCMenuItemSprite* tutorialNext;
+    
+    CCLabelTTF* tutorialHeader;
+    CCLabelTTF* tutorialText;
     
     PopupLayer* popupLayer;
     
