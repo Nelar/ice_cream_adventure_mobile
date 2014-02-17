@@ -47,6 +47,8 @@ public:
 	bool isLock();
 
 	void banner(const char* name, const char* text, float delay, ccColor3B color);
+    void bannerIce(const char* name, float delay, ccColor3B color);
+    void bannerBringDown(const char* name, float delay, ccColor3B color);
 	void end();
 	void setLevelType(eLevelType nType);
 	void setTime(int nTime);
@@ -129,13 +131,14 @@ private:
     
     CCSprite* boostClear;
 
-	CCSprite* movesTitle;
-	CCLabelBMFont* labelCountMoves;		
+	CCLabelTTF* movesTitle;
+	CCLabelTTF* labelCountMoves;
 	
-	CCSprite* targetTitle;
-	CCLabelBMFont* labelTargetScore;
+	CCNode* targetTitle;
+    CCNode* scoreTitle;
+	CCLabelTTF* labelTargetScore;
 
-	CCLabelBMFont* labelCurrentScore;	
+	CCLabelTTF* labelCurrentScore;
 
 	CCMenu* menu;
     
@@ -151,7 +154,7 @@ private:
     bool lock;
     
     CCSprite* bannerSprite;
-    CCLabelBMFont* labelBan;
+    CCLabelTTF* labelBan;
     
 
 
@@ -194,6 +197,7 @@ private:
     float progressPolosa = 608.0f;
     
     CCSprite* mig = NULL;
+    CCLabelTTF* labelTTF;
 };
 
 #endif

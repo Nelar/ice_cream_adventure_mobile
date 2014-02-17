@@ -81,8 +81,8 @@ private:
 	CCSprite* startCenter;
 	CCSprite* startLeft;
 	CCSprite* startRight;
-	CCLabelBMFont* targetTitle;
-	CCLabelBMFont* levelTitle;
+    CCLabelTTF * targetTitle;
+	CCLabelTTF* levelTitle;
     
 	int currentLevel;
     
@@ -126,7 +126,7 @@ private:
     
     SocialLayer* social;
     
-    CCLabelBMFont* boosterTitle;
+    CCLabelTTF* boosterTitle;
     CCSprite* targetSubstrate;
     
     int currentlevel;
@@ -135,8 +135,10 @@ private:
     CCLabelTTF* failed;
     CCSkeletonAnimation* guiWin;
     CCSkeletonAnimation* guiFailed;
-    CCLabelBMFont* scoreTitle;
-    CCLabelBMFont* targetPopupTitle;
+    CCLabelTTF* scoreTitle;
+    CCLabelTTF* targetPopupTitle;
+    
+    CCLabelTTF* labelTTF;
 };
 
 #endif

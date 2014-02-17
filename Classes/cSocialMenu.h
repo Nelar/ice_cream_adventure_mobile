@@ -118,6 +118,8 @@ private:
     vector<ScoreboardCell> users;
     
     int currentLevel = 0;
+    
+    CCLabelTTF* labelTTF;
 };
 
 #endif

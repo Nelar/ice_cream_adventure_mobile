@@ -78,8 +78,6 @@ public:
     
     void sendLife(CCObject* pSender);
     
-    CCLayer* createScoreLayer(int level);
-    
     void addSocialLayer();
     
     void bannerCallback(CCObject* pSender);

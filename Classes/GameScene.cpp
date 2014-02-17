@@ -423,7 +423,7 @@ void GameScene::loadLevel(const char* levelName)
         color.r = 0x16;
         color.g = 0x78;
         color.b = 0xa6;
-		menu->banner("game/iceBanner.png", "", 1.0f, color);
+		menu->bannerIce("game/iceBanner.png", 1.0f, color);
 	}
 	else if (gameType == Score)
 	{
@@ -431,7 +431,7 @@ void GameScene::loadLevel(const char* levelName)
         color.r = 0x8e;
         color.g = 0x2d;
         color.b = 0x1a;
-		sprintf(buf, "Get %d points in %d moves", menu->getTargetScore(), menu->getCountMoves());
+		sprintf(buf, CCLocalizedString("BANNER_TEXT_SCORE"), menu->getTargetScore(), menu->getCountMoves());
 		menu->banner("game/orangeBanner.png", buf, 1.0f, color);
 	}
 	else if (gameType == BringDown)
@@ -440,7 +440,7 @@ void GameScene::loadLevel(const char* levelName)
         color.r = 0x17;
         color.g = 0x94;
         color.b = 0x46;
-		menu->banner("game/bringDownBanner.png", "", 1.0f, color);
+		menu->bannerBringDown("game/bringDownBanner.png", 1.0f, color);
 		menu->setBringDownTarget(atoi(root->Attribute("bringDownCount")));
 		menu->setBringDownCurrent(0);
 	}
@@ -450,7 +450,7 @@ void GameScene::loadLevel(const char* levelName)
         color.r = 0x5b;
         color.g = 0x20;
         color.b = 0x8d;
-		sprintf(buf, "Get %d points in %d second", menu->getTargetScore(), atoi(root->Attribute("time")));
+		sprintf(buf, CCLocalizedString("BANNER_TEXT_TIME"), menu->getTargetScore(), atoi(root->Attribute("time")));
 		menu->banner("game/violetBanner.png", buf, 1.0f, color);
 	}
     
@@ -847,7 +847,21 @@ void GameScene::setTutorial_1()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
+
+    
     CCMenu* menu = CCMenu::create();
     tutorialLayer->addChild(menu);
     menu->addChild(skip);
@@ -856,7 +870,7 @@ void GameScene::setTutorial_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Swipe this ice cream to the down\n to match 3 of the same", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_2", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -866,9 +880,9 @@ void GameScene::setTutorial_1()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     skip->setOpacity(0);
-    skip->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
+    skip->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 255)));
     
     CCSprite* up = CCSprite::createWithSpriteFrameName("game/right.png");
     up->setRotation(90);
@@ -946,7 +960,18 @@ void GameScene::setTutorial_2()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCFadeTo::create(0.5f, 200));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -954,7 +979,7 @@ void GameScene::setTutorial_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Swipe this ice cream to the down\n to match 3 of the same", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_1", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -964,7 +989,7 @@ void GameScene::setTutorial_2()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCFadeTo::create(0.5f, 200));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCFadeTo::create(0.5f, 200));
@@ -1047,7 +1072,20 @@ void GameScene::setTutorial_2_1()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1055,7 +1093,7 @@ void GameScene::setTutorial_2_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Try to match 4 ice cream!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_3", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1065,7 +1103,7 @@ void GameScene::setTutorial_2_1()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
@@ -1137,7 +1175,20 @@ void GameScene::setTutorial_2_2()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCFadeTo::create(0.5f, 200));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1145,7 +1196,7 @@ void GameScene::setTutorial_2_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Match it to get a line blast!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_4", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1155,7 +1206,7 @@ void GameScene::setTutorial_2_2()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCFadeTo::create(0.5f, 200));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCFadeTo::create(0.5f, 200));
@@ -1235,7 +1286,20 @@ void GameScene::setTutorial_3_1()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1243,7 +1307,7 @@ void GameScene::setTutorial_3_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Try a T or L-shaped match!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_5", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1253,7 +1317,7 @@ void GameScene::setTutorial_3_1()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCFadeTo::create(0.5f, 200));
@@ -1326,7 +1390,20 @@ void GameScene::setTutorial_3_2()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCFadeTo::create(0.5f, 200));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1334,7 +1411,7 @@ void GameScene::setTutorial_3_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Match it to clear lots of ice cream!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_6", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1344,7 +1421,7 @@ void GameScene::setTutorial_3_2()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCFadeTo::create(0.5f, 200));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCFadeTo::create(0.5f, 200));
@@ -1407,7 +1484,20 @@ void GameScene::setTutorial_4_1()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1415,7 +1505,7 @@ void GameScene::setTutorial_4_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Swap the bomb and blasting\n ice cream for a \n super-powerful move!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_7", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1425,7 +1515,7 @@ void GameScene::setTutorial_4_1()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
@@ -1504,7 +1594,20 @@ void GameScene::setTutorial_5_1()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1512,7 +1615,7 @@ void GameScene::setTutorial_5_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Match 5 ice cream in a line\nto create a special ice cream!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_8", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1522,7 +1625,7 @@ void GameScene::setTutorial_5_1()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
@@ -1587,7 +1690,20 @@ void GameScene::setTutorial_5_2()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCFadeTo::create(0.5f, 200));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1595,7 +1711,7 @@ void GameScene::setTutorial_5_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Swap the special with any\n ice cream to remove all\n ice cream of that color!", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_9", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1605,7 +1721,7 @@ void GameScene::setTutorial_5_2()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCFadeTo::create(0.5f, 200));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCFadeTo::create(0.5f, 200));
@@ -1679,7 +1795,20 @@ void GameScene::setTutorial_6_1()
     tutorialPopup->setOpacity(0);
     tutorialPopup->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
     
-    CCMenuItemSprite* skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(GameScene::skipCallback));
+    
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameScene::skipCallback));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     CCMenu* menu = CCMenu::create();
     menu->addChild(skip);
     int fontSize = 0;
@@ -1687,7 +1816,7 @@ void GameScene::setTutorial_6_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create("Clear all the ice.\nMatch over the ice to remove it.", "Arial", fontSize);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_10", NULL), FONT_COMMON, FONT_SIZE_36);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1697,7 +1826,7 @@ void GameScene::setTutorial_6_1()
     label->setColor(color);
     label->setOpacity(0);
     label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height);
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/2.0f + skip->getContentSize().width/1.9f, -CCDirector::sharedDirector()->getWinSize().height/2.0f + skip->getContentSize().height/1.9f);
     tutorialLayer->addChild(menu);
     skip->setOpacity(0);
     skip->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(TUTORIAL_DELAY), CCFadeTo::create(0.5f, 200)));
@@ -1796,7 +1925,7 @@ void GameScene::reInitField()
     color.r = 0x8e;
     color.g = 0x2d;
     color.b = 0x1a;
-    menu->banner("game/failedBanner.png", "Not possible match", 0.5f, color);
+    menu->banner("game/failedBanner.png", CCLocalizedString("BANNER_NO_MATCH"), 0.5f, color);
     lock = true;
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::reInitFieldCancelled))));
 }
@@ -4308,13 +4437,13 @@ void GameScene::win(CCNode* sender)
     SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
     if (menu->isBannerLock)
     {
-        menu->banner("game/winBanner.png", "Wonderful! Level complete!", 1.5f, color);
+        menu->banner("game/winBanner.png", CCLocalizedString("BANNER_WIN"), 1.5f, color);
         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f),
                                                          CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
     }
     else
     {
-        menu->banner("game/winBanner.png", "Wonderful! Level complete!", 0.5f, color);
+        menu->banner("game/winBanner.png", CCLocalizedString("BANNER_WIN"), 0.5f, color);
         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
                                                          CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
     }
@@ -4330,7 +4459,7 @@ void GameScene::lose(CCNode* sender)
     color.g = 0x2d;
     color.b = 0x1a;
     SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
-	menu->banner("game/failedBanner.png", "Level failed! You didn't rich goal!", 0.5f, color);
+	menu->banner("game/failedBanner.png", CCLocalizedString("BANNER_LOSE"), 0.5f, color);
 	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
 		CCCallFuncN::create(this, callfuncN_selector(GameScene::loseCallback))));
 }

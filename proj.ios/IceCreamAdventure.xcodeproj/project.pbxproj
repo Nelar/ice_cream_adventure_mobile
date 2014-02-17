@@ -168,6 +168,11 @@
 		B09E7B5F18228A29004C2BE1 /* Updatable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09E7B3318228A29004C2BE1 /* Updatable.cpp */; };
 		B09E7B6018228A29004C2BE1 /* Convert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09E7B3618228A29004C2BE1 /* Convert.cpp */; };
 		B09E7B6118228A29004C2BE1 /* Hasher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09E7B3818228A29004C2BE1 /* Hasher.cpp */; };
+		B0A7F5F218B255A500963900 /* Localizable_fr in Resources */ = {isa = PBXBuildFile; fileRef = B0A7F5ED18B255A500963900 /* Localizable_fr */; };
+		B0A7F5F318B255A500963900 /* Localizable_ge in Resources */ = {isa = PBXBuildFile; fileRef = B0A7F5EE18B255A500963900 /* Localizable_ge */; };
+		B0A7F5F418B255A500963900 /* Localizable_it in Resources */ = {isa = PBXBuildFile; fileRef = B0A7F5EF18B255A500963900 /* Localizable_it */; };
+		B0A7F5F518B255A500963900 /* Localizable_pr in Resources */ = {isa = PBXBuildFile; fileRef = B0A7F5F018B255A500963900 /* Localizable_pr */; };
+		B0A7F5F618B255A500963900 /* Localizable_sp in Resources */ = {isa = PBXBuildFile; fileRef = B0A7F5F118B255A500963900 /* Localizable_sp */; };
 		B0B7C17618A4E23B00B456F7 /* CCLocalizedString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0B7C17418A4E23B00B456F7 /* CCLocalizedString.cpp */; };
 		B0EE13EC1821352D00740069 /* Options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0EE13E81821352D00740069 /* Options.cpp */; };
 		B0EE141A1821354A00740069 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0EE13EF1821354A00740069 /* Animation.cpp */; };
@@ -572,6 +577,11 @@
 		B09E7B3718228A29004C2BE1 /* Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Convert.h; sourceTree = "<group>"; };
 		B09E7B3818228A29004C2BE1 /* Hasher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hasher.cpp; sourceTree = "<group>"; };
 		B09E7B3918228A29004C2BE1 /* Hasher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hasher.h; sourceTree = "<group>"; };
+		B0A7F5ED18B255A500963900 /* Localizable_fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable_fr; sourceTree = SOURCE_ROOT; };
+		B0A7F5EE18B255A500963900 /* Localizable_ge */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable_ge; sourceTree = SOURCE_ROOT; };
+		B0A7F5EF18B255A500963900 /* Localizable_it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable_it; sourceTree = SOURCE_ROOT; };
+		B0A7F5F018B255A500963900 /* Localizable_pr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable_pr; sourceTree = SOURCE_ROOT; };
+		B0A7F5F118B255A500963900 /* Localizable_sp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable_sp; sourceTree = SOURCE_ROOT; };
 		B0B7C17418A4E23B00B456F7 /* CCLocalizedString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCLocalizedString.cpp; path = ../Classes/CCLocalizedString.cpp; sourceTree = "<group>"; };
 		B0B7C17518A4E23B00B456F7 /* CCLocalizedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCLocalizedString.h; path = ../Classes/CCLocalizedString.h; sourceTree = "<group>"; };
 		B0EE13E81821352D00740069 /* Options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Options.cpp; path = ../Classes/Options.cpp; sourceTree = "<group>"; };
@@ -1109,6 +1119,11 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B0A7F5ED18B255A500963900 /* Localizable_fr */,
+				B0A7F5EE18B255A500963900 /* Localizable_ge */,
+				B0A7F5EF18B255A500963900 /* Localizable_it */,
+				B0A7F5F018B255A500963900 /* Localizable_pr */,
+				B0A7F5F118B255A500963900 /* Localizable_sp */,
 				B0EE148D18213AAB00740069 /* iphone */,
 				B0446E53182133FE00D6B11A /* common */,
 				B0446E54182133FE00D6B11A /* ipad */,
@@ -1654,7 +1669,11 @@
 				B0446E47182133F300D6B11A /* 100x100.png in Resources */,
 				B0446E4A182133F300D6B11A /* 144x144.png in Resources */,
 				B0446E44182133F300D6B11A /* 72x72.png in Resources */,
+				B0A7F5F318B255A500963900 /* Localizable_ge in Resources */,
+				B0A7F5F518B255A500963900 /* Localizable_pr in Resources */,
 				D4EF949E15BD2D9600D803EB /* Icon-72.png in Resources */,
+				B0A7F5F418B255A500963900 /* Localizable_it in Resources */,
+				B0A7F5F618B255A500963900 /* Localizable_sp in Resources */,
 				D4EF94A015BD2D9800D803EB /* Icon-144.png in Resources */,
 				B0446E3F182133F300D6B11A /* 29x29.png in Resources */,
 				B0446E57182133FE00D6B11A /* ipad in Resources */,
@@ -1675,6 +1694,7 @@
 				B0446E46182133F300D6B11A /* 80x80.png in Resources */,
 				B0F1272B18465A270098B5AE /* TapjoyResources.bundle in Resources */,
 				CECB9C9F17F2CA77006F59C2 /* Default-Landscape~ipad.png in Resources */,
+				B0A7F5F218B255A500963900 /* Localizable_fr in Resources */,
 				B0446E51182133F300D6B11A /* iTunesArtwork in Resources */,
 				B0446E45182133F300D6B11A /* 76x76.png in Resources */,
 				B09E7B4918228A29004C2BE1 /* sconscript in Resources */,
@@ -1862,8 +1882,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1910,8 +1930,8 @@
 				OTHER_CFLAGS = "-O2";
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
+				PROVISIONING_PROFILE = "1EEEC2F3-62CC-4FB6-8F3F-729A8F86477E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1EEEC2F3-62CC-4FB6-8F3F-729A8F86477E";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1926,8 +1946,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Дмитрий Корнеев (BL4PX6FR2C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1971,8 +1991,8 @@
 				);
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DFFAAD9F-0BEB-4952-B640-7A28FAD1A0CE";
+				PROVISIONING_PROFILE = "1EEEC2F3-62CC-4FB6-8F3F-729A8F86477E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1EEEC2F3-62CC-4FB6-8F3F-729A8F86477E";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

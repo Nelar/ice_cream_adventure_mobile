@@ -282,7 +282,7 @@ void ComixScene::pauseComix(CCNode* sender)
         text->removeFromParentAndCleanup(true);
         text = NULL;
     }
-    text = CCLabelTTF::create("", "Script MT Bold", 48);
+    text = CCLabelTTF::create("", FONT_COMMON, FONT_SIZE_22);
     text->setColor(ccBLACK);
     
     next->setVisible(true);
@@ -292,7 +292,7 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(1220, 790));
-            text->setString("Hi! Before we can depart\n to the Ice Cream Land \nwe have to prepare \nfor journey!");
+            text->setString(CCLocalizedString("COMIX_1_1", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -301,7 +301,7 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(1340, 840));
-            text->setString("Ready!\n Let's not waste any time!\n Off we go!");
+            text->setString(CCLocalizedString("COMIX_1_2", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -310,7 +310,7 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(1000, 1020));
-            text->setString("Woah!\n Isn't it a forest\n of ice cream?\n Let's see what\n is in there!");
+            text->setString(CCLocalizedString("COMIX_2_1", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -319,7 +319,7 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(1200, 1150));
-            text->setString("Finally we were\n able to find an exit!");
+            text->setString(CCLocalizedString("COMIX_2_2", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -328,14 +328,14 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(730, 1000));
-            text->setString("How can we traverse\n those mountains?");
+            text->setString(CCLocalizedString("COMIX_3_1", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 1)
         {
             text->setPosition(ccp(700, 1650));
-            text->setString(" I will help you if you\n manage to complete\n my trials!");
+            text->setString(CCLocalizedString("COMIX_3_2", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -344,14 +344,14 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(730, 1000));
-            text->setString(" I think we did it! ");
+            text->setString(CCLocalizedString("COMIX_3_3", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 1)
         {
             text->setPosition(ccp(700, 1650));
-            text->setString(" Yes, you did it,\n you can now pass!");
+            text->setString(CCLocalizedString("COMIX_3_4", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -360,21 +360,21 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(540, 950));
-            text->setString("This looks like\n a ship closing in!");
+            text->setString(CCLocalizedString("COMIX_4_1", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 1)
         {
             text->setPosition(ccp(1200, 1450));
-            text->setString("I need berries\n for my ice cream!\n Get them for me!");
+            text->setString(CCLocalizedString("COMIX_4_2", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 2)
         {
             text->setPosition(ccp(530, 950));
-            text->setString("Sure\n we will help you!");
+            text->setString(CCLocalizedString("COMIX_4_3", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -383,14 +383,14 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(550, 950));
-            text->setString("Hey, \nwe got your berries!");
+            text->setString(CCLocalizedString("COMIX_4_4", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 1)
         {
             text->setPosition(ccp(1200, 1450));
-            text->setString("Thank you,\n you can now \nbe on your way!");
+            text->setString(CCLocalizedString("COMIX_4_5", NULL));
             text->runAction(CCFadeIn::create(1.0f));
         }
     }
@@ -400,7 +400,7 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(790, 1340));
-            text->setString("Now we can take\n our time to relax on\n the Caramel Meadows!");
+            text->setString(CCLocalizedString("COMIX_5_1", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
@@ -410,7 +410,7 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(790, 1340));
-            text->setString("That's all,\n it is time to go!");
+            text->setString(CCLocalizedString("COMIX_5_2", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
@@ -463,14 +463,14 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(500, 950));
-            text->setString("Ouch.\n Seems like he is cursed!");
+            text->setString(CCLocalizedString("COMIX_6_1", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 1)
         {
             text->setPosition(ccp(500, 950));
-            text->setString("We have to help him!");
+            text->setString(CCLocalizedString("COMIX_6_2", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
@@ -480,14 +480,14 @@ void ComixScene::pauseComix(CCNode* sender)
         if (pauseNumber == 0)
         {
             text->setPosition(ccp(500, 950));
-            text->setString("Ice should melt! ");
+            text->setString(CCLocalizedString("COMIX_6_3", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }
         else if (pauseNumber == 1)
         {
             text->setPosition(ccp(1150, 1190));
-            text->setString("Thank you guys,\n now I am finally free!");
+            text->setString(CCLocalizedString("COMIX_6_4", NULL));
             text->runAction(CCFadeIn::create(1.0f));
             pauseNumber++;
         }

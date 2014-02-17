@@ -101,7 +101,7 @@ bool EndGameLayer::init()
     else
         fontSize = 36;
     
-	targetTitle = CCLabelBMFont::create("Init", "fonts/Script MT Bold 22.fnt");
+	targetTitle = CCLabelTTF::create("Init", FONT_COMMON, FONT_SIZE_48);
 	targetTitle->setPosition(ccp(targetSubstrate->getContentSize().width/2.0f, targetSubstrate->getContentSize().height/2.0f));
     
     if (!IPAD)
@@ -109,7 +109,7 @@ bool EndGameLayer::init()
     
 	targetSubstrate->addChild(targetTitle);
     
-	boosterTitle = CCLabelBMFont::create("Select boosters", "fonts/Script MT Bold 22.fnt");
+	boosterTitle = CCLabelTTF::create(CCLocalizedString("SELECT_BOOSTER"), FONT_COMMON, FONT_SIZE_64);
 	boosterTitle->setPosition(ccp(popup->getContentSize().width/2.0f, popup->getContentSize().height/2.1f));
 	ccColor3B color;
 	color.r = 0x4b;
@@ -127,15 +127,13 @@ bool EndGameLayer::init()
     else
         fontSize = 50;
     
-	levelTitle = CCLabelBMFont::create("Init", "fonts/Script MT Bold 22.fnt");
+	levelTitle = CCLabelTTF::create("Init", FONT_COMMON, FONT_SIZE_86);
 	levelTitle->setPosition(ccp(popup->getContentSize().width/2.0f, popup->getContentSize().height/1.1f));
 	color.r = 0xba;
 	color.g = 0x29;
 	color.b = 0x91;
 	levelTitle->setColor(color);
     
-    if (!IPAD)
-        levelTitle->setScale(0.5f);
     
 	popup->addChild(levelTitle);
     
@@ -144,30 +142,59 @@ bool EndGameLayer::init()
 	close->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + popup->getContentSize().width /2.5f,
                        popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + popup->getContentSize().height /2.4f);
     
-	CCSprite* playNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
-	CCSprite* playSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
-	play = CCMenuItemSprite::create(playNormal,
-                                    playSelected, this, menu_selector(EndGameLayer::playCallback));
+	CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+	play = CCMenuItemSprite::create(spriteNormal,
+                                    spriteSelected, this, menu_selector(EndGameLayer::playCallback));
 	play->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
                       popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f
                       - popup->getContentSize().height /2.3f + play->getContentSize().height/2.0f);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    play->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
+    
+    
 	play->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
     
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    retry = CCMenuItemSprite::create(spriteNormal,
+                                     spriteSelected, this, menu_selector(EndGameLayer::retryCallback));
     
-    retry = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/redButton.png"),
-                                     CCSprite::createWithSpriteFrameName("common/redButton.png"), this, menu_selector(EndGameLayer::retryCallback));
+    labelTTF = CCLabelTTF::create(CCLocalizedString("RETRY", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    retry->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
 	retry->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f - retry->getContentSize().width/1.8f,
                        popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f
                        - popup->getContentSize().height /2.3f + play->getContentSize().height/2.0f);
     retry->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
     
     
-	next = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/redButton.png"),
-                                    CCSprite::createWithSpriteFrameName("common/redButton.png"), this, menu_selector(EndGameLayer::nextCallback));
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+	next = CCMenuItemSprite::create(spriteNormal,
+                                    spriteSelected, this, menu_selector(EndGameLayer::nextCallback));
 	next->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + next->getContentSize().width/1.8f,
                       popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f
                       - popup->getContentSize().height /2.3f + play->getContentSize().height/2.0f);
     next->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    next->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
     
     
     
@@ -213,11 +240,12 @@ bool EndGameLayer::init()
     if (!IPAD)
         guiFailed->setScale(0.5f);
     
-    failed = CCLabelTTF::create("FAILED", FONT_COMMON, FONT_SIZE_140);
+    failed = CCLabelTTF::create(CCLocalizedString("FAILED"), FONT_COMMON, FONT_SIZE_140);
 	failed->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 1.35f));
+    failed->setColor(IceCreamPink);
 	popup->addChild(failed);
     
-    scoreTitle = CCLabelBMFont::create("w", "fonts/Script MT Bold 22.fnt");
+    scoreTitle = CCLabelTTF::create("w", FONT_COMMON, FONT_SIZE_64);
 	color.r = 0x4b;
 	color.g = 0xd7;
 	color.b = 0x20;
@@ -227,7 +255,7 @@ bool EndGameLayer::init()
 	scoreTitle->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 3.2f));
 	popup->addChild(scoreTitle);
     
-    targetPopupTitle = CCLabelBMFont::create("1", "fonts/Script MT Bold 22.fnt");
+    targetPopupTitle = CCLabelTTF::create("1", FONT_COMMON, FONT_SIZE_64);
     targetPopupTitle->setPosition(targetSubstrate->getPosition());
     popup->addChild(targetPopupTitle);
 
@@ -369,14 +397,12 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     
 
     
-    CCLabelBMFont* label = CCLabelBMFont::create("High score", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("HIGH_SCORE"), FONT_COMMON, FONT_SIZE_64);
     ccColor3B color;
 	color.r = 0xba;
 	color.g = 0x29;
 	color.b = 0x91;
     label->setColor(color);
-    if (!IPAD)
-        label->setScale(0.5f);
     
     
 	if (starCount == 1)
@@ -407,44 +433,112 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
 		startRight->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/star_popup_disabled.png"));
 	}
     
-	sprintf(buf, "Target: %d", targetScore);
+    sprintf(buf, "%s: %d", CCLocalizedString("TARGET", NULL), targetScore);
 	targetTitle->setString(buf);
 	targetTitle->setPosition(ccp(targetTitle->getParent()->getContentSize().width/2.0f, targetTitle->getParent()->getContentSize().height/2.0f));
-	targetTitle->setScale(0.8f);
-    
-    if (!IPAD)
-        targetTitle->setScale(0.4f);
     
     
-	sprintf(buf, "Level %d", levelNum);
+	sprintf(buf, "%s %d", CCLocalizedString("LEVEL"), levelNum);
 	levelTitle->setString(buf);
     if (levelNum > 105)
     {
-        levelTitle->setString("Extra Level");
+        levelTitle->setString(CCLocalizedString("EXTRA_LEVEL", NULL));
+        levelTitle->setFontSize(FONT_SIZE_48);
     }
+
 	levelTitle->setPosition(ccp(levelTitle->getParent()->getContentSize().width/2.0f, levelTitle->getParent()->getContentSize().height/1.1f));
     
     updateBoosters();
     
     if (typeLevel == Ice)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/iceStudy.png"), CCSprite::createWithSpriteFrameName("common/iceStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/iceStudy.png"), CCSprite::createWithSpriteFrameName("common/iceStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/iceStudyModal.png");
+        
+        CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
+        titlehelp->setColor(IceCreamBrown);
+        helpModal->addChild(titlehelp);
+        titlehelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.1f));
+        
+        CCLabelTTF* titlehelp2 = CCLabelTTF::create(CCLocalizedString("STUDY_ICE_TITLE", NULL), FONT_COMMON, FONT_SIZE_48);
+        titlehelp2->setColor(IceCreamBrown2);
+        helpModal->addChild(titlehelp2);
+        titlehelp2->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.25f));
+        
+        CCLabelTTF* texthelp = CCLabelTTF::create(CCLocalizedString("STUDY_ICE_TEXT", NULL), FONT_COMMON, FONT_SIZE_48);
+        texthelp->setColor(IceCreamBrown2);
+        helpModal->addChild(texthelp);
+        texthelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/6.0f));
     }
     else if (typeLevel == Score)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/scoreStudy.png"), CCSprite::createWithSpriteFrameName("common/scoreStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/scoreStudy.png"), CCSprite::createWithSpriteFrameName("common/scoreStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/scoreStudyModal.png");
+        
+        CCLabelTTF* helpLabel = CCLabelTTF::create("15", FONT_COMMON, FONT_SIZE_64);
+        helpLabel->setColor(IceCreamBlue);
+        helpModal->addChild(helpLabel);
+        helpLabel->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/2.0f));
+        
+        CCLabelTTF* moves = CCLabelTTF::create(CCLocalizedString("MOVES", NULL), FONT_COMMON, FONT_SIZE_48);
+        moves->setColor(IceCreamBlue);
+        helpModal->addChild(moves);
+        moves->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.65f));
+        
+        CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
+        titlehelp->setColor(IceCreamBrown);
+        helpModal->addChild(titlehelp);
+        titlehelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.1f));
+        
+        CCLabelTTF* titlehelp2 = CCLabelTTF::create(CCLocalizedString("STUDY_MOVES_TITLE", NULL), FONT_COMMON, FONT_SIZE_48);
+        titlehelp2->setColor(IceCreamBrown2);
+        helpModal->addChild(titlehelp2);
+        titlehelp2->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.25f));
+        
+        CCLabelTTF* texthelp = CCLabelTTF::create(CCLocalizedString("STUDY_MOVES_TEXT", NULL), FONT_COMMON, FONT_SIZE_48);
+        texthelp->setColor(IceCreamBrown2);
+        helpModal->addChild(texthelp);
+        texthelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/6.0f));
     }
     else if (typeLevel == BringDown)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/bringStudy.png"), CCSprite::createWithSpriteFrameName("common/bringStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
-        helpModal = CCSprite::create("bringStudyModal.png");
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/bringStudy.png"), CCSprite::createWithSpriteFrameName("common/bringStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
+        helpModal = CCSprite::createWithSpriteFrameName("common/bringStudyModal.png");
+        
+        CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
+        titlehelp->setColor(IceCreamBrown);
+        helpModal->addChild(titlehelp);
+        titlehelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.1f));
+        
+        CCLabelTTF* titlehelp2 = CCLabelTTF::create(CCLocalizedString("STUDY_BRING_TITLE", NULL), FONT_COMMON, FONT_SIZE_48);
+        titlehelp2->setColor(IceCreamBrown2);
+        helpModal->addChild(titlehelp2);
+        titlehelp2->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.25f));
+        
+        CCLabelTTF* texthelp = CCLabelTTF::create(CCLocalizedString("STUDY_BRING_TEXT", NULL), FONT_COMMON, FONT_SIZE_48);
+        texthelp->setColor(IceCreamBrown2);
+        helpModal->addChild(texthelp);
+        texthelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/6.0f));
     }
     else if (typeLevel == Time)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/timeStudy.png"), CCSprite::createWithSpriteFrameName("common/timeStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/timeStudy.png"), CCSprite::createWithSpriteFrameName("common/timeStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/timeStudyModal.png");
+        
+        CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
+        titlehelp->setColor(IceCreamBrown);
+        helpModal->addChild(titlehelp);
+        titlehelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.1f));
+        
+        CCLabelTTF* titlehelp2 = CCLabelTTF::create(CCLocalizedString("STUDY_TIME_TITLE", NULL), FONT_COMMON, FONT_SIZE_48);
+        titlehelp2->setColor(IceCreamBrown2);
+        helpModal->addChild(titlehelp2);
+        titlehelp2->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/1.25f));
+        
+        CCLabelTTF* texthelp = CCLabelTTF::create(CCLocalizedString("STUDY_TIME_TEXT", NULL), FONT_COMMON, FONT_SIZE_48);
+        texthelp->setColor(IceCreamBrown2);
+        helpModal->addChild(texthelp);
+        texthelp->setPosition(ccp(helpModal->getContentSize().width/2.0f, helpModal->getContentSize().height/6.0f));
     }
     
     if (WINSIZE.width == 640)
@@ -575,26 +669,26 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
         }
         
         switch (currentLevel) {
-            case 7:
-                FacebookPtr->completeStage("Valley ice cream");
+            case 12:
+                FacebookPtr->completeStage(CCLocalizedString("VALLEY"));
                 break;
-            case 14:
-                FacebookPtr->completeStage("Sweet forest");
+            case 24:
+                FacebookPtr->completeStage(CCLocalizedString("FOREST"));
                 break;
-            case 21:
-                FacebookPtr->completeStage("Mountain giants");
+            case 36:
+                FacebookPtr->completeStage(CCLocalizedString("MOUNTAIN"));
                 break;
-            case 28:
-                FacebookPtr->completeStage("Pistachio sea");
+            case 48:
+                FacebookPtr->completeStage(CCLocalizedString("SEA"));
                 break;
-            case 35:
-                FacebookPtr->completeStage("Caramel meadows");
+            case 60:
+                FacebookPtr->completeStage(CCLocalizedString("MEADOWS"));
                 break;
-            case 42:
-                FacebookPtr->completeStage("Farm ice cream");
+            case 72:
+                FacebookPtr->completeStage(CCLocalizedString("FARM"));
                 break;
-            case 49:
-                FacebookPtr->completeStage("Ice city");
+            case 84:
+                FacebookPtr->completeStage(CCLocalizedString("CITY"));
                 break;
                 
             default:
@@ -623,14 +717,13 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
         menu->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME*2.0f, ccp(0, -WINSIZE.height))));
     }
     
-    CCLabelBMFont* label = CCLabelBMFont::create("High score", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("HIGH_SCORE"), FONT_COMMON, FONT_SIZE_64);
     ccColor3B color;
 	color.r = 0xba;
 	color.g = 0x29;
 	color.b = 0x91;
     label->setColor(color);
-    if (!IPAD)
-        label->setScale(0.5f);
+
     
     boosterTitle->setVisible(false);
     booster_1->setVisible(false);
@@ -736,20 +829,17 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
     failed->setVisible(false);
     targetPopupTitle->setVisible(false);
     
-	sprintf(buf, "Score: %d", countScore);
+	sprintf(buf, "%s: %d", CCLocalizedString("SCORE"), countScore);
 	targetTitle->setString(buf);
 	targetTitle->setPosition(ccp(targetTitle->getParent()->getContentSize().width/2.0f, targetTitle->getParent()->getContentSize().height/2.0f));
-	targetTitle->setScale(0.8f);
-    
-    if (!IPAD)
-        targetTitle->setScale(0.4f);
     
     
-	sprintf(buf, "Level %d", currentLevel);
+	sprintf(buf, "%s %d", CCLocalizedString("LEVEL"), currentLevel);
 	levelTitle->setString(buf);
     if (currentLevel > 105)
     {
-        levelTitle->setString("Extra Level");
+        levelTitle->setString(CCLocalizedString("LEVEL"));
+        levelTitle->setFontSize(FONT_SIZE_48);
     }
 	levelTitle->setPosition(ccp(levelTitle->getParent()->getContentSize().width/2.0f, levelTitle->getParent()->getContentSize().height/1.1f));
     
@@ -886,7 +976,7 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
     
     guiWin->setVisible(false);
     
-	sprintf(buf, "Score:%d", countScore);
+	sprintf(buf, "%s:%d", CCLocalizedString("SCORE"), countScore);
     
     scoreTitle->setString(buf);
     
@@ -896,13 +986,13 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
 	retry->setPosition(play->getPosition());
     
     if (typeLevel == BringDown)
-        targetPopupTitle->setString("You did not bring\n down all ingridients");
+        targetPopupTitle->setString(CCLocalizedString("DID_NOT_BRING"));
     else if (typeLevel == Ice)
-        targetPopupTitle->setString("You did not clear\n all the ices");
+        targetPopupTitle->setString(CCLocalizedString("DID_NOT_ICE"));
     else if (typeLevel == Score)
-        targetPopupTitle->setString("You did not get\n all the points");
+        targetPopupTitle->setString(CCLocalizedString("DID_NOT_MOVES"));
     else if (typeLevel == Time)
-        targetPopupTitle->setString("You did not get\n all the points");
+        targetPopupTitle->setString(CCLocalizedString("DID_NOT_MOVES"));
     
     targetSubstrate->setScale(1.5f);
     
@@ -912,10 +1002,13 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
         targetPopupTitle->setScale(0.25f);
     
     
-    sprintf(buf, "Level %d", currentLevel);
+    sprintf(buf, "%s %d", CCLocalizedString("LEVEL"), currentLevel);
 	levelTitle->setString(buf);
     if (currentLevel > 105)
-        levelTitle->setString("Extra Level");
+    {
+        levelTitle->setString(CCLocalizedString("EXTRA_LEVEL"));
+    }
+    
 	levelTitle->setPosition(ccp(levelTitle->getParent()->getContentSize().width/2.0f, levelTitle->getParent()->getContentSize().height/1.1f));
     
     close->stopAllActions();
@@ -927,26 +1020,23 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
 	retry->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
     
-    
     social->showScoreboard(currentLevel);
 }
 
 void EndGameLayer::updateBoosters()
 {
     char buf[255];
-    if (!isPopup)
-        return;
     
-    boosterPlus_1->removeAllChildrenWithCleanup(true);
-    boosterPlus_2->removeAllChildrenWithCleanup(true);
-    boosterPlus_3->removeAllChildrenWithCleanup(true);
-    
-    float ipScale = 1.0f;
-    
-    float bScale = 1.0f;
+    if (boosterPlus_1)
+        boosterPlus_1->removeAllChildrenWithCleanup(true);
+    if (boosterPlus_2)
+        boosterPlus_2->removeAllChildrenWithCleanup(true);
+    if (boosterPlus_3)
+        boosterPlus_3->removeAllChildrenWithCleanup(true);
     
     if (firstBooster == BoosterCrystal)
 	{
+        booster_1->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.1f, booster_1->getContentSize().height/1.9f));
         booster->setScale(0.8f);
@@ -957,13 +1047,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_1->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_1->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -975,6 +1060,7 @@ void EndGameLayer::updateBoosters()
 	}
 	else if (firstBooster == BoosterBomb)
 	{
+        booster_1->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
         booster->setScale(0.8f);
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
@@ -985,12 +1071,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_1->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_1->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1002,6 +1084,7 @@ void EndGameLayer::updateBoosters()
 	}
 	else if (firstBooster == BoosterFish)
 	{
+        booster_1->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_1->addChild(booster);
@@ -1011,12 +1094,9 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_1->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
             
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_1->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1028,6 +1108,7 @@ void EndGameLayer::updateBoosters()
 	}
     else if (firstBooster == BoosterDonut)
 	{
+        booster_1->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_1->addChild(booster);
@@ -1037,12 +1118,9 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_1->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
             
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_1->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1059,6 +1137,7 @@ void EndGameLayer::updateBoosters()
     
 	if (secondBooster == BoosterCrystal)
 	{
+        booster_2->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_2->addChild(booster);
@@ -1068,12 +1147,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("gameMap/boosterBack.png");
             boosterPlus_2->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_2->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1085,6 +1160,7 @@ void EndGameLayer::updateBoosters()
 	}
 	else if (secondBooster == BoosterBomb)
 	{
+        booster_2->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
         booster->setScale(0.8f);
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/1.9f));
@@ -1095,12 +1171,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_2->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_2->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1112,6 +1184,7 @@ void EndGameLayer::updateBoosters()
 	}
 	else if (secondBooster == BoosterFish)
 	{
+        booster_2->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_2->addChild(booster);
@@ -1121,11 +1194,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_2->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            label->setColor(ccWHITE);
             
             boosterPlus_2->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1137,6 +1207,7 @@ void EndGameLayer::updateBoosters()
 	}
     else if (secondBooster == BoosterDonut)
 	{
+        booster_2->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_2->addChild(booster);
@@ -1146,12 +1217,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_2->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_2->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1168,6 +1235,7 @@ void EndGameLayer::updateBoosters()
     
 	if (thirdBooster == BoosterCrystal)
 	{
+        booster_3->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_3->addChild(booster);
@@ -1177,12 +1245,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_3->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_3->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1194,8 +1258,8 @@ void EndGameLayer::updateBoosters()
 	}
 	else if (thirdBooster == BoosterBomb)
 	{
+        booster_3->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
-        //        booster->setScale(0.6f);
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_3->addChild(booster);
         
@@ -1204,12 +1268,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_3->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_3->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1221,6 +1281,7 @@ void EndGameLayer::updateBoosters()
 	}
 	else if (thirdBooster == BoosterFish)
 	{
+        booster_3->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/1.9f));
         booster->setScale(0.7f);
@@ -1231,12 +1292,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_3->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_3->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1248,6 +1305,7 @@ void EndGameLayer::updateBoosters()
 	}
     else if (thirdBooster == BoosterDonut)
 	{
+        booster_3->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
 		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
 		booster_3->addChild(booster);
@@ -1257,12 +1315,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_3->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");;
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
             label->setColor(ccWHITE);
-            label->setScale(ipScale);
-            
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus_3->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
@@ -1279,7 +1333,6 @@ void EndGameLayer::updateBoosters()
     
     OptionsPtr->save();
 }
-
 
 void EndGameLayer::helpModalCallback(CCObject* pSender)
 {
@@ -1425,14 +1478,18 @@ void EndGameLayer::retryEnd(CCNode* pSender)
 void EndGameLayer::booster_1_Callback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    booster_1->stopAllActions();
+    booster_1->setScale(0.7f);
+	booster_1->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
     menu->setEnabled(false);
     if (firstBooster == BoosterCrystal)
     {
-        popaplayer->popupBoosterInApp("Color bomb x3", "Start the game with a Color Bomb", GreenPopup, CrystalPopBoot, this, callfuncN_selector(EndGameLayer::popupOk1), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("COLOR_BOMB", NULL), (char*)CCLocalizedString("COLOR_BOMB_TEXT", NULL), GreenPopup, CrystalPopBoot, this, callfuncN_selector(EndGameLayer::popupOk1), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
     else if (firstBooster == BoosterBomb)
     {
-        popaplayer->popupBoosterInApp("Striped&Wrapped x3", "Start the game with a striped and wrapped", GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::popupOk2), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("STRIPPED_WRAPPED", NULL), (char*)CCLocalizedString("STRIPPED_WRAPPED_TEXT", NULL), GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::popupOk2), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
     else if (firstBooster == BoosterDonut)
     {
@@ -1440,21 +1497,25 @@ void EndGameLayer::booster_1_Callback(CCObject* pSender)
     }
     else if (firstBooster == BoosterFish)
     {
-        popaplayer->popupBoosterInApp("Ice Penguin x3", "Add a penguin to the ice mix, \n wich clears three pieces of ice.", GreenPopup, FishPopBoot, this, callfuncN_selector(EndGameLayer::popupOk3), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("SWEET_PENGUIN", NULL), (char*)CCLocalizedString("SWEET_PENGUIN_TEXT", NULL), GreenPopup, FishPopBoot, this, callfuncN_selector(EndGameLayer::popupOk3), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
 }
 
 void EndGameLayer::booster_2_Callback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    booster_2->stopAllActions();
+    booster_2->setScale(0.7f);
+	booster_2->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
     menu->setEnabled(false);
     if (secondBooster == BoosterCrystal)
     {
-        popaplayer->popupBoosterInApp("Color bomb x3", "Start the game with a Color Bomb", GreenPopup, CrystalPopBoot, this, callfuncN_selector(EndGameLayer::popupOk1), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("COLOR_BOMB", NULL), (char*)CCLocalizedString("COLOR_BOMB_TEXT", NULL), GreenPopup, CrystalPopBoot, this, callfuncN_selector(EndGameLayer::popupOk1), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
     else if (secondBooster == BoosterBomb)
     {
-        popaplayer->popupBoosterInApp("Striped&Wrapped x3", "Start the game with a striped and wrapped", GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::popupOk2), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("STRIPPED_WRAPPED", NULL), (char*)CCLocalizedString("STRIPPED_WRAPPED_TEXT", NULL), GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::popupOk2), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
     else if (secondBooster == BoosterDonut)
     {
@@ -1462,21 +1523,25 @@ void EndGameLayer::booster_2_Callback(CCObject* pSender)
     }
     else if (secondBooster == BoosterFish)
     {
-        popaplayer->popupBoosterInApp("Ice penguin x3", "Add a penguin to the ice mix, \n wich clears three pieces of ice.", GreenPopup, FishPopBoot, this, callfuncN_selector(EndGameLayer::popupOk3), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("SWEET_PENGUIN", NULL), (char*)CCLocalizedString("SWEET_PENGUIN_TEXT", NULL), GreenPopup, FishPopBoot, this, callfuncN_selector(EndGameLayer::popupOk3), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
 }
 
 void EndGameLayer::booster_3_Callback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    booster_3->stopAllActions();
+    booster_3->setScale(0.7f);
+	booster_3->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
     menu->setEnabled(false);
     if (thirdBooster == BoosterCrystal)
     {
-        popaplayer->popupBoosterInApp("Color bomb x3", "Start the game with a Color Bomb", GreenPopup, CrystalPopBoot, this, callfuncN_selector(EndGameLayer::popupOk1), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("COLOR_BOMB", NULL), (char*)CCLocalizedString("COLOR_BOMB_TEXT", NULL), GreenPopup, CrystalPopBoot, this, callfuncN_selector(EndGameLayer::popupOk1), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
     else if (thirdBooster == BoosterBomb)
     {
-        popaplayer->popupBoosterInApp("Striped&Wrapped x3", "Start the game with a striped and wrapped", GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::popupOk2), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("STRIPPED_WRAPPED", NULL), (char*)CCLocalizedString("STRIPPED_WRAPPED_TEXT", NULL), GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::popupOk2), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
     else if (thirdBooster == BoosterDonut)
     {
@@ -1484,10 +1549,9 @@ void EndGameLayer::booster_3_Callback(CCObject* pSender)
     }
     else if (thirdBooster == BoosterFish)
     {
-        popaplayer->popupBoosterInApp("Ice penguin x3", "Add a penguin to the ice mix, \n wich clears three pieces of ice.", GreenPopup, FishPopBoot, this, callfuncN_selector(EndGameLayer::popupOk3), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        popaplayer->popupBoosterInApp((char*)CCLocalizedString("SWEET_PENGUIN", NULL), (char*)CCLocalizedString("SWEET_PENGUIN_TEXT", NULL), GreenPopup, FishPopBoot, this, callfuncN_selector(EndGameLayer::popupOk3), this, callfuncN_selector(EndGameLayer::unclockMenu));
     }
 }
-
 void EndGameLayer::popupOk1(CCNode* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
@@ -1514,31 +1578,31 @@ void EndGameLayer::endTutorial(CCNode* pSender)
 void EndGameLayer::endStage(CCNode* pSender)
 {
     switch (currentLevel) {
-        case 7:
-            FacebookPtr->endStage("Valley ice cream");
+        case 12:
+            FacebookPtr->endStage(CCLocalizedString("VALLEY"));
             break;
-        case 14:
-            FacebookPtr->endStage("Sweet forest");
+        case 24:
+            FacebookPtr->endStage(CCLocalizedString("FOREST"));
             break;
-        case 21:
-            FacebookPtr->endStage("Mountain giants");
+        case 36:
+            FacebookPtr->endStage(CCLocalizedString("MOUNTAIN"));
             break;
-        case 28:
-            FacebookPtr->endStage("Pistachio sea");
+        case 48:
+            FacebookPtr->endStage(CCLocalizedString("SEA"));
             break;
-        case 35:
-            FacebookPtr->endStage("Caramel meadows");
+        case 60:
+            FacebookPtr->endStage(CCLocalizedString("MEADOWS"));
             break;
-        case 42:
-            FacebookPtr->endStage("Farm ice cream");
+        case 72:
+            FacebookPtr->endStage(CCLocalizedString("FARM"));
             break;
-        case 49:
-            FacebookPtr->endStage("Ice city");
+        case 84:
+            FacebookPtr->endStage(CCLocalizedString("CITY"));
             break;
+            
         default:
             break;
     }
-
 }
 
 void EndGameLayer::unclockMenu(CCNode* pSender)

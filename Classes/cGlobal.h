@@ -45,6 +45,7 @@
 #define FONT_SIZE_140 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?140:70
 #define FONT_SIZE_86 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?86:43
 #define FONT_SIZE_64 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?64:32
+#define FONT_SIZE_54 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?54:27
 #define FONT_SIZE_48 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?48:24
 #define FONT_SIZE_40 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?40:20
 #define FONT_SIZE_36 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?36:18
@@ -57,6 +58,7 @@
 static const cocos2d::ccColor3B IceCreamPink={0xba, 0x29, 0x91};
 static const cocos2d::ccColor3B IceCreamBlue={0x29, 0x29, 0x93};
 static const cocos2d::ccColor3B IceCreamBrown={0x7f, 0x3e, 0x7a};
+static const cocos2d::ccColor3B IceCreamBrown2={0x91, 0x3b, 0x55};
 
 enum IceCreamScene
 {

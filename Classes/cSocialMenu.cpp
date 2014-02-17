@@ -91,17 +91,15 @@ CCLayerColor* SocialLayer::createUserNode(int place, string avatarFileName, stri
     else
         firstName = name;
     sprintf(buf, "%s\n%d", firstName.c_str(), score);
-    CCLabelTTF* labelName = CCLabelTTF::create(buf, "Arial", 50);
+    CCLabelTTF* labelName = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_48);
     labelName->setPosition(ccp(node->getContentSize().width/1.6f, node->getContentSize().height/5.0f));
     labelName->setColor(ccBLACK);
-    labelName->setScale(multiplier);
     
     //position
     sprintf(buf, "%d", place);
-    CCLabelBMFont* userPosition = CCLabelBMFont::create(buf, "fonts/Script MT Bold 36.fnt");
+    CCLabelTTF* userPosition = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_140);
     userPosition->setColor(color);
     userPosition->setPosition(ccp(node->getContentSize().height*0.14f, node->getContentSize().height/5.0f));
-    userPosition->setScale(multiplier);
     
     CCMenu* fMenu = CCMenu::create();
     node->addChild(fMenu);
@@ -292,7 +290,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
     layer->addChild(scrollView, 2);
     
     
-    CCLabelBMFont* highScoreLabel = CCLabelBMFont::create("High score", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("HIGH_SCORE", NULL), FONT_COMMON, FONT_SIZE_86);
     layer->addChild(highScoreLabel, 3);
     
     if (LANDSCAPE)
@@ -308,11 +306,34 @@ CCNode* SocialLayer::createScoreLayer(int level)
     layer->addChild(cmenu, 3);
     
     
-    CCMenuItemSprite* me = CCMenuItemSprite::create(CCSprite::create("me.png"), CCSprite::create("meDown.png"), this, menu_selector(SocialLayer::meCallback));
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    
+    CCMenuItemSprite* me = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::meCallback));
     cmenu->addChild(me);
     
-    CCMenuItemSprite* numOne = CCMenuItemSprite::create(CCSprite::create("numOne.png"), CCSprite::create("numOneDown.png"), this, menu_selector(SocialLayer::numOneCallback));
+    labelTTF = CCLabelTTF::create(CCLocalizedString("ME", NULL), FONT_COMMON, FONT_SIZE_22);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    me->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
+
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    CCMenuItemSprite* numOne = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::numOneCallback));
     cmenu->addChild(numOne);
+    
+    labelTTF = CCLabelTTF::create("№ 1", FONT_COMMON, FONT_SIZE_22);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    me->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
     
     numOne->stopAllActions();
     numOne->setScale(0.7f);
@@ -366,9 +387,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
         me->setVisible(false);
         numOne->setVisible(false);
         
-        CCLabelTTF* label = CCLabelTTF::create("See how your friends are doing!\nConnect to Facebook!", "Arial", 18);
-        if (IPAD)
-            label->setFontSize(36);
+        CCLabelTTF* label = CCLabelTTF::create("See how your friends are doing!", FONT_COMMON, FONT_SIZE_48);
         label->setColor(ccBLACK);
         if (LANDSCAPE)
             label->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height/2.5f));
@@ -488,7 +507,7 @@ CCNode* SocialLayer::createMessageboardForAsk()
     greyBack->addChild(scrollMessage, 3);
     
     
-    CCLabelBMFont* highScoreLabel = CCLabelBMFont::create("Ask life from friend", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("ASK_FRIEND"), FONT_COMMON, FONT_SIZE_36);
     layer->addChild(highScoreLabel, 3);
     highScoreLabel->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height*0.9f));
     highScoreLabel->setScale(multiplier);
@@ -500,7 +519,19 @@ CCNode* SocialLayer::createMessageboardForAsk()
     cmenu->setAnchorPoint(ccp(0.0f, 0.0f));
     cmenu->setPosition(background->getPosition());
     
-    checkAll = CCMenuItemSprite::create(CCSprite::create("message/checkAll.png"), CCSprite::create("message/checkAllDown.png"), this, menu_selector(SocialLayer::checkCallback));
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/checkAll.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/checkAllDown.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    checkAll = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::checkCallback));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CHECK_ALL", NULL), FONT_COMMON, FONT_SIZE_32);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    checkAll->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
+    
     cmenu->addChild(checkAll);
     CCSprite* check = CCSprite::create("greenArrow.png");
     check->setPosition(ccp(checkAll->getContentSize().width/6.3f, checkAll->getContentSize().height/2.0f));
@@ -508,9 +539,19 @@ CCNode* SocialLayer::createMessageboardForAsk()
     check->setScale(0.5f);
     checkAll->addChild(check);
     
-    
-    CCMenuItemSprite* accept = CCMenuItemSprite::create(CCSprite::create("message/accept.png"), CCSprite::create("message/acceptDown.png"), this, menu_selector(SocialLayer::acceptCallback));
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/blueButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/blueButton.png");
+    spriteSelected->setColor(ccGRAY);
+
+    CCMenuItemSprite* accept = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::acceptCallback));
     cmenu->addChild(accept);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("ACCEPT", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    accept->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
     
     CCMenuItemSprite* close = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/close.png"), CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(SocialLayer::closeMessageboardCallback));
     close->setPosition(ccp(background->getContentSize().width - close->getContentSize().width/2.0f, background->getContentSize().height - close->getContentSize().height/2.0f));
@@ -587,7 +628,7 @@ CCNode* SocialLayer::createAskMessage(string fromId, string from, int idxRequest
     char buf[255];
     sprintf(buf, "%s!", from.c_str());
     
-    CCLabelTTF* label = CCLabelTTF::create(buf, "Script MT Bold", 70*multiplier);
+    CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_48);
     ccColor3B color;
     color.r = 0xba;
 	color.g = 0x29;
@@ -623,7 +664,7 @@ CCNode* SocialLayer::createMessageboard()
     greyBack->addChild(scrollMessage, 3);
     
     
-    CCLabelBMFont* highScoreLabel = CCLabelBMFont::create("Your messages", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("YOUR_MESSAGE", NULL), FONT_COMMON, FONT_SIZE_48);
     layer->addChild(highScoreLabel, 3);
     highScoreLabel->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height*0.9f));
     highScoreLabel->setScale(multiplier);
@@ -635,7 +676,19 @@ CCNode* SocialLayer::createMessageboard()
     cmenu->setAnchorPoint(ccp(0.0f, 0.0f));
     cmenu->setPosition(background->getPosition());
     
-    checkAll = CCMenuItemSprite::create(CCSprite::create("message/checkAll.png"), CCSprite::create("message/checkAllDown.png"), this, menu_selector(SocialLayer::checkCallback));
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/checkAll.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/checkAllDown.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    checkAll = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::checkCallback));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CHECK_ALL", NULL), FONT_COMMON, FONT_SIZE_32);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    checkAll->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
     cmenu->addChild(checkAll);
     CCSprite* check = CCSprite::create("greenArrow.png");
     check->setPosition(ccp(checkAll->getContentSize().width/6.3f, checkAll->getContentSize().height/2.0f));
@@ -643,9 +696,18 @@ CCNode* SocialLayer::createMessageboard()
     check->setScale(0.5f);
     checkAll->addChild(check);
     
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/blueButton.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/blueButton.png");
+    spriteSelected->setColor(ccGRAY);
     
-    CCMenuItemSprite* accept = CCMenuItemSprite::create(CCSprite::create("message/accept.png"), CCSprite::create("message/acceptDown.png"), this, menu_selector(SocialLayer::acceptCallback));
+    CCMenuItemSprite* accept = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::acceptCallback));
     cmenu->addChild(accept);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("ACCEPT", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    accept->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
     CCMenuItemSprite* close = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/close.png"), CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(SocialLayer::closeMessageboardCallback));
     close->setPosition(ccp(background->getContentSize().width - close->getContentSize().width/2.0f, background->getContentSize().height - close->getContentSize().height/2.0f));
@@ -736,11 +798,11 @@ CCNode* SocialLayer::createMessage(string fromId, string from, NotificationType 
 
     char buf[255];
     if (notif == HELPED_YOU)
-        sprintf(buf, "You got a gift \n %s gave you a life!", from.c_str());
+        sprintf(buf, "%s \n %s %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
     else if (notif == HELP_ME)
-        sprintf(buf, "Help a friend \n %s requests life!", from.c_str());
+        sprintf(buf, "%s \n %s %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
     
-    CCLabelTTF* label = CCLabelTTF::create(buf, "Script MT Bold", 45*multiplier);
+    CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_32);
     ccColor3B color;
     color.r = 0xba;
 	color.g = 0x29;
@@ -943,13 +1005,13 @@ void SocialLayer::connection()
     connectionPlate->setPosition(ccp(WINSIZE.width/2.0f + WINSIZE.width, WINSIZE.height/2.0f));
     this->addChild(connectionPlate);
     
-    CCLabelBMFont* titleLabel = CCLabelBMFont::create("Facebook", "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* titleLabel = CCLabelTTF::create("Facebook", FONT_COMMON, FONT_SIZE_86);
     titleLabel->setPosition(ccp(connectionPlate->getContentSize().width/2.0f, 9.0f*connectionPlate->getContentSize().height/10.0f));
     if (!IPAD)
         titleLabel->setScale(0.5f);
     connectionPlate->addChild(titleLabel);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create("Connection", "Arial", 50);
+    CCLabelTTF* textLabel = CCLabelTTF::create(CCLocalizedString("CONNECTION"), FONT_COMMON, FONT_SIZE_64);
     textLabel->setPosition(ccp(connectionPlate->getContentSize().width/2.0f, 1.0f*connectionPlate->getContentSize().height/10.0f));
     connectionPlate->addChild(textLabel);
     
