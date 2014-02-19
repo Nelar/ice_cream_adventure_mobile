@@ -261,7 +261,7 @@ bool MapMenuLayer::init()
 
     if (OptionsPtr->getLifeCount() >= 5)
     {
-        livesTime = CCLabelTTF::create(CCLocalizedString("FULL"), FONT_COMMON, FONT_SIZE_64);
+        livesTime = CCLabelTTF::create(CCLocalizedString("FULL"), FONT_COMMON, FONT_SIZE_48);
         livesTime->setPosition(ccp(livesPanel->getContentSize().width/1.6f, livesPanel->getContentSize().height/2.6f));
         livesPanel->addChild(livesTime);
     }
@@ -509,7 +509,7 @@ void MapMenuLayer::timeCallback(CCNode* sender)
     
     if (OptionsPtr->getLifeCount() >= 5)
     {
-        livesTime = CCLabelTTF::create(CCLocalizedString("FULL"), FONT_COMMON, FONT_SIZE_64);
+        livesTime = CCLabelTTF::create(CCLocalizedString("FULL"), FONT_COMMON, FONT_SIZE_48);
         livesTime->setPosition(ccp(livesPanel->getContentSize().width/1.6f, livesPanel->getContentSize().height/2.6f));
         livesPanel->addChild(livesTime);
     }

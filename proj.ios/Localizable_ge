@@ -108,16 +108,16 @@ BANNER_LOSE = "Leider! Ziel nicht erreicht.";
 BANNER_NO_MATCH = "Spielzug nicht möglich";
 SKIP = "Überspringen";
 
-TUTORIAL_1 = "Swipe this ice cream\n to the down to match 3\n of the same";
-TUTORIAL_2 = "Swipe this ice cream\n to the left or right to\n match 3 of the same";
-TUTORIAL_3 = "Try to match 4 ice cream!";
-TUTORIAL_4 = "Match it to get\n a line blast!";
-TUTORIAL_5 = "Try a T or L\n - shaped match!";
-TUTORIAL_6 = "Match it to clear\n lots of ice cream!";
-TUTORIAL_7 = "Swap the bomb\n and blasting ice cream for\n a super-powerful move!";
-TUTORIAL_8 = "Match 5 ice cream\n in a line to create\n a special ice cream!";
-TUTORIAL_9 = "Swap the special\n with any ice cream to remove\n all ice cream of that color!";
-TUTORIAL_10 = "Clear all the ice.\n Match over the ice to remove it.";
+TUTORIAL_1 = "Wische die Eiskugel \nnach unten, um drei gleiche\n Kugeln zu erhalten.";
+TUTORIAL_2 = "Wische die Eiskugel \nnach links oder rechts, um drei\n gleiche Kugeln zu erhalten.";
+TUTORIAL_3 = "Versuche eine Kombination aus\n vier Kugeln zu erzielen!";
+TUTORIAL_4 = "Diese Kombination bewirkt\n die Explosion einer Reihe!";
+TUTORIAL_5 = "Versuche eine Kombination in\n Form eines „T“ oder „L“ zu erzielen!";
+TUTORIAL_6 = "Diese Kombinationen entfernen\n viele Eiskugeln auf einmal!";
+TUTORIAL_7 = "Tausche die Bombe und\n die explosive Eiscreme gegen\n einen Super-Spielzug!";
+TUTORIAL_8 = "Erziele eine Kombination aus\n fünf Kugeln in einer Reihe, um eine\n Spezialkugel zu erzeugen!";
+TUTORIAL_9 = "Tausche die Spezialkugel gegen\n eine andere Kugel, um die gesamte \nEiscreme dieser Farbe zu zerstören!";
+TUTORIAL_10 = "Entferne das Eis,\n indem du Kombinationen erzielst.";
 
 
 
