@@ -453,7 +453,7 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     
     playOn = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(GameMenuLayer::playOnCallback));
     
-    labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY_ON", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY_ON", NULL), FONT_COMMON, FONT_SIZE_64);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     playOn->addChild(labelTTF);

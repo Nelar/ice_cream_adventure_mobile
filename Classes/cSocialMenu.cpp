@@ -290,7 +290,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
     layer->addChild(scrollView, 2);
     
     
-    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("HIGH_SCORE", NULL), FONT_COMMON, FONT_SIZE_86);
+    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("HIGH_SCORE", NULL), FONT_COMMON, FONT_SIZE_64);
     layer->addChild(highScoreLabel, 3);
     
     if (LANDSCAPE)
@@ -387,7 +387,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
         me->setVisible(false);
         numOne->setVisible(false);
         
-        CCLabelTTF* label = CCLabelTTF::create("See how your friends are doing!", FONT_COMMON, FONT_SIZE_48);
+        CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("SETTING_FACEBOOK_TEXT"), FONT_COMMON, FONT_SIZE_48);
         label->setColor(ccBLACK);
         if (LANDSCAPE)
             label->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height/2.5f));

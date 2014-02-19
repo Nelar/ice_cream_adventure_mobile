@@ -1,9 +1,9 @@
-<Level background="1" targetScore="40000" width="9" height="9" type="ice" movesCount="25" colorNumber="5">
+<Level background="1" targetScore="40000" secondStar = "60000" thirdStar = "70000" width="9" height="9" type="ice" movesCount="25" colorNumber="5">
   <c t="s"/>
   <c t="s"/>
   <c t="s" index="1"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="2"/>
   <c t="s"/>
@@ -12,7 +12,7 @@
   <c t="s"/>
   <c t="s" index="3"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="4"/>
   <c t="s"/>
@@ -21,7 +21,7 @@
   <c t="s"/>
   <c t="s" index="5"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="6"/>
   <c t="s"/>
@@ -30,7 +30,7 @@
   <c t="s"/>
   <c t="s" index="7"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="8"/>
   <c t="s"/>
@@ -39,7 +39,7 @@
   <c t="s"/>
   <c t="s" index="9"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="10"/>
   <c t="s"/>
@@ -48,7 +48,7 @@
   <c t="s"/>
   <c t="s" index="11"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="12"/>
   <c t="s"/>
@@ -57,7 +57,7 @@
   <c t="s"/>
   <c t="s" index="13"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="14"/>
   <c t="s"/>
@@ -75,7 +75,7 @@
   <c t="s"/>
   <c t="s" index="17"/>
   <c t="n"/>
-  <c t="si"/>
+  <c t="i"/>
   <c t="n"/>
   <c t="s" index="18"/>
   <c t="s"/>

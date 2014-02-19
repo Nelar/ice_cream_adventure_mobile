@@ -1,4 +1,4 @@
-<Level background="1" targetScore="20000" width="9" height="9" type="bringDown" bringDownCount="4" movesCount="25" colorNumber="5">
+<Level background="1" targetScore="20000" width="9" height="9" type="bringDown" bringDownCount="4" movesCount="45" colorNumber="5">
   <c t="s"/>
   <c t="s"/>
   <c t="s" oT="cookie"/>
