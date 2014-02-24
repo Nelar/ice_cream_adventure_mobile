@@ -48,14 +48,16 @@ cFacebook::cFacebook()
 
 void cFacebook::login()
 {
-    if (isLogin)
-        return;
-    if (sessionIsOpened())
+    if(sessionIsOpened())
     {
-        [[FBSession activeSession] closeAndClearTokenInformation];
-        [FBSession setActiveSession:nil];
+        if(!loggedInSuccessfully)
+        {
+            //that flag is used to call onLogin callback only once
+            loggedInSuccessfully = true;
+        }
+        getScores();
+        return;
     }
-
         NSArray *permissions = [[NSArray alloc] initWithObjects:
                                 @"email",
                                 @"publish_actions",
@@ -91,6 +93,9 @@ void cFacebook::login()
                 
                 getScores();
                 
+                OptionsPtr->setFacebookConnection(true);
+                OptionsPtr->save();
+                
                 if (GlobalsPtr->iceCreamScene == Menu)
                 {
                     MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
@@ -125,6 +130,8 @@ void cFacebook::login()
                 [[PFUser currentUser] saveInBackground];
                 
                 getScores();
+                OptionsPtr->setFacebookConnection(true);
+                OptionsPtr->save();
                 
                 if (GlobalsPtr->iceCreamScene == Menu)
                 {
@@ -135,6 +142,106 @@ void cFacebook::login()
                 }
             }
         }];
+}
+
+void cFacebook::loginWithInvite()
+{
+    if(sessionIsOpened())
+    {
+        if(!loggedInSuccessfully)
+        {
+            //that flag is used to call onLogin callback only once
+            loggedInSuccessfully = true;
+        }
+        return;
+    }
+    NSArray *permissions = [[NSArray alloc] initWithObjects:
+                            @"email",
+                            @"publish_actions",
+                            nil];
+    
+    [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
+        if (!user) {
+            NSLog(@"Uh oh. The user cancelled the Facebook login.");
+        } else if (user.isNew) {
+            isLogin = true;
+            NSLog(@"User signed up and logged in through Facebook!");
+            [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                if (!error) {
+                    // Store the current user's Facebook ID on the user
+                    [[PFUser currentUser] setObject:[result objectForKey:@"id"]
+                                             forKey:@"fbId"];
+                    [[PFUser currentUser] saveInBackground];
+                    
+                    PFInstallation *installation = [PFInstallation currentInstallation];
+                    [installation setObject:[result objectForKey:@"id"] forKey:@"fbId"];
+                    [installation saveInBackground];
+                }
+            }];
+            if (![PFFacebookUtils isLinkedWithUser:user]) {
+                [PFFacebookUtils linkUser:user permissions:nil block:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        NSLog(@"Woohoo, user logged in with Facebook!");
+                    }
+                }];
+            }
+            
+            [[PFUser currentUser] saveInBackground];
+            
+            getScores();
+            OptionsPtr->setFacebookConnection(true);
+            OptionsPtr->save();
+            
+            inviteFriends();
+            
+            if (GlobalsPtr->iceCreamScene == Menu)
+            {
+                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->facebookButtonHide();
+                OptionsPtr->setFacebookConnection(true);
+                OptionsPtr->save();
+            }
+            
+        } else {
+            isLogin = true;
+            [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                if (!error) {
+                    // Store the current user's Facebook ID on the user
+                    [[PFUser currentUser] setObject:[result objectForKey:@"id"]
+                                             forKey:@"fbId"];
+                    [[PFUser currentUser] saveInBackground];
+                    
+                    PFInstallation *installation = [PFInstallation currentInstallation];
+                    [installation setObject:[result objectForKey:@"id"] forKey:@"fbId"];
+                    [installation saveInBackground];
+                }
+            }];
+            
+            if (![PFFacebookUtils isLinkedWithUser:user]) {
+                [PFFacebookUtils linkUser:user permissions:nil block:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        NSLog(@"Woohoo, user logged in with Facebook!");
+                    }
+                }];
+            }
+            
+            [[PFUser currentUser] saveInBackground];
+            
+            getScores();
+            OptionsPtr->setFacebookConnection(true);
+            OptionsPtr->save();
+            
+            inviteFriends();
+            
+            if (GlobalsPtr->iceCreamScene == Menu)
+            {
+                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->facebookButtonHide();
+                OptionsPtr->setFacebookConnection(true);
+                OptionsPtr->save();
+            }
+        }
+    }];
 }
 
 bool cFacebook::sessionIsOpened()

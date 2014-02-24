@@ -43,6 +43,7 @@ public:
     ~cFacebook(){};
     
     void login();
+    void loginWithInvite();
     void getUserData();
     string& getAvatar();
     
@@ -101,6 +102,8 @@ public:
     void checkMessages();
     void acceptMessage();
 private:
+    
+    bool loggedInSuccessfully = false;
     
     void createFBSession();
     

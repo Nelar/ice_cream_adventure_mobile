@@ -19,5 +19,7 @@ void sendlocalNotification(float second);
 void removeAllNotification();
 const char* getCountry();
 bool getNetworkStatus();
+void alertNetwork();
+
 
 #endif /* defined(__IceCream__utils__) */

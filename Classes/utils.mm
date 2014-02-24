@@ -10,6 +10,10 @@
 #import <AdSupport/ASIdentifierManager.h>
 #import "Reachability.h"
 
+#import "Reachability.h"
+#include "cocos2d.h"
+#include "CCLocalizedString.h"
+
 
 const char* version()
 {
@@ -74,4 +78,12 @@ bool getNetworkStatus()
         return true;
     
     return false;
+}
+
+void alertNetwork()
+{
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithUTF8String:CCLocalizedString("NETWORK_MESSAGE", NULL)]
+                                                   delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
+    [alert release];
 }

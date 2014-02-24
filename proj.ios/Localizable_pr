@@ -120,7 +120,7 @@ TUTORIAL_9 = "Troque a bola especial com\n qualquer outra bola de sorvete\n para
 TUTORIAL_10 = "Elimine todo o gelo\n fazendo combinações.";
 
 
-
+NETWORK_MESSAGE = "Sem conexão à internet.\n Tente novamente mais tarde";
 
 
 

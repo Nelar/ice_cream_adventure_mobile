@@ -798,7 +798,14 @@ void MapMenuLayer::notif_1_Callback(CCObject* pSender)
 void MapMenuLayer::askFriendCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
     closeHeartCallback(NULL);
+    
     
     if (social->isMessageBoard)
     {
@@ -810,13 +817,19 @@ void MapMenuLayer::askFriendCallback(CCObject* pSender)
         if (lock)
             return;
         lock = true;
-        isPopup = true;
         if (FacebookPtr->sessionIsOpened())
         {
             if (FacebookPtr->friendsScores.size() > 0)
+            {
                 social->showAskMessageboard();
+                isPopup = true;
+            }
             else
                 FacebookPtr->inviteFriends();
+        }
+        else
+        {
+            FacebookPtr->loginWithInvite();
         }
     }
 }
@@ -853,6 +866,10 @@ void MapMenuLayer::updateFacebook()
     {
         social->hideScoreBoard();
         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::updateFacebookCallback))));
+    }
+    else
+    {
+        lock = false;
     }
 }
 

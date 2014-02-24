@@ -260,7 +260,7 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     button->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
-    
+    menu->addChild(button);
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
 }
 

@@ -120,6 +120,7 @@ TUTORIAL_9 = "Inverti una pallina di\n gelato speciale con una\n pallina qualsia
 TUTORIAL_10 = "Rimuovi tutto il\n ghiaccio abbinando le\n palline di gelato.";
 
 
+NETWORK_MESSAGE="Nessuna connessione a internet,\n per favore riprova più tardi";
 
 
 

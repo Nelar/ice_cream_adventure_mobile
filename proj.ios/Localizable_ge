@@ -120,6 +120,7 @@ TUTORIAL_9 = "Tausche die Spezialkugel gegen\n eine andere Kugel, um die gesamte
 TUTORIAL_10 = "Entferne das Eis,\n indem du Kombinationen erzielst.";
 
 
+NETWORK_MESSAGE = "Keine Internetverbindung.\n Bitte versuchen Sie es später erneut.";
 
 
 

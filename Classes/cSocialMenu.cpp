@@ -306,32 +306,32 @@ CCNode* SocialLayer::createScoreLayer(int level)
     layer->addChild(cmenu, 3);
     
     
-    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
-	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/redButtonSmall.png");
+	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/redButtonSmall.png");
     spriteSelected->setColor(ccGRAY);
     
     
     CCMenuItemSprite* me = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::meCallback));
     cmenu->addChild(me);
     
-    labelTTF = CCLabelTTF::create(CCLocalizedString("ME", NULL), FONT_COMMON, FONT_SIZE_22);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("ME", NULL), FONT_COMMON, FONT_SIZE_36);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     me->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
 
-    spriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
-	spriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/redButtonSmall.png");
+	spriteSelected = CCSprite::createWithSpriteFrameName("common/redButtonSmall.png");
     spriteSelected->setColor(ccGRAY);
     
     CCMenuItemSprite* numOne = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::numOneCallback));
     cmenu->addChild(numOne);
     
-    labelTTF = CCLabelTTF::create("№ 1", FONT_COMMON, FONT_SIZE_22);
+    labelTTF = CCLabelTTF::create("№ 1", FONT_COMMON, FONT_SIZE_36);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
-    me->addChild(labelTTF);
+    numOne->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
     
@@ -390,9 +390,15 @@ CCNode* SocialLayer::createScoreLayer(int level)
         CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("SETTING_FACEBOOK_TEXT"), FONT_COMMON, FONT_SIZE_48);
         label->setColor(ccBLACK);
         if (LANDSCAPE)
+        {
             label->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height/2.5f));
+            label->setFontSize(FONT_SIZE_22);
+        }
         else
+        {
             label->setPosition(ccp(layer->getContentSize().width/1.5f, layer->getContentSize().height/2.5f));
+            label->setFontSize(FONT_SIZE_48);
+        }
         layer->addChild(label, 3);
         
         CCSprite* darkFace = CCSprite::create("facebookScore.png");
@@ -957,6 +963,9 @@ void SocialLayer::acceptCallback(CCObject* pSender)
 
 void SocialLayer::facebookCallback(CCObject* pSender)
 {
+    if (!getNetworkStatus())
+        alertNetwork();
+    
     FacebookPtr->login();
 }
 

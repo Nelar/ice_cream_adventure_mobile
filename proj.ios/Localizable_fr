@@ -120,8 +120,7 @@ TUTORIAL_9 = "Interchange la méga boule\n avec une autre boule pour\n faire dis
 TUTORIAL_10 = "Élimine toute la glace\n en réalisant des\n combinaisons !";
 
 
-
-
+NETWORK_MESSAGE = "Aucune connexion Internet.\n Veuillez réessayer ultérieurement";
 
 
 

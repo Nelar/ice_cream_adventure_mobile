@@ -62,9 +62,6 @@ bool MainMenuScene::init()
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common0.plist", CCTextureCache::sharedTextureCache()->addPVRImage("common0.pvr.ccz"));
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common1.plist", CCTextureCache::sharedTextureCache()->addPVRImage("common1.pvr.ccz"));
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("mainMenu.plist", CCTextureCache::sharedTextureCache()->addPVRImage("mainMenu.pvr.ccz"));
-
-    Options* options = new Options();
-	OptionsPtr->load();
     
     vector<sRequestData> requests = OptionsPtr->appRequests;
     
@@ -1380,7 +1377,20 @@ void MainMenuScene::resetPopup(CCObject* pSender)
 
 void MainMenuScene::addBonus(CCNode* pSender)
 {
-    FacebookPtr->inviteFriends();
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    
+    if (FacebookPtr->sessionIsOpened())
+    {
+        FacebookPtr->inviteFriends();
+    }
+    else
+    {
+        FacebookPtr->loginWithInvite();
+    }
 }
 
 void MainMenuScene::resetPopupOk(CCNode* pSender)
@@ -1574,7 +1584,7 @@ void MainMenuScene::closeSettingCallback(CCObject* pSender)
 
 		for (int i = 0; i < popup->getChildrenCount(); i++)
 		{			
-			((CCSprite*)popup->getChildren()->objectAtIndex(i))->runAction(CCFadeIn::create(0.5f));				
+			((CCSprite*)popup->getChildren()->objectAtIndex(i))->runAction(CCFadeIn::create(0.5f));
 		}
 		for (int i = 0; i < popupMenu->getChildrenCount(); i++)
 		{			
@@ -1590,6 +1600,12 @@ void MainMenuScene::closeSettingCallback(CCObject* pSender)
 
 void MainMenuScene::menuFacebookCallback(CCObject* pSender)
 {
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+        
     vector<sRequestData> requests = OptionsPtr->appRequests;
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     FacebookPtr->login();

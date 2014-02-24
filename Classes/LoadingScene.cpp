@@ -11,6 +11,8 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
+#include "Options.h"
+#include "cFacebook.h"
 
 using namespace cocos2d;
 using namespace std;
@@ -48,6 +50,9 @@ bool LoadingScene::init()
 	if (!CCLayer::init())
 		return false;
     
+    Options* options = new Options();
+	OptionsPtr->load();
+    
     if (IPAD)
     {
         if (LANDSCAPE)
@@ -73,12 +78,21 @@ bool LoadingScene::init()
     
     background->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     
+    
     this->addChild(background);
     
     if (getNetworkStatus())
+    {
+        if (OptionsPtr->isFacebookConnection())
+        {
+            FacebookPtr->login();
+        }
         moreGamesRequest();
+    }
     else
+    {
         moreGamesLoadSavedData();
+    }
     
 	return true;
 }
@@ -135,7 +149,10 @@ void LoadingScene::moreGamesLoadSavedData()
 {
     int countMoreGames = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey("countMoreGames", 0);
     if (countMoreGames == 0)
+    {
+        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(LoadingScene::loadingFinished))));
         return;
+    }
     
     for (int i = 0; i < countMoreGames; i++)
     {
@@ -151,7 +168,7 @@ void LoadingScene::moreGamesLoadSavedData()
         moreGame.iconUrl = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesIconUrl" + to_string(i)).c_str());
         GlobalsPtr->globalMoreGames.push_back(moreGame);
     }
-    loadingFinished(NULL);
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(LoadingScene::loadingFinished))));
 }
 
 void LoadingScene::moreGamesLoadedCallback(CCNode *sender)

@@ -120,6 +120,8 @@ TUTORIAL_9 = "Swap the special\n with any ice cream to remove\n all ice cream of
 TUTORIAL_10 = "Clear all the ice.\n Match over the ice to remove it.";
 
 
+NETWORK_MESSAGE = "No internet connection.\n Please try again later";
+
 
 
 
