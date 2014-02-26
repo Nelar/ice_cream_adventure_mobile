@@ -92,7 +92,38 @@ public:
     void checkMessage(CCNode* pSender);
     
     void playAfterLoad(CCNode* pSender);
+    
+    void showUnlock(int numLevel);
+    void hideUnlock();
+    void stageCallback(CCNode* node);
+    
+    void showLastStage(int numLevel);
+    void hideLastStage();
+    void LastStageCallback(CCNode* node);
+    
+    void closeLoading();
+    
+//    void buyPack
 private:
+    
+    CCMenu* stageMenu;
+    CCSprite* stageSprite;
+    CCSprite* stageLogo;
+    CCMenuItemSprite* stageButton;
+    CCMenuItemSprite* stageClose;
+    CCLabelTTF* stageTitle;
+    CCLabelTTF* stageText;
+    CCLabelTTF* stageButtonText;
+    
+    CCMenu* lastStageMenu;
+    CCSprite* lastStageSprite;
+    CCSprite* lastStageLogo;
+    CCMenuItemSprite* lastStageButton;
+    CCMenuItemSprite* lastStageClose;
+    CCLabelTTF* lastStageTitle;
+    CCLabelTTF* lastStageText;
+    CCLabelTTF* lastStageButtonText;
+    
 
 	bool lock;
 	CCMenu* menu;

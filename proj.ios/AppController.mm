@@ -15,7 +15,7 @@
 #import "cFacebook.h"
 
 #include "SimpleAudioEngine.h"
-#include "GAI.h"
+//#include "GAI.h"
 #import <Parse/Parse.h>
 
 #import <Tapjoy/Tapjoy.h>
@@ -83,7 +83,7 @@ static AppDelegate s_sharedApplication;
     self.appUsageCheckEnabled = YES;
     
     // Optional: automatically send uncaught exceptions to Google Analytics.
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
+/*    [GAI sharedInstance].trackUncaughtExceptions = YES;
     
     // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
     [GAI sharedInstance].dispatchInterval = 20;
@@ -93,7 +93,7 @@ static AppDelegate s_sharedApplication;
     
     // Initialize tracker.
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-44781394-4"];
-
+*/
     [Tapjoy requestTapjoyConnect:@"9c1347c8-9037-465e-80aa-7f0ca2132e5a" secretKey:@"vA2FgPlWDpuT8E46WOZR"];
     
     cocos2d::CCApplication::sharedApplication()->run();

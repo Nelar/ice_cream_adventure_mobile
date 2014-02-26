@@ -51,6 +51,10 @@ public:
     
     virtual void changeOrientation();
     
+    
+    void loading(char* closeLoading);
+    void closeLoading();
+    
     void closePopup(CCObject* pSender);
     void buttonClick(CCObject* pSender);
     

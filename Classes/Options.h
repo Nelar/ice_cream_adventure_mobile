@@ -23,6 +23,7 @@ struct sLevelData
 	int countScore;
 	eLevelType levelType;
     int targetScore;
+    bool lock;
 };
 
 struct sRequestData
@@ -57,7 +58,7 @@ public:
 	int	getCurrentLevel();
 	void setCurrentLevel(int nCurrentLevel);
 
-	void setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType);
+	void setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock = false);
 	sLevelData getLevelData(int idx);
     
     void setLifeCount(int nLife);
@@ -115,6 +116,9 @@ public:
     
     void setEndPost();
     bool getEndPost();
+    
+    void setUnclock(int numLevel, bool isLock);
+    bool getUnlock(int numLevel);
     
     vector<sRequestData> appRequests;
 

@@ -10,6 +10,7 @@
 
 NSString *const IAPHelperProductPurchasedNotification = @"IAPHelperProductPurchasedNotification";
 NSString *const IAPHelperProductPurchasedCancelNotification = @"IAPHelperProductPurchasedCancelNotification";
+NSString *const IAPHelperProductRestoreNotification = @"IAPHelperProductRestoreNotification";
 
 typedef void (^RequestProductsCompletionHandler)(BOOL success, NSArray * products);
 

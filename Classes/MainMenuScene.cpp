@@ -12,6 +12,8 @@
 
 #include "MMPInterface.h"
 
+#include "IAP.h"
+
 using namespace Core;
 using namespace MarketingPlatform;
 
@@ -49,6 +51,9 @@ MainMenuScene::~MainMenuScene()
 void MainMenuScene::facebookButtonHide()
 {
     facebook->setVisible(false);
+    faceConnect->setVisible(false);
+    faceConnect->setCascadeOpacityEnabled(true);
+    faceConnect->setEnabled(false);
 }
 
 bool MainMenuScene::init()
@@ -159,7 +164,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     play->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
@@ -175,13 +180,9 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebook->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
-
-    
-    if (FacebookPtr->sessionIsOpened())
-        facebook->setVisible(false);
 
 	CCSprite* settingSpriteNormal = CCSprite::create("gameMap/setting.png");
 	CCSprite* settingSpriteSelected = CCSprite::create("gameMap/setting.png");
@@ -200,8 +201,8 @@ bool MainMenuScene::init()
 	invite->setPosition(ccp(invite->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f - settingBlob->getContentSize().width / 20.0f,
                             -invite->getContentSize().height/1.3f - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height/0.99f));
     
-    CCSprite* moreGamesNormal = CCSprite::create("inviteFriends.png");
-	CCSprite* moreGamesSelected = CCSprite::create("inviteFriends.png");
+    CCSprite* moreGamesNormal = CCSprite::create("moreGames.png");
+	CCSprite* moreGamesSelected = CCSprite::create("moreGames.png");
     moreGamesSelected->setColor(ccGRAY);
     
     moreGamesSelected->setScale(0.9f);
@@ -326,7 +327,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(IceCreamBrown);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     faceConnect->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -351,7 +352,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(IceCreamBrown);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     howPlay->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -375,7 +376,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_ASK", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(IceCreamBrown);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     freqAsk->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -398,7 +399,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_RESTORE", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(IceCreamBrown);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     restorePurshase->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -421,7 +422,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_RESET", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(IceCreamBrown);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     reset->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -444,7 +445,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_NOTIFICATION", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(IceCreamBrown);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     notification->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
@@ -477,7 +478,7 @@ bool MainMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialNext->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
@@ -489,13 +490,13 @@ bool MainMenuScene::init()
     
     tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
     tutorialText->setColor(IceCreamBrown);
-    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialSprite->addChild(tutorialText);
     tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
     
     tutorialHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
     tutorialHeader->setColor(IceCreamPink);
-    tutorialHeader->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialHeader->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialPopup->addChild(tutorialHeader);
     tutorialHeader->setPosition(ccp(tutorialHeader->getParent()->getContentSize().width/2.0f, tutorialHeader->getParent()->getContentSize().height/1.1f));
 
@@ -565,6 +566,15 @@ bool MainMenuScene::init()
 	tutorialMenu->setPosition(ccp(tutorialMenu->getPositionX(), tutorialMenu->getPositionY() - tutorialPopup->getContentSize().height));
 	popup->setPosition(ccp(popup->getPositionX(), popup->getPositionY() - popup->getContentSize().height));
 	popupMenu->setPosition(ccp(popupMenu->getPositionX(), popupMenu->getPositionY() - popup->getContentSize().height));
+    
+    if (FacebookPtr->sessionIsOpened())
+    {
+        facebook->setVisible(false);
+        faceConnect->setVisible(false);
+        faceConnect->setVisible(false);
+        faceConnect->setCascadeOpacityEnabled(true);
+        faceConnect->setEnabled(false);
+    }
     
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::facebookCheck))));
     
@@ -848,7 +858,7 @@ void MainMenuScene::facebookCallback(CCObject* pSender)
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-	label = CCLabelTTF::create(CCLocalizedString("SETTING_FACEBOOK_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
+	label = CCLabelTTF::create(CCLocalizedString("SETTING_FACEBOOK_TEXT", NULL), FONT_COMMON, FONT_SIZE_40);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -858,9 +868,6 @@ void MainMenuScene::facebookCallback(CCObject* pSender)
     color.b = 0x55;
 	label->setColor(color);
 	label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
-
-    if (!IPAD)
-        label->setScale(0.5f);
     
     CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/facebookButtonMainMenu.png");
     CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/facebookButtonMainMenu.png");
@@ -876,7 +883,7 @@ void MainMenuScene::facebookCallback(CCObject* pSender)
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_64);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebookButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
@@ -902,7 +909,7 @@ void MainMenuScene::helpFromSetting(CCNode* pSender)
     
     tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
     tutorialText->setColor(IceCreamBrown);
-    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialSprite->addChild(tutorialText);
     tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
     
@@ -955,13 +962,13 @@ void MainMenuScene::howToPlaySettingCallback(CCObject* pSender)
     
     CCLabelTTF* howToPlayText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
     howToPlayText->setColor(IceCreamBrown);
-    howToPlayText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    howToPlayText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorial->addChild(howToPlayText);
     howToPlayText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
     
     howToPlayHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
     howToPlayHeader->setColor(IceCreamPink);
-    howToPlayHeader->enableShadow(CCSize(5, -5), 255, 8.0f);
+    howToPlayHeader->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     popup->addChild(howToPlayHeader);
     popup->setCascadeOpacityEnabled(true);
     howToPlayHeader->setPosition(ccp(howToPlayHeader->getParent()->getContentSize().width/2.0f, howToPlayHeader->getParent()->getContentSize().height/1.1f));
@@ -981,7 +988,7 @@ void MainMenuScene::howToPlaySettingCallback(CCObject* pSender)
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebookButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
@@ -1003,7 +1010,7 @@ void MainMenuScene::tutorialCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
@@ -1017,7 +1024,8 @@ void MainMenuScene::tutorialCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+
         ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -1034,7 +1042,8 @@ void MainMenuScene::tutorialCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+
         tutorialSprite->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
 	}
@@ -1048,7 +1057,8 @@ void MainMenuScene::tutorialCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+
         tutorialSprite->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
 	}
@@ -1062,7 +1072,8 @@ void MainMenuScene::tutorialCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+
         tutorialSprite->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
 	}
@@ -1105,7 +1116,7 @@ void MainMenuScene::nextCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
         
@@ -1122,7 +1133,7 @@ void MainMenuScene::nextCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -1147,7 +1158,7 @@ void MainMenuScene::nextCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorial->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
 	}
@@ -1161,7 +1172,7 @@ void MainMenuScene::nextCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorial->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
 	}
@@ -1197,7 +1208,7 @@ void MainMenuScene::askedCallback(CCObject* pSender)
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create(CCLocalizedString("SETTING_ASK_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_ASK_TEXT", NULL), FONT_COMMON, FONT_SIZE_40);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1207,10 +1218,6 @@ void MainMenuScene::askedCallback(CCObject* pSender)
     color.b = 0x55;
 	label->setColor(color);
 	label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
-
-    if (!IPAD)
-        label->setScale(0.5f);
-    
     
     CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/greenButton.png");
     CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/greenButton.png");
@@ -1227,7 +1234,7 @@ void MainMenuScene::askedCallback(CCObject* pSender)
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("GO", NULL), FONT_COMMON, FONT_SIZE_64);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebookButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
@@ -1267,7 +1274,7 @@ void MainMenuScene::restoreCallback(CCObject* pSender)
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create(CCLocalizedString("SETTING_RESTORE_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_RESTORE_TEXT", NULL), FONT_COMMON, FONT_SIZE_40);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1277,16 +1284,13 @@ void MainMenuScene::restoreCallback(CCObject* pSender)
     color.b = 0x55;
 	label->setColor(color);
 	label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
-
-    if (!IPAD)
-        label->setScale(0.5f);
     
     CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/greenButton.png");
     CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/greenButton.png");
     facebookButtonButtonDown->setColor(ccGRAY);
 
 	CCMenuItemSprite* facebookButton = CCMenuItemSprite::create(facebookButtonButton,
-		facebookButtonButtonDown, this, menu_selector(MainMenuScene::menuFacebookCallback));
+		facebookButtonButtonDown, this, menu_selector(MainMenuScene::restoreInappCallback));
 	facebookButton->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		(popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f - facebookButton->getContentSize().height*1.2f* 3.0f));
     facebookButton->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
@@ -1296,9 +1300,20 @@ void MainMenuScene::restoreCallback(CCObject* pSender)
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("RESTORE", NULL), FONT_COMMON, FONT_SIZE_64);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebookButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+}
+
+void MainMenuScene::restoreInappCallback(CCObject* pSender)
+{
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeSettingCallback))));
+    IAP::sharedInstance().restoreCompletedTransactions();
 }
 
 void MainMenuScene::resetCallback(CCObject* pSender)
@@ -1331,7 +1346,7 @@ void MainMenuScene::resetCallback(CCObject* pSender)
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create(CCLocalizedString("SETTING_RESET_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_RESET_TEXT", NULL), FONT_COMMON, FONT_SIZE_40);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 2.0f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1341,10 +1356,6 @@ void MainMenuScene::resetCallback(CCObject* pSender)
     color.b = 0x55;
 	label->setColor(color);
 	label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
-
-    if (!IPAD)
-        label->setScale(0.5f);
-    
     
     CCSprite* facebookButtonButton = CCSprite::createWithSpriteFrameName("common/redButton.png");
     CCSprite* facebookButtonButtonDown = CCSprite::createWithSpriteFrameName("common/redButton.png");
@@ -1362,7 +1373,7 @@ void MainMenuScene::resetCallback(CCObject* pSender)
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("RESET", NULL), FONT_COMMON, FONT_SIZE_64);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebookButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 }
@@ -1462,7 +1473,7 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
 	facebook->setOpacity(0);
 	facebook->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
 
-    label = CCLabelTTF::create(CCLocalizedString("SETTING_NOTIF_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
+    label = CCLabelTTF::create(CCLocalizedString("SETTING_NOTIF_TEXT", NULL), FONT_COMMON, FONT_SIZE_40);
 	label->setPosition(ccp(popup->getContentSize().width / 2.0f - popup->getContentSize().width/4.0f, popup->getContentSize().height / 1.75f));
 	popup->addChild(label);
 	label->setOpacity(0);
@@ -1472,10 +1483,6 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
     color.b = 0x55;
 	label->setColor(color);
 	label->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
-
-    if (!IPAD)
-        label->setScale(0.5f);
-
 
 	notif_1_Button = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/offButton.png"),
 		CCSprite::createWithSpriteFrameName("common/onButton.png"), this, menu_selector(MainMenuScene::notif_1_Callback));
@@ -1492,7 +1499,7 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_64);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         notif_1_Button->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -1502,7 +1509,7 @@ void MainMenuScene::notificationCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_64);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         notif_1_Button->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -1520,7 +1527,7 @@ void MainMenuScene::notif_1_Callback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_64);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         notif_1_Button->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -1532,7 +1539,7 @@ void MainMenuScene::notif_1_Callback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_64);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         notif_1_Button->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -1605,18 +1612,59 @@ void MainMenuScene::menuFacebookCallback(CCObject* pSender)
         alertNetwork();
         return;
     }
-        
+    
     vector<sRequestData> requests = OptionsPtr->appRequests;
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     FacebookPtr->login();
+    
+    if (settingState == Facebook)
+        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeSettingCallback))));
 }
 
 #include "GameScene.h"
 
 void MainMenuScene::menuPlayCallback(CCObject* pSender)
 {
-    CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene());
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    CCSprite* sprite;
+    if (IPAD)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("Default-Landscape@2x~ipad.png");
+        else
+            sprite = CCSprite::create("Default-Portrait@2x~ipad.png");
+    }
+    else if (IPAD_MINI)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("Default-Landscape~ipad.png");
+        else
+            sprite = CCSprite::create("Default-Portrait~ipad.png");
+    }
+    else if (IPHONE_4)
+    {
+        sprite = CCSprite::create("Default@2x.png");
+        if (LANDSCAPE)
+            sprite->setRotation(90);
+    }
+    else if (IPHONE_5)
+    {
+        sprite = CCSprite::create("Default-568h@2x.png");
+        if (LANDSCAPE)
+            sprite->setRotation(90);
+    }
+    CCLabelTTF* labelLoad = CCLabelTTF::create("Loading", FONT_COMMON, FONT_SIZE_48);
+    labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+    sprite->addChild(labelLoad);
+    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(sprite, 1000);
+    
+    this->runAction(CCSequence::create(CCDelayTime::create(0.5f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::playWithLoading)), NULL));
+}
+
+void MainMenuScene::playWithLoading(CCNode* pSender)
+{
+    CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene());
 }
 
 void MainMenuScene::settingFinished(CCNode* sender)
@@ -1737,7 +1785,7 @@ void MainMenuScene::helpCallback(CCObject* pSender)
     
     tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
     tutorialText->setColor(IceCreamBrown);
-    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialSprite->addChild(tutorialText);
     tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
 

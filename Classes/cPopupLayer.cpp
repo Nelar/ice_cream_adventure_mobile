@@ -3,6 +3,7 @@
 #include "Options.h"
 #include "SimpleAudioEngine.h"
 #include "MMPInterface.h"
+#include "IAP.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -51,13 +52,11 @@ void PopupLayer::popup(char* title, char* text, char* buttonText, ePopupColor po
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_40);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
-    if (!IPAD)
-        titleLabel->setScale(0.5f);
     plate->addChild(titleLabel);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_26);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_32);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/2.0f));
     plate->addChild(textLabel);
     
@@ -100,7 +99,11 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     closeSelector = ncloseselector;
     closeTarget = ncloseSelectorTarget;
     
-    char buttonText[255] = "1$";
+    string priceLocale;
+    if (IAP::sharedInstance().products.empty())
+        priceLocale = "1$";
+    else
+        priceLocale = IAP::sharedInstance().products[0]->priceLocale;
     
     //background->setVisible(true);
     
@@ -120,10 +123,8 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_40);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
-    if (!IPAD)
-        titleLabel->setScale(0.5f);
     plate->addChild(titleLabel);
     
     CCSprite* boost;
@@ -151,7 +152,7 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     boost->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/1.4f));
     plate->addChild(boost);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_26);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_32);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/3.0f));
     plate->addChild(textLabel);
     
@@ -167,11 +168,13 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     CCMenuItemSprite* button = CCMenuItemSprite::create(buttonSprite, buttonSpriteDown, this, menu_selector(PopupLayer::buttonClick));
     button->setPosition(ccp(0.0f, -plate->getContentSize().height/3.0f));
     
-    labelTTF = CCLabelTTF::create(buttonText, FONT_COMMON, FONT_SIZE_48);
+    labelTTF = CCLabelTTF::create(priceLocale.c_str(), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     button->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    menu->addChild(button);
     
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
 }
@@ -181,7 +184,6 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
                CCObject* npSelectorTarget, SEL_CallFuncN nselector,
                CCObject* ncloseSelectorTarget, SEL_CallFuncN ncloseselector)
 {
-    
     isPopup = true;
     pSelectorTarget = npSelectorTarget;
     selector = nselector;
@@ -204,10 +206,8 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_40);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
-    if (!IPAD)
-        titleLabel->setScale(0.5f);
     plate->addChild(titleLabel);
     
     CCSprite* boost;
@@ -239,7 +239,7 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     if (!IPAD)
         multiplier = 0.5f;
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_26);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_32);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/3.0f));
     plate->addChild(textLabel);
     
@@ -260,8 +260,49 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     button->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
     menu->addChild(button);
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
+}
+
+void PopupLayer::loading(char* closeLoading)
+{
+    isPopup = true;
+    
+    plate = CCSprite::createWithSpriteFrameName("common/greenPlate.png");
+    
+    plate->setPosition(ccp(WINSIZE.width/2.0f + WINSIZE.width, WINSIZE.height/2.0f));
+    this->addChild(plate);
+    
+    CCMenu* menu = CCMenu::create();
+    menu->setAnchorPoint(ccp(0.0f, 0.0f));
+    menu->setContentSize(plate->getContentSize());
+    menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
+    plate->addChild(menu);
+    
+    CCLabelTTF* titleLabel = CCLabelTTF::create(closeLoading, FONT_COMMON, FONT_SIZE_40);
+    titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
+
+    plate->addChild(titleLabel);
+    
+    CCSprite* boost = CCSprite::create("loading.png");
+    boost->runAction(CCRepeatForever::create(CCRotateBy::create(0.5f, 90)));
+
+    boost->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
+    plate->addChild(boost);
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(20.0f), CCCallFuncN::create(this, callfuncN_selector(PopupLayer::closeLoading))));
+    
+    plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
+}
+
+void PopupLayer::closeLoading()
+{
+    if (!plate)
+        return;
+    isPopup = false;
+    background->setVisible(false);
+    plate->removeFromParentAndCleanup(true);
+    plate = NULL;
 }
 
 void PopupLayer::buttonClick(CCObject* pSender)
@@ -271,6 +312,7 @@ void PopupLayer::buttonClick(CCObject* pSender)
     plate->removeFromParentAndCleanup(true);
     this->runAction(CCCallFuncN::create(pSelectorTarget, selector));
     this->runAction(CCCallFuncN::create(closeTarget, closeSelector));
+    plate = NULL;
 }
 
 void PopupLayer::closePopup(CCObject* pSender)
@@ -279,6 +321,7 @@ void PopupLayer::closePopup(CCObject* pSender)
     background->setVisible(false);
     plate->removeFromParentAndCleanup(true);
     this->runAction(CCCallFuncN::create(closeTarget, closeSelector));
+    plate = NULL;
 }
 
 void PopupLayer::changeOrientation()

@@ -20,7 +20,13 @@ Options::Options()
         levels[i].targetScore = 0;
 		levels[i].countStar = 0;
 		levels[i].levelType = Score;
+        levels[i].lock = false;
 	}
+    levels[24].lock = true;
+    levels[36].lock = true;
+    levels[48].lock = true;
+    levels[60].lock = true;
+    levels[72].lock = true;
 }
 
 Options::~Options()
@@ -39,11 +45,12 @@ void Options::setCurrentLevel(int nCurrentLevel)
     FacebookPtr->unlockNewLevel(currentLevel);
 }
 
-void Options::setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType)
+void Options::setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock)
 {
 	levels[idx].countStar = nCountStar;
 	levels[idx].countScore = nCountScore;
 	levels[idx].levelType = nLevelType;
+    levels[idx].lock = lock;
 }
 
 sLevelData Options::getLevelData(int idx)
@@ -265,13 +272,23 @@ bool Options::getEndPost()
     return _endPost;
 }
 
+void Options::setUnclock(int numLevel, bool isLock)
+{
+    levels[numLevel].lock = isLock;
+}
+
+bool Options::getUnlock(int numLevel)
+{
+    return levels[numLevel].lock;
+}
+
 void Options::load()
 {
     _useSounds = CCUserDefault::sharedUserDefault()->getBoolForKey("sound", true);
     _useMusic = CCUserDefault::sharedUserDefault()->getBoolForKey("music", true);
     _notif = CCUserDefault::sharedUserDefault()->getBoolForKey("notif", false);
     _facebook = CCUserDefault::sharedUserDefault()->getBoolForKey("facebook", false);
-    currentLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLevel", 84);
+    currentLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLevel", 85);
     currentLife = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLife", 5);
     crystalCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("crystalCount", 0);
     bombCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("bombCount", 0);
@@ -321,6 +338,17 @@ void Options::load()
 		levels[i].countScore = CCUserDefault::sharedUserDefault()->getIntegerForKey(buf, 0);
         sprintf(buf, "levelType_%d", i);
 		levels[i].levelType = (eLevelType)CCUserDefault::sharedUserDefault()->getIntegerForKey(buf, 0);
+        
+        sprintf(buf, "lock_%d", i);
+        
+        bool isStageUnlocked = false;
+        
+        if (i == 24  || i == 36 || i == 48 || i == 60 || i == 72)
+            isStageUnlocked = CCUserDefault::sharedUserDefault()->getBoolForKey(buf, true);
+        else
+            isStageUnlocked = CCUserDefault::sharedUserDefault()->getBoolForKey(buf, false);
+
+        levels[i].lock = isStageUnlocked;
 	}
     
     levels[0].levelType = Score;
@@ -646,6 +674,8 @@ void Options::save()
         CCUserDefault::sharedUserDefault()->setIntegerForKey(buf, levels[i].countScore);
         sprintf(buf, "levelType_%d", i);
         CCUserDefault::sharedUserDefault()->setIntegerForKey(buf, (int)levels[i].levelType);
+        sprintf(buf, "lock_%d", i);
+        CCUserDefault::sharedUserDefault()->setBoolForKey(buf, levels[i].lock);
 	}
 
     CCUserDefault::sharedUserDefault()->flush();

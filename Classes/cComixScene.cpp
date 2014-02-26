@@ -181,11 +181,29 @@ bool ComixScene::init(int num)
             break;
     }
     
-    skip = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/skip.png"), CCSprite::createWithSpriteFrameName("common/skipDown.png"), this, menu_selector(ComixScene::skipCallback));
-    
+    CCSprite* spriteNormal = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButton.png");
+    CCSprite* spriteSelected = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButton.png");
+    spriteSelected->setColor(ccGRAY);
+    skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(ComixScene::skipCallback));
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/3.0f, -CCDirector::sharedDirector()->getWinSize().height/2.4f);
     
-    next = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/nextComix.png"), CCSprite::createWithSpriteFrameName("common/nextComixDown.png"), this, menu_selector(ComixScene::nextCallback));
+    
+    spriteNormal = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButtonArrow.png");
+    spriteSelected = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButtonArrow.png");
+    next = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(ComixScene::nextCallback));
+    next->setCascadeOpacityEnabled(true);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    next->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
     
     next->setPosition(CCDirector::sharedDirector()->getWinSize().width/3.0f, -CCDirector::sharedDirector()->getWinSize().height/2.4f);
     

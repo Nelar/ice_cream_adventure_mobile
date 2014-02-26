@@ -515,11 +515,6 @@ bool GameMapLayer::init(int nextLevel)
 		labelNormal->setPosition(ccp(normal->getContentSize().width/2.0f, normal->getContentSize().height/2.0f));
 		labelSelect->setPosition(ccp(select->getContentSize().width/2.0f, select->getContentSize().height/2.0f));
 		labelSelect->setColor(ccGRAY);
-        if (WINSIZE.width != 2048 && WINSIZE.height != 2048)
-        {
-            labelNormal->setScale(0.5f);
-            labelSelect->setScale(0.5f);
-        }
 
 
 		normal->addChild(labelNormal);
@@ -1131,7 +1126,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_1->addChild(label_1);
     label_1->setPosition(ccp(lenta_1->getContentSize().width/2.0f, lenta_1->getContentSize().height/2.0f));
     label_1->setRotation(-4.0f);
-    label_1->setScale(multiplier);
     layerGradient->addChild(lenta_1, 4);
     
     CCSprite* lenta_2 = CCSprite::createWithSpriteFrameName("gameMap/lent_2.png");
@@ -1141,7 +1135,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_2->addChild(label_2);
     label_2->setPosition(ccp(lenta_2->getContentSize().width/2.0f, lenta_2->getContentSize().height/2.0f));
     label_2->setRotation(-4.0f);
-    label_2->setScale(multiplier);
     layerGradient->addChild(lenta_2, 4);
     
     CCSprite* lenta_4 = CCSprite::createWithSpriteFrameName("gameMap/lent_3.png");
@@ -1151,7 +1144,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_4->addChild(label_4);
     label_4->setPosition(ccp(lenta_4->getContentSize().width/2.0f, lenta_4->getContentSize().height/2.0f));
     label_4->setRotation(-4.0f);
-    label_4->setScale(multiplier);
     layerGradient->addChild(lenta_4, 4);
     
     CCSprite* lenta_5 = CCSprite::createWithSpriteFrameName("gameMap/lent_4.png");
@@ -1161,7 +1153,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_5->addChild(label_5);
     label_5->setPosition(ccp(lenta_5->getContentSize().width/2.0f, lenta_5->getContentSize().height/2.0f));
     label_5->setRotation(-4.0f);
-    label_5->setScale(multiplier);
     layerGradient->addChild(lenta_5, 4);
     
     CCSprite* lenta_6 = CCSprite::createWithSpriteFrameName("gameMap/lent_1.png");
@@ -1171,7 +1162,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_6->addChild(label_6);
     label_6->setPosition(ccp(lenta_6->getContentSize().width/2.0f, lenta_6->getContentSize().height/2.0f));
     label_6->setRotation(-4.0f);
-    label_6->setScale(multiplier);
     layerGradient->addChild(lenta_6, 4);
     
     CCSprite* lenta_7 = CCSprite::createWithSpriteFrameName("gameMap/lent_2.png");
@@ -1181,7 +1171,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_7->addChild(label_7);
     label_7->setPosition(ccp(lenta_7->getContentSize().width/2.0f, lenta_7->getContentSize().height/2.0f));
     label_7->setRotation(-4.0f);
-    label_7->setScale(multiplier);
     layerGradient->addChild(lenta_7, 4);
     
     CCSprite* lenta_8 = CCSprite::createWithSpriteFrameName("gameMap/lent_3.png");
@@ -1191,7 +1180,6 @@ void GameMapLayer::levelLabelsDraw()
     lenta_8->addChild(label_8);
     label_8->setPosition(ccp(lenta_8->getContentSize().width/2.0f, lenta_8->getContentSize().height/2.0f));
     label_8->setRotation(-4.0f);
-    label_8->setScale(multiplier);
     layerGradient->addChild(lenta_8, 4);
 }
 
@@ -1520,6 +1508,11 @@ void GameMapLayer::drawPoins(CCNode* sender)
 	drawPoins(this);
 }
 
+void GameMapLayer::closeLoading()
+{
+    menu->closeLoading();
+}
+
 void GameMapLayer::levelCallback(CCObject* pSender)
 {
 	if (leftDownMenu->isLock())
@@ -1530,7 +1523,11 @@ void GameMapLayer::levelCallback(CCObject* pSender)
     layerGradient->clearTouches();
 
 	int numLevel = ((CCMenuItemSprite*)pSender)->getTag();
-    if (OptionsPtr->getLevelData(numLevel).levelType != Score)
+    if (numLevel == 84)
+        menu->showLastStage(84);
+    else if (OptionsPtr->getLevelData(numLevel).lock)
+        menu->showUnlock(numLevel);
+    else if (OptionsPtr->getLevelData(numLevel).levelType != Score)
         menu->levelPopup(numLevel + 1, OptionsPtr->getLevelData(numLevel).countStar, OptionsPtr->getLevelData(numLevel).targetScore, OptionsPtr->getLevelData(numLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else
         menu->levelPopup(numLevel + 1, OptionsPtr->getLevelData(numLevel).countStar, OptionsPtr->getLevelData(numLevel).targetScore, OptionsPtr->getLevelData(numLevel).levelType, BoosterCrystal, BoosterBomb, BoosterNone);

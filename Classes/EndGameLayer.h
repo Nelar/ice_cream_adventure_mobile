@@ -70,6 +70,9 @@ public:
     void updateFacebook();
     void updateFacebookCallback(CCNode* pSender);
     
+    void closeLoading();
+    
+    void nextAfterLoading(CCNode* node);
 private:
     
     void explosionCallback(CCNode* sender);

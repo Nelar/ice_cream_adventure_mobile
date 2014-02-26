@@ -154,6 +154,9 @@ public:
     
     bool timesLock = false;
     bool timesLeftDownLock = false;
+    
+    void closeLoading();
+    
 private:
     
     bool endConditionCheck();

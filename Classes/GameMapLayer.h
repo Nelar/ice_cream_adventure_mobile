@@ -60,6 +60,8 @@ public:
     void addBonus(CCNode* pSender);
     void addPostBonus(CCNode* pSender);
     
+    void closeLoading();
+    
 private:
 
     int nextLevelForSender = 0;

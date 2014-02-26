@@ -151,6 +151,10 @@ bool AppDelegate::applicationDidFinishLaunching()
     pi.push_back("com.destiny.icecreamadventure.stripedandbomb");
     pi.push_back("com.destiny.icecreamadventure.superelements");
     pi.push_back("com.destiny.icecreamadventure.unlocklevelpack");
+    pi.push_back("com.destiny.icecreamadventure.unlocklevelpack1");
+    pi.push_back("com.destiny.icecreamadventure.unlocklevelpack2");
+    pi.push_back("com.destiny.icecreamadventure.unlocklevelpack3");
+    pi.push_back("com.destiny.icecreamadventure.unlocklevelpack4");
     
     IAP::sharedInstance().initWithProductIdentifiers(pi);
     IAP::sharedInstance().provideContentForProductIdentifier = bind(&AppDelegate::provideContentForProductIdentifier, this, std::placeholders::_1);
@@ -179,6 +183,18 @@ void AppDelegate::productReceived()
 
 void AppDelegate::provideContentForProductIdentifier(string productIdentifier)
 {
+    
+    if (GlobalsPtr->iceCreamScene == Game)
+    {
+        GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+        layer->closeLoading();
+    }
+    else if (GlobalsPtr->iceCreamScene == Map)
+    {
+        GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+        layer->closeLoading();
+    }
+    
     if(productIdentifier ==  "com.destiny.icecreamadventure.5lives")
     {
         FacebookPtr->boughtItem("5 lives");
@@ -247,10 +263,30 @@ void AppDelegate::provideContentForProductIdentifier(string productIdentifier)
         }
         OptionsPtr->setFirstPayCrystal();
     }
+    else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack1")
+    {
+        int idx = 24;
+        OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+    }
+    else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack2")
+    {
+        int idx = 36;
+        OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+    }
+    else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack3")
+    {
+        int idx = 48;
+        OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+    }
+    else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack4")
+    {
+        int idx = 60;
+        OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+    }
     else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack")
     {
-        GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
-        layer->updateMenuBooster();
+        int idx = 72;
+        OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
     }
     OptionsPtr->save();
 }

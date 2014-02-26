@@ -34,7 +34,7 @@
 
 #define POPUP_SHOW_TIME 0.5f
 
-#define ELEMENT_SCALE ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?0.85f*IPHONE_MULTIPLIER:0.86f*IPHONE_MULTIPLIER)
+#define ELEMENT_SCALE ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?0.85f*IPHONE_MULTIPLIER:0.75f*IPHONE_MULTIPLIER)
 
 #define WINSIZE CCDirector::sharedDirector()->getWinSize()
 
@@ -52,7 +52,7 @@
 #define FONT_SIZE_32 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?32:16
 #define FONT_SIZE_26 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?26:13
 #define FONT_SIZE_22 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?22:11
-
+#define MULTIPLIER (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?1.0f:0.5f
 
 
 static const cocos2d::ccColor3B IceCreamPink={0xba, 0x29, 0x91};

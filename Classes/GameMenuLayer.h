@@ -107,6 +107,8 @@ public:
     eLevelType type;
     int targetScore;
 	int currentScore;
+    
+    void closeLoading();
 private:
     
     void playOnCallback(CCObject* pSender);

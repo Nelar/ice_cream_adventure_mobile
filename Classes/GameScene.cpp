@@ -855,7 +855,7 @@ void GameScene::setTutorial_1()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -968,7 +968,7 @@ void GameScene::setTutorial_2()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1081,7 +1081,7 @@ void GameScene::setTutorial_2_1()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1184,7 +1184,7 @@ void GameScene::setTutorial_2_2()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1295,7 +1295,7 @@ void GameScene::setTutorial_3_1()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1399,7 +1399,7 @@ void GameScene::setTutorial_3_2()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1493,7 +1493,7 @@ void GameScene::setTutorial_4_1()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1603,7 +1603,7 @@ void GameScene::setTutorial_5_1()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1699,7 +1699,7 @@ void GameScene::setTutorial_5_2()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1804,7 +1804,7 @@ void GameScene::setTutorial_6_1()
     
     CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     skip->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
@@ -1858,6 +1858,19 @@ void GameScene::setTutorial_6_1()
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
         down->setPosition(ccp(down->getPositionX() + CELL_WIDTH*2.0f, down->getPositionY() - CELL_HEIGHT/2.0f));
     }
+}
+
+void GameScene::closeLoading()
+{
+    if (endGameMenu)
+    {
+        if (endGameMenu->isVisible())
+            endGameMenu->closeLoading();
+        else
+            menu->closeLoading();
+    }
+    else
+        menu->closeLoading();
 }
 
 void GameScene::skipCallback(CCObject* pSender)

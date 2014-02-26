@@ -61,6 +61,8 @@ public:
 	void closeTutorialCallback(CCObject* pSender);
 
 	void goCallback(CCObject* pSender);
+    void restoreInappCallback(CCObject* pSender);
+    
 
 	CREATE_FUNC(MainMenuScene);
     
@@ -86,6 +88,7 @@ public:
 	virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
     
     void helpFromSetting(CCNode* pSender);
+    void playWithLoading(CCNode* pSender);
 private:
     
     

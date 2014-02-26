@@ -13,6 +13,7 @@
 #include "rapidjson/stringbuffer.h"
 #include "Options.h"
 #include "cFacebook.h"
+#include "IAP.h"
 
 using namespace cocos2d;
 using namespace std;

@@ -19,9 +19,9 @@
 #include <sys/sysctl.h>
 #include <sys/utsname.h>
 
-#include "GAI.h"
+/*#include "GAI.h"
 #include "GAITracker.h"
-#include "GAIDictionaryBuilder.h"
+#include "GAIDictionaryBuilder.h"*/
 
 namespace Core
 {
@@ -47,11 +47,11 @@ namespace Core
     
     void MMPInterface::gaiEvent(std::string category, std::string action)
     {
-        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+       /* id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
         [tracker send:[[GAIDictionaryBuilder createEventWithCategory:[NSString stringWithUTF8String:category.c_str()]
                                                               action:[NSString stringWithUTF8String:action.c_str()]
                                                                label:nil
-                                                               value:nil] build]];
+                                                               value:nil] build]];*/
     }
     
     void MMPInterface::gaiEvent(std::string category, std::string action, std::map<std::string, std::string>& userData)
@@ -63,7 +63,7 @@ namespace Core
         {
             [dict setObject:[NSString stringWithUTF8String:it->first.c_str()] forKey:[NSString stringWithUTF8String:it->second.c_str()]];
         }
-        
+        /*
         id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
         GAIDictionaryBuilder* dictBuilder = [GAIDictionaryBuilder createEventWithCategory:[NSString stringWithUTF8String:category.c_str()]
                                                                                     action:[NSString stringWithUTF8String:action.c_str()]
@@ -71,7 +71,7 @@ namespace Core
                                                                                      value:nil];
         [dictBuilder setAll:dict];
         
-        [tracker send: [dictBuilder build]];
+        [tracker send: [dictBuilder build]];*/
     }
     
     std::string MMPInterface::GetDevice()

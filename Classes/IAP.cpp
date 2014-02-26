@@ -83,11 +83,11 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
 
 @implementation IAPEventListener
 
--(void)provideContentForProductIdentifier:(NSString *) productIdentifier
+-(void)provideContentForProductIdentifier:(NSNotification *)notification
 {
     if(IAP::sharedInstance().provideContentForProductIdentifier)
     {
-        IAP::sharedInstance().provideContentForProductIdentifier(string([productIdentifier UTF8String]));
+        IAP::sharedInstance().provideContentForProductIdentifier(string([((NSString*)notification.object) UTF8String]));
     }
 }
 
@@ -119,7 +119,7 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     string base64packet = base64_encode(reinterpret_cast<const unsigned char*>(packet.c_str()), packet.length());
     string project   = "com.destinygroup.icecreamadventure";
     string password  = "tPRVWTFA0tCmD9pAh0h7WFXi3cDXBd3s";
-    string signature = password + ";" + currency + ";" + base64packet + ";" + project + ";" + password;
+    string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + password;
     string md5signature = md5(signature);
     string requestData = "project=" + project + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
     IAP::sharedInstance().validateReciept(url, requestData, productIdentifier);
@@ -142,6 +142,8 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
         flagPay = OptionsPtr->getFirstPayCrystal();
     else if (productIdentifier == "com.destiny.icecreamadventure.superelements")
         flagPay = OptionsPtr->getFirstPayCrystal();
+    else
+        flagPay = true;
     
     string subCurrency = currency.substr(currency.find('=')+1, currency.size());
     
@@ -187,7 +189,7 @@ IAP::IAP()
     helper = [IAPHelper alloc];
     listener = [[IAPEventListener alloc]init];
     listener.products = [NSArray array];
-    //[[NSNotificationCenter defaultCenter] addObserver:listener selector:@selector(provideContentForProductIdentifier:) name:IAPHelperProductPurchasedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:listener selector:@selector(provideContentForProductIdentifier:) name:IAPHelperProductRestoreNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:listener selector:@selector(validateReciept:) name:IAPHelperProductPurchasedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:listener selector:@selector(cancelPayment:) name:IAPHelperProductPurchasedCancelNotification object:nil];
 }

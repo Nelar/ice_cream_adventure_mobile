@@ -964,7 +964,10 @@ void SocialLayer::acceptCallback(CCObject* pSender)
 void SocialLayer::facebookCallback(CCObject* pSender)
 {
     if (!getNetworkStatus())
+    {
         alertNetwork();
+        return;
+    }
     
     FacebookPtr->login();
 }

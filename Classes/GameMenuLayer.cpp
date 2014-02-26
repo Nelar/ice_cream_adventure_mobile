@@ -223,9 +223,8 @@ bool GameMenuLayer::init(eLevelType ntype)
         sprintf(buf, "%d", OptionsPtr->getHammerCount());
         CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
         label->setColor(ccWHITE);
-        
         if (!IPAD)
-            label->setScale(0.4f);
+            label->setScale(0.5f);
         
         boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
         boosterPlus->addChild(label);
@@ -737,9 +736,6 @@ void GameMenuLayer::startTime()
     else
         labelCountMoves->setPosition(ccp(downPanel->getContentSize().width/4.0f, downPanel->getContentSize().height/4.0f*2.4f));
 
-    if (!IPAD)
-        labelCountMoves->setScale(0.5f);
-
 	downPanel->addChild(labelCountMoves, 3);
 }
 
@@ -778,9 +774,6 @@ void GameMenuLayer::timeCallback(CCNode* sender)
         labelCountMoves->setPosition(ccp(downPanel->getContentSize().width/4.0f, downPanel->getContentSize().height/4.0f*2.4f));
     }
 
-    if (!IPAD)
-        labelCountMoves->setScale(0.5f);
-
 	downPanel->addChild(labelCountMoves, 3);
 }
 
@@ -818,9 +811,6 @@ void GameMenuLayer::banner(const char* name, const char* text, float delay, ccCo
 	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/2.0f, bannerSprite->getContentSize().height/2.0f));
 	labelBan->setColor(color);
 
-    if (!IPAD)
-        labelBan->setScale(0.5f);
-
     if (LANDSCAPE)
     {
         if (WINSIZE.width == 1136)
@@ -852,8 +842,6 @@ void GameMenuLayer::bannerIce(const char* name, float delay, ccColor3B color)
 	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/1.6f, bannerSprite->getContentSize().height/2.7f));
 	labelBan->setColor(color);
     
-    if (!IPAD)
-        labelBan->setScale(0.5f);
     
     if (LANDSCAPE)
     {
@@ -885,9 +873,6 @@ void GameMenuLayer::bannerBringDown(const char* name, float delay, ccColor3B col
     bannerSprite->setCascadeOpacityEnabled(true);
 	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/1.6f, bannerSprite->getContentSize().height/2.7f));
 	labelBan->setColor(color);
-    
-    if (!IPAD)
-        labelBan->setScale(0.5f);
     
     if (LANDSCAPE)
     {
@@ -1067,8 +1052,6 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
             color.b = 0xa6;
             label->setColor(color);
             
-            if (!IPAD)
-                label->setScale(0.4f);
             
             boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
             boosterPlus->addChild(label);
@@ -1078,6 +1061,11 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
         }
     }
     OptionsPtr->save();
+}
+
+void GameMenuLayer::closeLoading()
+{
+    popupBooster->closeLoading();
 }
 
 void GameMenuLayer::booster_3_Callback(CCObject* pSender)
@@ -1101,7 +1089,7 @@ void GameMenuLayer::addHammer()
     label->setColor(ccWHITE);
     
     if (!IPAD)
-        label->setScale(0.4f);
+        label->setScale(0.5f);
     
     boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
     boosterPlus->addChild(label);
@@ -1130,12 +1118,24 @@ void GameMenuLayer::addMovesInApp()
 
 void GameMenuLayer::popupOk1(CCNode* pSender)
 {
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.hammer");
+    popupBooster->loading((char*)CCLocalizedString("CONNECTION", NULL));
 }
 
 void GameMenuLayer::popupOk2(CCNode* pSender)
 {
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.5moves");
+    popupBooster->loading((char*)CCLocalizedString("CONNECTION", NULL));
     ((GameScene*)getParent())->isEndDialog = false;
     if (exitBack)
     {
@@ -1214,8 +1214,6 @@ void GameMenuLayer::setCountMoves(int nTargetScore)
     else
         labelCountMoves->setPosition(ccp(downPanel->getContentSize().width/4.0f, downPanel->getContentSize().height/4.0f*2.3f));
 
-    if (!IPAD)
-        labelCountMoves->setScale(0.5f);
 
 	downPanel->addChild(labelCountMoves, 2);
     
@@ -1303,10 +1301,6 @@ void GameMenuLayer::setBringDownCurrent(int current)
 	color.b = 0x91;
 	labelTargetScore->setColor(color);
 
-    if (!IPAD)
-        labelTargetScore->setScale(0.5f);
-
-    
     
     if (targetTitle)
 		targetTitle->removeFromParentAndCleanup(true);
@@ -1429,9 +1423,6 @@ void GameMenuLayer::setTargetScore(int nTargetScore)
                                           upPanel->getContentSize().height/2.25f));
         labelTargetScore->setAnchorPoint(ccp(0.0f, 0.5f));
     }
-    
-    if (!IPAD)
-        labelTargetScore->setScale(0.5f);
 
 	upPanel->addChild(labelTargetScore);
 }

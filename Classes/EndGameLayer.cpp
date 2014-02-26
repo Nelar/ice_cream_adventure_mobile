@@ -104,9 +104,6 @@ bool EndGameLayer::init()
 	targetTitle = CCLabelTTF::create("Init", FONT_COMMON, FONT_SIZE_48);
 	targetTitle->setPosition(ccp(targetSubstrate->getContentSize().width/2.0f, targetSubstrate->getContentSize().height/2.0f));
     
-    if (!IPAD)
-        targetTitle->setScale(0.5f);
-    
 	targetSubstrate->addChild(targetTitle);
     
 	boosterTitle = CCLabelTTF::create(CCLocalizedString("SELECT_BOOSTER"), FONT_COMMON, FONT_SIZE_64);
@@ -116,9 +113,6 @@ bool EndGameLayer::init()
 	color.g = 0xd7;
 	color.b = 0x20;
 	boosterTitle->setColor(color);
-    
-    if (!IPAD)
-        boosterTitle->setScale(0.5f);
     
 	popup->addChild(boosterTitle);
     
@@ -250,8 +244,7 @@ bool EndGameLayer::init()
 	color.g = 0xd7;
 	color.b = 0x20;
 	scoreTitle->setColor(ccWHITE);
-    if (!IPAD)
-        scoreTitle->setScale(0.5f);
+
 	scoreTitle->setPosition(ccp(popup->getContentSize().width / 2.0f, popup->getContentSize().height / 3.2f));
 	popup->addChild(scoreTitle);
     
@@ -996,10 +989,7 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
     
     targetSubstrate->setScale(1.5f);
     
-    if (IPAD)
-        targetPopupTitle->setScale(0.5f);
-    else
-        targetPopupTitle->setScale(0.25f);
+    targetPopupTitle->setScale(0.5f);
     
     
     sprintf(buf, "%s %d", CCLocalizedString("LEVEL"), currentLevel);
@@ -1021,6 +1011,11 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
     
     
     social->showScoreboard(currentLevel);
+}
+
+void EndGameLayer::closeLoading()
+{
+    popaplayer->closeLoading();
 }
 
 void EndGameLayer::updateBoosters()
@@ -1421,6 +1416,61 @@ void EndGameLayer::playCallback(CCObject* pSender)
 void EndGameLayer::nextCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    
+    if (LANDSCAPE)
+    {
+        popup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0, -WINSIZE.height))));
+        menu->runAction(CCSequence::createWithTwoActions(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0, -WINSIZE.height))), CCCallFuncN::create(this,callfuncN_selector(EndGameLayer::closeEnded))));
+    }
+    else
+    {
+        popup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0, WINSIZE.height))));
+        menu->runAction(CCSequence::createWithTwoActions(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0, WINSIZE.height))), CCCallFuncN::create(this,callfuncN_selector(EndGameLayer::closeEnded))));
+    }
+    
+    social->hideScoreBoard();
+    
+    CCSprite* sprite;
+    if (IPAD)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("Default-Landscape@2x~ipad.png");
+        else
+            sprite = CCSprite::create("Default-Portrait@2x~ipad.png");
+    }
+    else if (IPAD_MINI)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("Default-Landscape~ipad.png");
+        else
+            sprite = CCSprite::create("Default-Portrait~ipad.png");
+    }
+    else if (IPHONE_4)
+    {
+        sprite = CCSprite::create("Default@2x.png");
+        if (LANDSCAPE)
+            sprite->setRotation(90);
+        sprite->setScale(1.2f);
+    }
+    else if (IPHONE_5)
+    {
+        sprite = CCSprite::create("Default-568h@2x.png");
+        if (LANDSCAPE)
+            sprite->setRotation(90);
+        sprite->setScale(1.2f);
+    }
+    CCLabelTTF* labelLoad = CCLabelTTF::create("Loading", FONT_COMMON, FONT_SIZE_48);
+    labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+    sprite->addChild(labelLoad);
+    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(sprite, 1000);
+    sprite->setVisible(false);
+    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), NULL));
+    this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextAfterLoading)), NULL));
+}
+
+void EndGameLayer::nextAfterLoading(CCNode* node)
+{
     if (currentLevel == 12 && OptionsPtr->getCurrentLevel() <= (currentLevel + 1))
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(16));
     else if (currentLevel == 24 && OptionsPtr->getCurrentLevel() <= (currentLevel + 1))
@@ -1435,7 +1485,7 @@ void EndGameLayer::nextCallback(CCObject* pSender)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(21));
     else if (currentLevel == 84 && OptionsPtr->getCurrentLevel() <= (currentLevel + 1))
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(22));
-    else if (currentLevel == 106) 
+    else if (currentLevel == 106)
         CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(35));
     else
         CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(currentLevel + 1));
@@ -1555,18 +1605,36 @@ void EndGameLayer::booster_3_Callback(CCObject* pSender)
 void EndGameLayer::popupOk1(CCNode* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.superelements");
 }
 
 void EndGameLayer::popupOk2(CCNode* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.stripedandbomb");
 }
 
 void EndGameLayer::popupOk3(CCNode* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.penguins");
 }
 

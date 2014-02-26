@@ -137,7 +137,7 @@ bool LeftDownMenuScene::init()
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
     labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialNext->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
@@ -149,13 +149,13 @@ bool LeftDownMenuScene::init()
     
     tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
     tutorialText->setColor(IceCreamBrown);
-    tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialSprite->addChild(tutorialText);
     tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
     
     tutorialHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
     tutorialHeader->setColor(IceCreamPink);
-    tutorialHeader->enableShadow(CCSize(5, -5), 255, 8.0f);
+    tutorialHeader->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialPopup->addChild(tutorialHeader);
     tutorialHeader->setPosition(ccp(tutorialHeader->getParent()->getContentSize().width/2.0f, tutorialHeader->getParent()->getContentSize().height/1.1f));
 
@@ -347,7 +347,7 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
         
@@ -361,7 +361,7 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
         
         labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
         labelTTF->setColor(ccWHITE);
-        labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 	}
@@ -378,7 +378,7 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorialSprite->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
 	}
@@ -392,7 +392,7 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorialSprite->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
 	}
@@ -406,7 +406,7 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
         
         tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
         tutorialText->setColor(IceCreamBrown);
-        tutorialText->enableShadow(CCSize(5, -5), 255, 8.0f);
+        tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorialSprite->addChild(tutorialText);
         tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
 	}

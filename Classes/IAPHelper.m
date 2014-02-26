@@ -154,6 +154,7 @@
 - (void)failedTransaction:(SKPaymentTransaction *)transaction {
     
     NSLog(@"failedTransaction...");
+    NSLog(@"%@\n%@\n%@", transaction.error.description, transaction.error.localizedFailureReason, transaction.error.localizedRecoverySuggestion);
     if (transaction.error.code == SKErrorPaymentCancelled)
     {
         [self cancelTransactionForValidation:transaction];
@@ -163,7 +164,7 @@
 }
 
 - (void)provideContentForProductIdentifier:(NSString *)productIdentifier {
-    [[NSNotificationCenter defaultCenter] postNotificationName:IAPHelperProductPurchasedNotification object:productIdentifier userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:IAPHelperProductRestoreNotification object:productIdentifier userInfo:nil];
 }
 
 - (void)cancelTransactionForValidation:(SKPaymentTransaction *)transaction {
