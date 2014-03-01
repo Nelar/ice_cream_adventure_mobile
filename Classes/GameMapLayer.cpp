@@ -86,7 +86,7 @@ bool GameMapLayer::init(int nextLevel)
 	if (!CCLayer::init())
 		return false;
     
-    if (FacebookPtr->sessionIsOpened())
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
         FacebookPtr->checkNotification();
     
     vector<sRequestData> requests = OptionsPtr->appRequests;
@@ -128,7 +128,7 @@ bool GameMapLayer::init(int nextLevel)
 	leftDownMenu->setBackScene(MainMenu);
 	this->addChild(leftDownMenu, 10);
     
-    if (OptionsPtr->getFirstGame() && FacebookPtr->sessionIsOpened())
+    if (OptionsPtr->getFirstGame() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         OptionsPtr->setFirstGame();
         popupLayer->popupPost("Post on wall", "Post message on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
@@ -573,7 +573,7 @@ bool GameMapLayer::init(int nextLevel)
 			star_3->setPosition(ccp(star_3->getPositionX() + 80*multiplier + level->getContentSize().width/2.0f, star_3->getPositionY() - 10*multiplier));
 		}
         
-        if (FacebookPtr->sessionIsOpened())
+        if (getNetworkStatus() && FacebookPtr->sessionIsOpened())
         if ((i + 1) == OptionsPtr->getCurrentLevel())
 		{
             CCSprite* circleFlik = CCSprite::createWithSpriteFrameName("gameMap/circleFlik.png");
@@ -606,7 +606,7 @@ bool GameMapLayer::init(int nextLevel)
                     break;
                 }
             }
-            if (FacebookPtr->sessionIsOpened())
+            if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
             if ((i + 1) == friendCurrentLevel)
             {
                 string avatarFileName = FacebookPtr->getWorkDirectory() + "/" + FacebookPtr->friendsScores[k].uid + ".png";

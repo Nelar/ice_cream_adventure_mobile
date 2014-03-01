@@ -12,6 +12,7 @@
 #include "SimpleAudioEngine.h"
 #include "GameMapLayer.h"
 #include "CCLocalizedString.h"
+#include "MainMenuScene.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -64,6 +65,7 @@ void MoreGamesLayer::hideMessageboard()
     isMessageBoard = false;
     messageboard->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, WINSIZE.height))));
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME), CCCallFuncN::create(this, callfuncN_selector(MoreGamesLayer::deleteMessageboard))));
+    ((MainMenuScene*)this->getParent())->menu->setEnabled(true);
 }
 
 void MoreGamesLayer::deleteMessageboard(CCNode* node)
@@ -231,6 +233,7 @@ CCNode* MoreGamesLayer::createMessage(sMoreGames game)
 void MoreGamesLayer::messageCallback(CCObject* pSender)
 {
     CCMenuItemSprite* sender = (CCMenuItemSprite*)pSender;
+    goToLink(GlobalsPtr->globalMoreGames[sender->getTag()].url.c_str());
 }
 
 

@@ -2309,7 +2309,7 @@ bool GameScene::findMatch()
         firstFind = false;
         for (int i = 0; i < currentMatch.size(); i++)
         {
-            gameObjects[currentMatch[i]]->sprite->runAction(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.0f),
+            gameObjects[currentMatch[i]]->sprite->runAction(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, ELEMENT_SCALE+(ELEMENT_SCALE/10.0f)),
                                                                                              CCScaleTo::create(0.5f, ELEMENT_SCALE)));
 /*            ccBlendFunc bright;
             ccBlendFunc restore;
@@ -5009,27 +5009,11 @@ void GameScene::stoneDestroyed(CCNode* sender)
 void GameScene::megaIceDestroyed(CCNode* sender)
 {
  	((CCSprite*)sender)->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/superIce.png")->displayFrame());
-    if (IPAD_MINI)
-    {
-        ((CCSprite*)sender)->setScale(0.93f);
-    }
-    else if (IPHONE_4 || IPHONE_5)
-    {
-        ((CCSprite*)sender)->setScale(0.85f);
-    }
 }
 
 void GameScene::superIceDestroyed(CCNode* sender)
 {
 	((CCSprite*)sender)->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/ice.png")->displayFrame());
-    if (IPAD_MINI)
-    {
-        ((CCSprite*)sender)->setScale(0.93f);
-    }
-    else if (IPHONE_4 || IPHONE_5)
-    {
-        ((CCSprite*)sender)->setScale(0.85f);
-    }
     CCSprite* iceBreak = CCSprite::createWithSpriteFrameName("game/ice_break.png");
     ((CCSprite*)sender)->addChild(iceBreak);
     iceBreak->setPosition(ccp(((CCSprite*)sender)->getContentSize().width/2.0f, ((CCSprite*)sender)->getContentSize().height/2.0f));
@@ -7731,59 +7715,43 @@ void GameScene::renderField()
 
 	renderTex->retain();
 	renderTex->begin();
-	for (int i = 0; i < rowCount; i++)
-	{
-		if (cellType)
-			cellType = false;
-		else
-			cellType = true;
-
-		for (int j = 0; j < columnCount; j++)
-		{
-			if (cellType)
-				cellType = false;
-			else
-				cellType = true;
-
-			if (gameField[i][j] == NoneCell || gameField[i][j] == LockCell)
-				continue;
-
-			CCSprite* cell = CCSprite::create("game/cell.png");
-            CCPoint temp = ccp(j*CELL_WIDTH + xZero,
-                                yZero - i*CELL_HEIGHT);
+    if (IPHONE_4 || IPHONE_5)
+    {
+        for (int i = 0; i < rowCount; i++)
+        {
+            if (cellType)
+                cellType = false;
+            else
+                cellType = true;
             
-			cell->setPosition(ccp(j*CELL_WIDTH + xZero,
-				yZero - i*CELL_HEIGHT));
-            cell->setAnchorPoint(ccp(0.5f, 1.0f));
-            
-            ccColor3B color;
-            color.r = 0x51;
-            color.g = 0x7f;
-            color.b = 0x95;
-            
-            bool isVer = true;
-            bool isGor = true;
-            
-    
-            if ( i == rowCount-1 && gameType == BringDown)
+            for (int j = 0; j < columnCount; j++)
             {
-                CCSprite* stencil = CCSprite::createWithSpriteFrameName("game/bringStudy.png");
-				stencil->setAnchorPoint(ccp(0.5f, 0.5f));
-				stencil->setPosition(ccp(CELL_WIDTH/2.0f, 0.0f));
-                stencil->setScale(0.4f);
-				stencil->setVisible(true);
-				cell->addChild(stencil, 5);
-            }
-            
-            if (isNoneCell(i + 1, j) && gameType == BringDown)
-			{
-                bool isNone = true;
+                if (cellType)
+                    cellType = false;
+                else
+                    cellType = true;
                 
-                for (int k = i + 1; k < rowCount; k++)
-                    if (!isNoneCell(k, j))
-                        isNone = false;
-
-                if (isNone)
+                if (gameField[i][j] == NoneCell || gameField[i][j] == LockCell)
+                    continue;
+                
+                CCSprite* cell = CCSprite::create("game/cell_iphone.png");
+                CCPoint temp = ccp(j*CELL_WIDTH + xZero,
+                                   yZero - i*CELL_HEIGHT);
+                
+                cell->setPosition(ccp(j*CELL_WIDTH + xZero,
+                                      yZero - i*CELL_HEIGHT));
+                cell->setAnchorPoint(ccp(0.5f, 1.0f));
+                
+                ccColor3B color;
+                color.r = 0x51;
+                color.g = 0x7f;
+                color.b = 0x95;
+                
+                bool isVer = true;
+                bool isGor = true;
+                
+                
+                if ( i == rowCount-1 && gameType == BringDown)
                 {
                     CCSprite* stencil = CCSprite::createWithSpriteFrameName("game/bringStudy.png");
                     stencil->setAnchorPoint(ccp(0.5f, 0.5f));
@@ -7792,284 +7760,652 @@ void GameScene::renderField()
                     stencil->setVisible(true);
                     cell->addChild(stencil, 5);
                 }
-            }
-
-
-			if (isNoneCell(i - 1, j))
-			{
-				isGor = false;
-				CCSprite* stencil = CCSprite::create("game/edge.png");
-				stencil->setRotation(90.0f);
-                stencil->setFlipX(true);
-				stencil->setAnchorPoint(ccp(1.0f, 0.0f));
-				stencil->setPosition(ccp(0.0f, CELL_HEIGHT));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-			if (isNoneCell(i + 1, j))
-			{
-				CCSprite* stencil = CCSprite::create("game/edge.png");
-				stencil->setRotation(90.0f);
-				stencil->setAnchorPoint(ccp(0.0f, 0.0f));
-				stencil->setPosition(ccp(0.0f, 0.0f));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-			if (isNoneCell(i, j - 1))
-			{
-				isVer = false;
-				CCSprite* stencil = CCSprite::create("game/edge.png");
-                stencil->setScaleY(1.1f);
-                stencil->setFlipX(true);
-				stencil->setAnchorPoint(ccp(1.0f, 0.0f));
-				stencil->setPosition(ccp(0.0f, 0.0f));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-			if (isNoneCell(i, j + 1))
-			{
-				CCSprite* stencil = CCSprite::create("game/edge.png");
-                stencil->setScaleY(1.1f);
-				stencil->setAnchorPoint(ccp(0.0f, 0.0f));
-				stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-
-			if (isNoneCell(i - 1, j - 1) && isNoneCell(i - 1, j) && isNoneCell(i, j - 1))
-			{
-				CCSprite* stencil = CCSprite::create("game/outside.png");
-				stencil->setAnchorPoint(ccp(1.0f, 0.0f));
-                if (IPHONE_4 || IPHONE_5)
-                    stencil->setPosition(ccp(0.0f, cell->getContentSize().height-2));
-                else
-                    stencil->setPosition(ccp(0.0f, cell->getContentSize().height));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-
-			if (isNoneCell(i - 1, j + 1) && isNoneCell(i - 1, j) && isNoneCell(i, j + 1))
-			{
-				CCSprite* stencil = CCSprite::create("game/outside.png");
-				stencil->setFlipX(true);
-				stencil->setAnchorPoint(ccp(0.0f, 0.0f));
-				stencil->setPosition(ccp(CELL_WIDTH, CELL_HEIGHT));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-
-			if (isNoneCell(i, j - 1) && isNoneCell(i + 1, j - 1) && isNoneCell(i + 1, j))
-			{
-				CCSprite* stencil = CCSprite::create("game/outside.png");
-				stencil->setFlipY(true);
-				stencil->setAnchorPoint(ccp(1.0f, 1.0f));
-				stencil->setPosition(ccp(0.0f, 0.0f));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-			if (isNoneCell(i, j + 1) && isNoneCell(i + 1, j + 1) && isNoneCell(i + 1, j))
-			{
-				CCSprite* stencil = CCSprite::create("game/outside.png");
-				stencil->setFlipY(true);
-				stencil->setFlipX(true);
-				stencil->setAnchorPoint(ccp(0.0f, 1.0f));
-				stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
-				stencil->setVisible(true);
-				cell->addChild(stencil);
-			}
-
-			if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j + 1))
-			{
-                CCSprite* stencil = CCSprite::create("game/edge.png");
-				CCSprite* content = CCSprite::create("game/inside.png");
-				content->setFlipX(true);
-				content->setAnchorPoint(ccp(1.0f, 1.0f));
-                content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width, -stencil->getContentSize().width));
-				content->setVisible(true);
-				cell->addChild(content, 11);
-			}
-			if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j - 1))
-			{
-                CCSprite* stencil = CCSprite::create("game/edge.png");
-				CCSprite* content = CCSprite::create("game/inside.png");
-				content->setAnchorPoint(ccp(0.0f, 1.0f));
-				content->setPosition(ccp(stencil->getContentSize().width, -stencil->getContentSize().width));
-				content->setVisible(true);
-				cell->addChild(content);
-			}
-			if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j - 1))
-			{
-                CCSprite* stencil = CCSprite::create("game/edge.png");
-				CCSprite* content = CCSprite::create("game/inside.png");
-				content->setFlipY(true);
-				content->setAnchorPoint(ccp(0.0f, 0.0f));
-                if (IPHONE_4 || IPHONE_5)
-                    content->setPosition(ccp(stencil->getContentSize().width, stencil->getContentSize().width + cell->getContentSize().height - 2));
-                else
-                    content->setPosition(ccp(stencil->getContentSize().width, stencil->getContentSize().width + cell->getContentSize().height));
-				content->setVisible(true);
-				cell->addChild(content);
-			}
-			if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j + 1))
-			{
-                CCSprite* stencil = CCSprite::create("game/edge.png");
-				CCSprite* content = CCSprite::create("game/inside.png");
-				content->setFlipY(true);
-				content->setFlipX(true);
-				content->setAnchorPoint(ccp(1.0f, 0.0f));
-                if (IPHONE_4 || IPHONE_5)
-                    content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width,
-                                             cell->getContentSize().height + stencil->getContentSize().width - 2));
-                else
-                    content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width,
-                                             cell->getContentSize().height + stencil->getContentSize().width));
-
-				content->setVisible(true);
-				cell->addChild(content);
-			}
-            
-			cell->visit();
-            cell->setPosition(ccp(cell->getPositionX(), cell->getPositionY()));
-            cell->setAnchorPoint(ccp(0.5f, 0.5f));
-            fieldLayer->addChild(cell,2);
-			cell->setOpacity(0);
-			for (int n = 0; n < cell->getChildrenCount(); n++)
-				((CCSprite*)cell->getChildren()->objectAtIndex(n))->setOpacity(0);
-
-			gameFieldSprites[i][j] = cell;
-            
-            CCSprite* gor = CCSprite::create("game/gorizontal.png");
-			gor->setAnchorPoint(ccp(0.0f, 0.0f));
-			gor->setPosition(ccp(0.0f, cell->getContentSize().height));
-			cell->addChild(gor, 1);
-            //            gor->setColor(color);
-			gor->setOpacity(0);
-            gor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.1f), CCFadeTo::create(0.2f, 120)));
-
-            if (!isGor)
-                gor->setVisible(false);
-            
-			CCSprite* ver = CCSprite::create("game/vertical.png");
-			ver->setAnchorPoint(ccp(0.0f, 0.0f));
-			ver->setPosition(ccp(0.0f, 0.0f));
-			cell->addChild(ver, 1);
-			ver->setOpacity(0);
-            ver->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.1f), CCFadeTo::create(0.2f, 90)));
-
-            if (!isVer)
-                ver->setVisible(false);
-        
-            CCSprite* ice = NULL;
-			if (gameField[i][j] == IceCell)
-			{
-                iceCells.push_back(ccp(i,j));
-				ice = CCSprite::createWithSpriteFrameName("game/ice.png");
-				ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
-				cell->addChild(ice, 10);
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-                ice->setTag(1);
-				iceCount++;
-			}
-			else if (gameField[i][j] == SuperIceCell)
-			{
-                superIceCells.push_back(ccp(i,j));
-				ice = CCSprite::createWithSpriteFrameName("game/superIce.png");
-				ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
-				cell->addChild(ice, 10);
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-                ice->setTag(1);
-				iceCount++;
-			}
-			else if (gameField[i][j] == MegaIceCell)
-			{
-				ice = CCSprite::createWithSpriteFrameName("game/megaIce.png");
-				ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
-				cell->addChild(ice, 12);
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-                ice->setTag(1);
-				iceCount++;
-			}
-			else if (gameField[i][j] == StoneCell)
-			{
-				ice = CCSprite::createWithSpriteFrameName("game/stone.png");
-				ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-				cell->addChild(ice, 12);
-                ice->setTag(3);
-			}
-            else if (gameField[i][j] == CageCell)
-			{
-				ice = CCSprite::createWithSpriteFrameName("game/reshetka.png");
-				ice->setPosition(cell->getPosition());
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-				cell->getParent()->addChild(ice, 10);
-                cell->setUserData((void*)ice);
-                ice->setTag(3);
-			}
-            else if (gameField[i][j] == CageIceCell)
-			{
-				ice = CCSprite::createWithSpriteFrameName("game/reshetka.png");
-				ice->setPosition(cell->getPosition());
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-				cell->getParent()->addChild(ice, 10);
-                cell->setUserData((void*)ice);
-                ice->setTag(3);
                 
-                iceCells.push_back(ccp(i,j));
-				CCSprite* ice2 = CCSprite::createWithSpriteFrameName("game/ice.png");
-				ice2->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
-				cell->addChild(ice2, 10);
-				ice2->setOpacity(0);
-				ice2->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-                ice2->setTag(1);
-                
-                if (ice2)
+                if (isNoneCell(i + 1, j) && gameType == BringDown)
                 {
-                    ice2->setScaleX(0.95f);
-                    ice2->setScaleY(1.05f);
+                    bool isNone = true;
+                    
+                    for (int k = i + 1; k < rowCount; k++)
+                        if (!isNoneCell(k, j))
+                            isNone = false;
+                    
+                    if (isNone)
+                    {
+                        CCSprite* stencil = CCSprite::createWithSpriteFrameName("game/bringStudy.png");
+                        stencil->setAnchorPoint(ccp(0.5f, 0.5f));
+                        stencil->setPosition(ccp(CELL_WIDTH/2.0f, 0.0f));
+                        stencil->setScale(0.4f);
+                        stencil->setVisible(true);
+                        cell->addChild(stencil, 5);
+                    }
+                }
+                
+                
+                if (isNoneCell(i - 1, j))
+                {
+                    isGor = false;
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    stencil->setRotation(90.0f);
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(1.0f, 0.0f));
+                    stencil->setPosition(ccp(0.0f, CELL_HEIGHT));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i + 1, j))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    stencil->setRotation(90.0f);
+                    stencil->setAnchorPoint(ccp(0.0f, 0.0f));
+                    stencil->setPosition(ccp(0.0f, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i, j - 1))
+                {
+                    isVer = false;
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    stencil->setScaleY(1.1f);
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(1.0f, 0.0f));
+                    stencil->setPosition(ccp(0.0f, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    stencil->setScaleY(1.1f);
+                    stencil->setAnchorPoint(ccp(0.0f, 0.0f));
+                    stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i - 1, j - 1) && isNoneCell(i - 1, j) && isNoneCell(i, j - 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    stencil->setAnchorPoint(ccp(1.0f, 0.0f));
+                    if (IPHONE_4 || IPHONE_5)
+                        stencil->setPosition(ccp(0.0f, cell->getContentSize().height-2));
+                    else
+                        stencil->setPosition(ccp(0.0f, cell->getContentSize().height));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i - 1, j + 1) && isNoneCell(i - 1, j) && isNoneCell(i, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(0.0f, 0.0f));
+                    stencil->setPosition(ccp(CELL_WIDTH, CELL_HEIGHT));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i, j - 1) && isNoneCell(i + 1, j - 1) && isNoneCell(i + 1, j))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    stencil->setFlipY(true);
+                    stencil->setAnchorPoint(ccp(1.0f, 1.0f));
+                    stencil->setPosition(ccp(0.0f, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i, j + 1) && isNoneCell(i + 1, j + 1) && isNoneCell(i + 1, j))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    stencil->setFlipY(true);
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(0.0f, 1.0f));
+                    stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    content->setFlipX(true);
+                    content->setAnchorPoint(ccp(1.0f, 1.0f));
+                    content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width, -stencil->getContentSize().width));
+                    content->setVisible(true);
+                    cell->addChild(content, 11);
+                }
+                if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j - 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    content->setAnchorPoint(ccp(0.0f, 1.0f));
+                    content->setPosition(ccp(stencil->getContentSize().width, -stencil->getContentSize().width));
+                    content->setVisible(true);
+                    cell->addChild(content);
+                }
+                if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j - 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    content->setFlipY(true);
+                    content->setAnchorPoint(ccp(0.0f, 0.0f));
+                    if (IPHONE_4 || IPHONE_5)
+                        content->setPosition(ccp(stencil->getContentSize().width, stencil->getContentSize().width + cell->getContentSize().height - 2));
+                    else
+                        content->setPosition(ccp(stencil->getContentSize().width, stencil->getContentSize().width + cell->getContentSize().height));
+                    content->setVisible(true);
+                    cell->addChild(content);
+                }
+                if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    content->setFlipY(true);
+                    content->setFlipX(true);
+                    content->setAnchorPoint(ccp(1.0f, 0.0f));
+                    if (IPHONE_4 || IPHONE_5)
+                        content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width,
+                                                 cell->getContentSize().height + stencil->getContentSize().width - 2));
+                    else
+                        content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width,
+                                                 cell->getContentSize().height + stencil->getContentSize().width));
+                    
+                    content->setVisible(true);
+                    cell->addChild(content);
+                }
+                
+                cell->visit();
+                cell->setPosition(ccp(cell->getPositionX(), cell->getPositionY()));
+                cell->setAnchorPoint(ccp(0.5f, 0.5f));
+                fieldLayer->addChild(cell,2);
+                cell->setOpacity(0);
+                for (int n = 0; n < cell->getChildrenCount(); n++)
+                    ((CCSprite*)cell->getChildren()->objectAtIndex(n))->setOpacity(0);
+                
+                gameFieldSprites[i][j] = cell;
+                
+                CCSprite* gor = CCSprite::create("game/gorizontal_iphone.png");
+                gor->setAnchorPoint(ccp(0.0f, 0.0f));
+                gor->setPosition(ccp(0.0f, cell->getContentSize().height));
+                cell->addChild(gor, 1);
+                //            gor->setColor(color);
+                gor->setOpacity(0);
+                gor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.1f), CCFadeTo::create(0.2f, 120)));
+                
+                if (!isGor)
+                    gor->setVisible(false);
+                
+                CCSprite* ver = CCSprite::create("game/vertical_iphone.png");
+                ver->setAnchorPoint(ccp(0.0f, 0.0f));
+                ver->setPosition(ccp(0.0f, 0.0f));
+                cell->addChild(ver, 1);
+                ver->setOpacity(0);
+                ver->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.1f), CCFadeTo::create(0.2f, 90)));
+                
+                if (!isVer)
+                    ver->setVisible(false);
+                
+                CCSprite* ice = NULL;
+                if (gameField[i][j] == IceCell)
+                {
+                    iceCells.push_back(ccp(i,j));
+                    ice = CCSprite::createWithSpriteFrameName("game/ice.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice, 10);
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice->setTag(1);
+                    iceCount++;
+                }
+                else if (gameField[i][j] == SuperIceCell)
+                {
+                    superIceCells.push_back(ccp(i,j));
+                    ice = CCSprite::createWithSpriteFrameName("game/superIce.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice, 10);
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice->setTag(1);
+                    iceCount++;
+                }
+                else if (gameField[i][j] == MegaIceCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/megaIce.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice, 12);
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice->setTag(1);
+                    iceCount++;
+                }
+                else if (gameField[i][j] == StoneCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/stone.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->addChild(ice, 12);
+                    ice->setTag(3);
+                }
+                else if (gameField[i][j] == CageCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/reshetka.png");
+                    ice->setPosition(cell->getPosition());
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->getParent()->addChild(ice, 10);
+                    cell->setUserData((void*)ice);
+                    ice->setTag(3);
+                }
+                else if (gameField[i][j] == CageIceCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/reshetka.png");
+                    ice->setPosition(cell->getPosition());
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->getParent()->addChild(ice, 10);
+                    cell->setUserData((void*)ice);
+                    ice->setTag(3);
+                    
+                    iceCells.push_back(ccp(i,j));
+                    CCSprite* ice2 = CCSprite::createWithSpriteFrameName("game/ice.png");
+                    ice2->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice2, 10);
+                    ice2->setOpacity(0);
+                    ice2->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice2->setTag(1);
+                    
+                    if (ice2)
+                    {
+                        ice2->setScaleX(0.95f);
+                        ice2->setScaleY(1.05f);
+                        if (IPAD_MINI)
+                        {
+                            ice2->setScaleX(0.95f);
+                            ice2->setScaleY(1.05f);
+                        }
+                        else if (IPHONE_4 || IPHONE_5)
+                        {
+                            ice2->setScaleX(0.95f*IPHONE_MULTIPLIER);
+                            ice2->setScaleY(1.05f*IPHONE_MULTIPLIER);
+                        }
+                    }
+                    iceCount++;
+                }
+                else if (gameField[i][j] == Chocolate)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/chokolad.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->addChild(ice, 12);
+                    ice->setTag(4);
+                }
+                
+                if (ice)
+                {
+                    ice->setScaleX(0.95f);
+                    ice->setScaleY(1.05f);
                     if (IPAD_MINI)
                     {
-                        ice2->setScale(0.93f);
+                        ice->setScaleX(0.95f);
+                        ice->setScaleY(1.05f);
                     }
                     else if (IPHONE_4 || IPHONE_5)
                     {
-                        ice2->setScale(0.85f);
+                        ice->setScaleX(0.95f*IPHONE_MULTIPLIER);
+                        ice->setScaleY(1.05f*IPHONE_MULTIPLIER);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < rowCount; i++)
+        {
+            if (cellType)
+                cellType = false;
+            else
+                cellType = true;
+            
+            for (int j = 0; j < columnCount; j++)
+            {
+                if (cellType)
+                    cellType = false;
+                else
+                    cellType = true;
+                
+                if (gameField[i][j] == NoneCell || gameField[i][j] == LockCell)
+                    continue;
+                
+                CCSprite* cell = CCSprite::create("game/cell.png");
+                CCPoint temp = ccp(j*CELL_WIDTH + xZero,
+                                   yZero - i*CELL_HEIGHT);
+                
+                cell->setPosition(ccp(j*CELL_WIDTH + xZero,
+                                      yZero - i*CELL_HEIGHT));
+                cell->setAnchorPoint(ccp(0.5f, 1.0f));
+                
+                ccColor3B color;
+                color.r = 0x51;
+                color.g = 0x7f;
+                color.b = 0x95;
+                
+                bool isVer = true;
+                bool isGor = true;
+                
+                
+                if ( i == rowCount-1 && gameType == BringDown)
+                {
+                    CCSprite* stencil = CCSprite::createWithSpriteFrameName("game/bringStudy.png");
+                    stencil->setAnchorPoint(ccp(0.5f, 0.5f));
+                    stencil->setPosition(ccp(CELL_WIDTH/2.0f, 0.0f));
+                    stencil->setScale(0.4f);
+                    stencil->setVisible(true);
+                    cell->addChild(stencil, 5);
+                }
+                
+                if (isNoneCell(i + 1, j) && gameType == BringDown)
+                {
+                    bool isNone = true;
+                    
+                    for (int k = i + 1; k < rowCount; k++)
+                        if (!isNoneCell(k, j))
+                            isNone = false;
+                    
+                    if (isNone)
+                    {
+                        CCSprite* stencil = CCSprite::createWithSpriteFrameName("game/bringStudy.png");
+                        stencil->setAnchorPoint(ccp(0.5f, 0.5f));
+                        stencil->setPosition(ccp(CELL_WIDTH/2.0f, 0.0f));
+                        stencil->setScale(0.4f);
+                        stencil->setVisible(true);
+                        cell->addChild(stencil, 5);
                     }
                 }
                 
-				iceCount++;
-			}
-            else if (gameField[i][j] == Chocolate)
-			{
-				ice = CCSprite::createWithSpriteFrameName("game/chokolad.png");
-				ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
-				ice->setOpacity(0);
-				ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
-				cell->addChild(ice, 12);
-                ice->setTag(4);
-			}
-            
-            if (ice)
-            {
-                ice->setScaleX(0.95f);
-                ice->setScaleY(1.05f);
-                if (IPAD_MINI)
+                
+                if (isNoneCell(i - 1, j))
                 {
-                    ice->setScale(0.93f);
+                    isGor = false;
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    stencil->setRotation(90.0f);
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(1.0f, 0.0f));
+                    stencil->setPosition(ccp(0.0f, CELL_HEIGHT));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
                 }
-                else if (IPHONE_4 || IPHONE_5)
+                if (isNoneCell(i + 1, j))
                 {
-                    ice->setScale(0.85f);
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    stencil->setRotation(90.0f);
+                    stencil->setAnchorPoint(ccp(0.0f, 0.0f));
+                    stencil->setPosition(ccp(0.0f, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i, j - 1))
+                {
+                    isVer = false;
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    stencil->setScaleY(1.1f);
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(1.0f, 0.0f));
+                    stencil->setPosition(ccp(0.0f, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    stencil->setScaleY(1.1f);
+                    stencil->setAnchorPoint(ccp(0.0f, 0.0f));
+                    stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i - 1, j - 1) && isNoneCell(i - 1, j) && isNoneCell(i, j - 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside.png");
+                    stencil->setAnchorPoint(ccp(1.0f, 0.0f));
+                    if (IPHONE_4 || IPHONE_5)
+                        stencil->setPosition(ccp(0.0f, cell->getContentSize().height-2));
+                    else
+                        stencil->setPosition(ccp(0.0f, cell->getContentSize().height));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i - 1, j + 1) && isNoneCell(i - 1, j) && isNoneCell(i, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside.png");
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(0.0f, 0.0f));
+                    stencil->setPosition(ccp(CELL_WIDTH, CELL_HEIGHT));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i, j - 1) && isNoneCell(i + 1, j - 1) && isNoneCell(i + 1, j))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside.png");
+                    stencil->setFlipY(true);
+                    stencil->setAnchorPoint(ccp(1.0f, 1.0f));
+                    stencil->setPosition(ccp(0.0f, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                if (isNoneCell(i, j + 1) && isNoneCell(i + 1, j + 1) && isNoneCell(i + 1, j))
+                {
+                    CCSprite* stencil = CCSprite::create("game/outside.png");
+                    stencil->setFlipY(true);
+                    stencil->setFlipX(true);
+                    stencil->setAnchorPoint(ccp(0.0f, 1.0f));
+                    stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
+                    stencil->setVisible(true);
+                    cell->addChild(stencil);
+                }
+                
+                if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    CCSprite* content = CCSprite::create("game/inside.png");
+                    content->setFlipX(true);
+                    content->setAnchorPoint(ccp(1.0f, 1.0f));
+                    content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width, -stencil->getContentSize().width));
+                    content->setVisible(true);
+                    cell->addChild(content, 11);
+                }
+                if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j - 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    CCSprite* content = CCSprite::create("game/inside.png");
+                    content->setAnchorPoint(ccp(0.0f, 1.0f));
+                    content->setPosition(ccp(stencil->getContentSize().width, -stencil->getContentSize().width));
+                    content->setVisible(true);
+                    cell->addChild(content);
+                }
+                if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j - 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    CCSprite* content = CCSprite::create("game/inside.png");
+                    content->setFlipY(true);
+                    content->setAnchorPoint(ccp(0.0f, 0.0f));
+                    if (IPHONE_4 || IPHONE_5)
+                        content->setPosition(ccp(stencil->getContentSize().width, stencil->getContentSize().width + cell->getContentSize().height - 2));
+                    else
+                        content->setPosition(ccp(stencil->getContentSize().width, stencil->getContentSize().width + cell->getContentSize().height));
+                    content->setVisible(true);
+                    cell->addChild(content);
+                }
+                if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j + 1))
+                {
+                    CCSprite* stencil = CCSprite::create("game/edge.png");
+                    CCSprite* content = CCSprite::create("game/inside.png");
+                    content->setFlipY(true);
+                    content->setFlipX(true);
+                    content->setAnchorPoint(ccp(1.0f, 0.0f));
+                    if (IPHONE_4 || IPHONE_5)
+                        content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width,
+                                                 cell->getContentSize().height + stencil->getContentSize().width - 2));
+                    else
+                        content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width,
+                                                 cell->getContentSize().height + stencil->getContentSize().width));
+                    
+                    content->setVisible(true);
+                    cell->addChild(content);
+                }
+                
+                cell->visit();
+                cell->setPosition(ccp(cell->getPositionX(), cell->getPositionY()));
+                cell->setAnchorPoint(ccp(0.5f, 0.5f));
+                fieldLayer->addChild(cell,2);
+                cell->setOpacity(0);
+                for (int n = 0; n < cell->getChildrenCount(); n++)
+                    ((CCSprite*)cell->getChildren()->objectAtIndex(n))->setOpacity(0);
+                
+                gameFieldSprites[i][j] = cell;
+                
+                CCSprite* gor = CCSprite::create("game/gorizontal.png");
+                gor->setAnchorPoint(ccp(0.0f, 0.0f));
+                gor->setPosition(ccp(0.0f, cell->getContentSize().height));
+                cell->addChild(gor, 1);
+                //            gor->setColor(color);
+                gor->setOpacity(0);
+                gor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.1f), CCFadeTo::create(0.2f, 120)));
+                
+                if (!isGor)
+                    gor->setVisible(false);
+                
+                CCSprite* ver = CCSprite::create("game/vertical.png");
+                ver->setAnchorPoint(ccp(0.0f, 0.0f));
+                ver->setPosition(ccp(0.0f, 0.0f));
+                cell->addChild(ver, 1);
+                ver->setOpacity(0);
+                ver->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.1f), CCFadeTo::create(0.2f, 90)));
+                
+                if (!isVer)
+                    ver->setVisible(false);
+                
+                CCSprite* ice = NULL;
+                if (gameField[i][j] == IceCell)
+                {
+                    iceCells.push_back(ccp(i,j));
+                    ice = CCSprite::createWithSpriteFrameName("game/ice.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice, 10);
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice->setTag(1);
+                    iceCount++;
+                }
+                else if (gameField[i][j] == SuperIceCell)
+                {
+                    superIceCells.push_back(ccp(i,j));
+                    ice = CCSprite::createWithSpriteFrameName("game/superIce.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice, 10);
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice->setTag(1);
+                    iceCount++;
+                }
+                else if (gameField[i][j] == MegaIceCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/megaIce.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice, 12);
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice->setTag(1);
+                    iceCount++;
+                }
+                else if (gameField[i][j] == StoneCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/stone.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->addChild(ice, 12);
+                    ice->setTag(3);
+                }
+                else if (gameField[i][j] == CageCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/reshetka.png");
+                    ice->setPosition(cell->getPosition());
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->getParent()->addChild(ice, 10);
+                    cell->setUserData((void*)ice);
+                    ice->setTag(3);
+                }
+                else if (gameField[i][j] == CageIceCell)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/reshetka.png");
+                    ice->setPosition(cell->getPosition());
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->getParent()->addChild(ice, 10);
+                    cell->setUserData((void*)ice);
+                    ice->setTag(3);
+                    
+                    iceCells.push_back(ccp(i,j));
+                    CCSprite* ice2 = CCSprite::createWithSpriteFrameName("game/ice.png");
+                    ice2->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    cell->addChild(ice2, 10);
+                    ice2->setOpacity(0);
+                    ice2->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    ice2->setTag(1);
+                    
+                    if (ice2)
+                    {
+                        ice2->setScaleX(0.95f);
+                        ice2->setScaleY(1.05f);
+                        if (IPAD_MINI)
+                        {
+                            ice2->setScaleX(0.95f);
+                            ice2->setScaleY(1.05f);
+                        }
+                        else if (IPHONE_4 || IPHONE_5)
+                        {
+                            ice2->setScaleX(0.95f*IPHONE_MULTIPLIER);
+                            ice2->setScaleY(1.05f*IPHONE_MULTIPLIER);
+                        }
+                    }
+                    
+                    iceCount++;
+                }
+                else if (gameField[i][j] == Chocolate)
+                {
+                    ice = CCSprite::createWithSpriteFrameName("game/chokolad.png");
+                    ice->setPosition(ccp(cell->getContentSize().width/2.0f, cell->getContentSize().height/2.0f));
+                    ice->setOpacity(0);
+                    ice->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCFadeIn::create(0.2f)));
+                    cell->addChild(ice, 12);
+                    ice->setTag(4);
+                }
+                
+                if (ice)
+                {
+                    ice->setScaleX(0.95f);
+                    ice->setScaleY(1.05f);
+                    if (IPAD_MINI)
+                    {
+                        ice->setScaleX(0.95f);
+                        ice->setScaleY(1.05f);
+                    }
+                    else if (IPHONE_4 || IPHONE_5)
+                    {
+                        ice->setScaleX(0.95f*IPHONE_MULTIPLIER);
+                        ice->setScaleY(1.05f*IPHONE_MULTIPLIER);
+                    }
                 }
             }
-		}
-	}
+        }
+    }
 	renderTex->end();
 
     CCImage* image = renderTex->newCCImage();

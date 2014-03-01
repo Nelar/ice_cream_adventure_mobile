@@ -172,6 +172,17 @@ void AppDelegate::cancelPayment()
     if (GlobalsPtr->iceCreamScene == Game)
     {
         GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+        layer->closeLoading();
+    }
+    else if (GlobalsPtr->iceCreamScene == Map)
+    {
+        GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+        layer->closeLoading();
+    }
+
+    if (GlobalsPtr->iceCreamScene == Game)
+    {
+        GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
         layer->cancelPayment();
     }
 }

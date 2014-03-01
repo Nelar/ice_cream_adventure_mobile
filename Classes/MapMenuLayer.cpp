@@ -533,7 +533,7 @@ void MapMenuLayer::showMessageboard()
             return;
         lock = true;
         isPopup = true;
-        if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened())
+        if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
             social->showMessageboard();
     }
 }
@@ -989,7 +989,7 @@ void MapMenuLayer::askFriendCallback(CCObject* pSender)
         if (lock)
             return;
         lock = true;
-        if (FacebookPtr->sessionIsOpened())
+        if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
         {
             if (FacebookPtr->friendsScores.size() > 0)
             {

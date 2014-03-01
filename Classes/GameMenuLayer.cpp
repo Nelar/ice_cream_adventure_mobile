@@ -662,6 +662,25 @@ void GameMenuLayer::changeOrientation(void)
         setTargetScore(targetScore);
     }
     
+    if (scoreTitle)
+		scoreTitle->removeFromParentAndCleanup(true);
+    
+    ccColor3B colorBlue;
+	colorBlue.r = 0x29;
+	colorBlue.g = 0x45;
+	colorBlue.b = 0x93;
+    
+    
+    scoreTitle = CCLabelTTF::create(CCLocalizedString("SCORE"), FONT_COMMON, FONT_SIZE_54);
+    ((CCLabelTTF*)scoreTitle)->setColor(colorBlue);
+    
+    if (LANDSCAPE)
+        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*1.8f));
+    else
+        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f*3.0f, downPanel->getContentSize().height/4.0f*3.2f));
+    
+    downPanel->addChild(scoreTitle);
+    
     setCurrentScore(currentScore);
     
     if (type == Time)
@@ -1024,6 +1043,8 @@ void GameMenuLayer::booster_1_Callback(CCObject* pSender)
 
 void GameMenuLayer::booster_2_Callback(CCObject* pSender)
 {
+    if (isClear)
+        return;
     if (OptionsPtr->getHammerCount() <= 0)
     {
         ((CCLayer*)getParent())->setTouchEnabled(false);
@@ -1322,7 +1343,7 @@ void GameMenuLayer::setBringDownCurrent(int current)
     
     if (LANDSCAPE)
     {
-        labelTargetScore->setPosition(ccp(targetTitle->getContentSize().width/1.5f + labelTargetScore->getContentSize().width*labelTargetScore->getScale(), upPanel->getContentSize().height/4.0f));
+        labelTargetScore->setPosition(ccp(targetTitle->getContentSize().width + labelTargetScore->getContentSize().width*labelTargetScore->getScale(), upPanel->getContentSize().height/4.0f));
     }
     else
     {

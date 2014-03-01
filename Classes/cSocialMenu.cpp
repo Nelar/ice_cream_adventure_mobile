@@ -115,7 +115,7 @@ CCLayerColor* SocialLayer::createUserNode(int place, string avatarFileName, stri
 //    sendFriend->setScale(multiplier);
     sendFriend->setTag(place - 1);
     
-    if (!FacebookPtr->sessionIsOpened())
+    if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus())
     {
         sendFriend->setVisible(false);
     }
@@ -382,7 +382,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
         }
     }
     
-    if (!FacebookPtr->sessionIsOpened())
+    if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus())
     {
         me->setVisible(false);
         numOne->setVisible(false);
@@ -416,7 +416,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
     users.clear();
     
     ScoreboardCell meUser;
-    if (FacebookPtr->sessionIsOpened())
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         meUser.score = OptionsPtr->getLevelData(level).countScore;
         char buf[255];
@@ -468,7 +468,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
             userPosition = i + 1;
             str = FacebookPtr->getAvatar();
         }
-        if (!FacebookPtr->sessionIsOpened())
+        if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus())
         {
             str = "user.png";
         }

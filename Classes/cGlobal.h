@@ -14,9 +14,9 @@
 //com.destinygroup.icecreamadventure
 //com.triada.icecream
 
-#define IPHONE_MULTIPLIER ((CCDirector::sharedDirector()->getWinSize().height == 640 || CCDirector::sharedDirector()->getWinSize().width == 640)?0.97f:1.0f)
-#define CELL_WIDTH  ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?143.0f*(IPHONE_MULTIPLIER):70.0f*(IPHONE_MULTIPLIER))
-#define CELL_HEIGHT ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?157.0f*(IPHONE_MULTIPLIER):70.0f*(IPHONE_MULTIPLIER))
+#define IPHONE_MULTIPLIER ((CCDirector::sharedDirector()->getWinSize().height == 640 || CCDirector::sharedDirector()->getWinSize().width == 640)?0.87f:1.0f)
+#define CELL_WIDTH  ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?143.0f*(IPHONE_MULTIPLIER):72.0f*(IPHONE_MULTIPLIER))
+#define CELL_HEIGHT ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?157.0f*(IPHONE_MULTIPLIER):79.0f*(IPHONE_MULTIPLIER))
 
 #define MOVE_DELTA 0.2f
 #define REFILL_DELTA 0.1f
@@ -34,7 +34,7 @@
 
 #define POPUP_SHOW_TIME 0.5f
 
-#define ELEMENT_SCALE ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?0.85f*IPHONE_MULTIPLIER:0.75f*IPHONE_MULTIPLIER)
+#define ELEMENT_SCALE ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?0.85f*IPHONE_MULTIPLIER:0.85f*IPHONE_MULTIPLIER)
 
 #define WINSIZE CCDirector::sharedDirector()->getWinSize()
 

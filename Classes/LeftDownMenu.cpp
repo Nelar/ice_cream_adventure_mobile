@@ -212,6 +212,11 @@ LeftDownMenuScene::~LeftDownMenuScene()
 
 void LeftDownMenuScene::inviteCallback(CCObject* pSender)
 {
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
     isInvite = true;
 }
 

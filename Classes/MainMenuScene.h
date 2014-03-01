@@ -89,11 +89,15 @@ public:
     
     void helpFromSetting(CCNode* pSender);
     void playWithLoading(CCNode* pSender);
-private:
-    
+    bool isPopup;
     
     void unlock(CCNode* sender);
     void lock();
+    
+    CCMenu* menu;
+private:
+    
+
     
     CCLabelTTF* labelTTF = NULL;
     CCLabelTTF* howToPlayHeader = NULL;
@@ -118,7 +122,6 @@ private:
 
 	CCSprite* popup;
 	CCMenu* popupMenu;
-	CCMenu* menu;
 
 	CCSprite* tutorialPopup;
 	CCMenu* tutorialMenu;
@@ -126,7 +129,6 @@ private:
 	CCLabelTTF* label;
 
 	bool isLock;
-    bool isPopup;
     bool isTutorial;
 
 	eSettingState settingState;

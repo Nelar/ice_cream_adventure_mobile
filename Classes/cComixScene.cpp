@@ -60,8 +60,6 @@ bool ComixScene::init(int num)
 	if (!CCLayer::init())
 		return false;
     
-    CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
-    
     GlobalsPtr->iceCreamScene = Comix;
     
     time = 0.0f;
@@ -70,6 +68,81 @@ bool ComixScene::init(int num)
     nextBubbleTime = -1.0f;
     comixNumber = num;
     pauseNumber = 0;
+
+    
+    CCSprite* spriteNormal = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButton.png");
+    CCSprite* spriteSelected = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButton.png");
+    spriteSelected->setColor(ccGRAY);
+    skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(ComixScene::skipCallback));
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    skip->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/3.0f, -CCDirector::sharedDirector()->getWinSize().height/2.4f);
+    
+    
+    spriteNormal = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButtonArrow.png");
+    spriteSelected = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButtonArrow.png");
+    next = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(ComixScene::nextCallback));
+    next->setCascadeOpacityEnabled(true);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
+    next->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
+    
+    next->setPosition(CCDirector::sharedDirector()->getWinSize().width/3.0f, -CCDirector::sharedDirector()->getWinSize().height/2.4f);
+    
+    menu = CCMenu::create();
+    menu->addChild(next);
+    menu->addChild(skip);
+    next->setVisible(false);
+    this->addChild(menu, 15);
+    
+    fon = CCSprite::create("game/cell.png");
+    this->addChild(fon, 10);
+    
+    fon->setColor(ccBLACK);
+    fon->setScale(200.0f);
+    fon->setOpacity(0);
+    
+    borderLeft = CCSprite::create("game/border.png");
+    borderRight = CCSprite::create("game/border.png");
+    
+    if (LANDSCAPE)
+    {
+        borderLeft->setRotation(90.0f);
+        borderRight->setRotation(90.0f);
+        borderLeft->setPosition(ccp(borderLeft->getContentSize().height/2.0f, WINSIZE.height/2.0f));
+        borderRight->setPosition(ccp(WINSIZE.width - borderLeft->getContentSize().height/2.0f, WINSIZE.height/2.0f));
+        
+        if (IPHONE_5)
+        {
+            borderLeft->setScaleY(1.5f);
+            borderRight->setScaleY(1.5f);
+            borderLeft->setScaleX(1.0f);
+            borderRight->setScaleX(1.0f);
+        }
+    }
+    else
+    {
+        
+        borderLeft->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height - borderLeft->getContentSize().height/2.0f));
+        borderRight->setPosition(ccp(WINSIZE.width/2.0f, borderLeft->getContentSize().height/2.0f));
+        if (IPHONE_5)
+        {
+            borderLeft->setScaleY(1.0f);
+            borderRight->setScaleY(1.0f);
+            borderLeft->setScaleX(1.5f);
+            borderRight->setScaleX(1.5f);
+        }
+    }
+    
+    this->addChild(borderLeft, 11);
+    this->addChild(borderRight, 11);
     
     switch(num)
     {
@@ -181,81 +254,7 @@ bool ComixScene::init(int num)
             break;
     }
     
-    CCSprite* spriteNormal = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButton.png");
-    CCSprite* spriteSelected = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButton.png");
-    spriteSelected->setColor(ccGRAY);
-    skip = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(ComixScene::skipCallback));
-    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("SKIP", NULL), FONT_COMMON, FONT_SIZE_48);
-    labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
-    skip->addChild(labelTTF);
-    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
-    skip->setPosition(-CCDirector::sharedDirector()->getWinSize().width/3.0f, -CCDirector::sharedDirector()->getWinSize().height/2.4f);
-    
-    
-    spriteNormal = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButtonArrow.png");
-    spriteSelected = CCSprite::CCSprite::createWithSpriteFrameName("common/blueButtonArrow.png");
-    next = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(ComixScene::nextCallback));
-    next->setCascadeOpacityEnabled(true);
-    
-    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_48);
-    labelTTF->setColor(ccWHITE);
-    labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
-    next->addChild(labelTTF);
-    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
-
-    
-    next->setPosition(CCDirector::sharedDirector()->getWinSize().width/3.0f, -CCDirector::sharedDirector()->getWinSize().height/2.4f);
-    
-    menu = CCMenu::create();
-    menu->addChild(next);
-    menu->addChild(skip);
-    next->setVisible(false);
-    this->addChild(menu, 15);
-    
-    fon = CCSprite::create("game/cell.png");
-    this->addChild(fon, 10);
-    
-    fon->setColor(ccBLACK);
-    fon->setScale(200.0f);
-    fon->setOpacity(0);
-    
-    borderLeft = CCSprite::create("game/border.png");
-    borderRight = CCSprite::create("game/border.png");
-    
-    if (LANDSCAPE)
-    {
-        borderLeft->setRotation(90.0f);
-        borderRight->setRotation(90.0f);
-        borderLeft->setPosition(ccp(borderLeft->getContentSize().height/2.0f, WINSIZE.height/2.0f));
-        borderRight->setPosition(ccp(WINSIZE.width - borderLeft->getContentSize().height/2.0f, WINSIZE.height/2.0f));
-        
-        if (IPHONE_5)
-        {
-            borderLeft->setScaleY(1.5f);
-            borderRight->setScaleY(1.5f);
-            borderLeft->setScaleX(1.0f);
-            borderRight->setScaleX(1.0f);
-        }
-    }
-    else
-    {
-        
-        borderLeft->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height - borderLeft->getContentSize().height/2.0f));
-        borderRight->setPosition(ccp(WINSIZE.width/2.0f, borderLeft->getContentSize().height/2.0f));
-        if (IPHONE_5)
-        {
-            borderLeft->setScaleY(1.0f);
-            borderRight->setScaleY(1.0f);
-            borderLeft->setScaleX(1.5f);
-            borderRight->setScaleX(1.5f);
-        }
-    }
-    
-    this->addChild(borderLeft, 11);
-    this->addChild(borderRight, 11);
-    
-    this->schedule(schedule_selector(ComixScene::update), 0.1f);
+    this->schedule(schedule_selector(ComixScene::update));
     return true;
 }
 
@@ -300,7 +299,7 @@ void ComixScene::pauseComix(CCNode* sender)
         text->removeFromParentAndCleanup(true);
         text = NULL;
     }
-    text = CCLabelTTF::create("", FONT_COMMON, FONT_SIZE_22);
+    text = CCLabelTTF::create("", FONT_COMMON, FONT_SIZE_32);
     text->setColor(ccBLACK);
     
     next->setVisible(true);

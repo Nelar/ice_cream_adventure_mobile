@@ -21,7 +21,7 @@
   <c t="n"/>
   <c t="n"/>
   <c t="n"/>
-  <c t="s"/>
+  <c t="s" oT="cookie"/>
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>

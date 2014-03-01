@@ -567,7 +567,7 @@ bool MainMenuScene::init()
 	popup->setPosition(ccp(popup->getPositionX(), popup->getPositionY() - popup->getContentSize().height));
 	popupMenu->setPosition(ccp(popupMenu->getPositionX(), popupMenu->getPositionY() - popup->getContentSize().height));
     
-    if (FacebookPtr->sessionIsOpened())
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         facebook->setVisible(false);
         faceConnect->setVisible(false);
@@ -583,6 +583,8 @@ bool MainMenuScene::init()
 
 void MainMenuScene::moreGamesCallback(CCObject* pSender)
 {
+    lock();
+    menu->setEnabled(false);
     moreGamesLayer->showMessageboard();
 }
 
@@ -590,6 +592,12 @@ void MainMenuScene::inviteCallback(CCObject* pSender)
 {
     if (isLock)
         return;
+    
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
     
     lock();
     
@@ -618,8 +626,9 @@ void MainMenuScene::facebookCheck(CCNode* pSender)
     Core::MMPInterface::Instance()->SessionConfirmed();
     if (OptionsPtr->isFacebookConnection())
     {
-//        if (!FacebookPtr->sessionIsOpened())
-            menuFacebookCallback(NULL);
+        if (getNetworkStatus())
+            if (!FacebookPtr->sessionIsOpened())
+                menuFacebookCallback(NULL);
     }
 }
 
@@ -1394,7 +1403,7 @@ void MainMenuScene::addBonus(CCNode* pSender)
         return;
     }
     
-    if (FacebookPtr->sessionIsOpened())
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         FacebookPtr->inviteFriends();
     }
@@ -1843,8 +1852,6 @@ void MainMenuScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     if (isLock)
         return;
-    
-    lock();
     
 	if (isSetting)
 	{
