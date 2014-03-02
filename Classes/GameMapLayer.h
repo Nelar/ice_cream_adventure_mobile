@@ -118,6 +118,7 @@ private:
     int nextlevelCurr;
     
     bool levelLock;
+    bool isBuyLive = false;
 };
 
 #endif

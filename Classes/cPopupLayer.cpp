@@ -310,8 +310,8 @@ void PopupLayer::buttonClick(CCObject* pSender)
     isPopup = false;
     background->setVisible(false);
     plate->removeFromParentAndCleanup(true);
-    this->runAction(CCCallFuncN::create(pSelectorTarget, selector));
     this->runAction(CCCallFuncN::create(closeTarget, closeSelector));
+    this->runAction(CCCallFuncN::create(pSelectorTarget, selector));
     plate = NULL;
 }
 

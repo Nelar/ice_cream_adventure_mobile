@@ -288,7 +288,7 @@ void Options::load()
     _useMusic = CCUserDefault::sharedUserDefault()->getBoolForKey("music", true);
     _notif = CCUserDefault::sharedUserDefault()->getBoolForKey("notif", false);
     _facebook = CCUserDefault::sharedUserDefault()->getBoolForKey("facebook", false);
-    currentLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLevel", 1);
+    currentLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLevel", 84);
     currentLife = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLife", 5);
     crystalCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("crystalCount", 0);
     bombCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("bombCount", 0);

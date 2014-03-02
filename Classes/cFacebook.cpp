@@ -334,6 +334,7 @@ bool cFacebook::createAvatarFromFBIDForFriend(string fuid)
 
 void cFacebook::requestWritePermissions()
 {
+    return;
     if (!sessionIsOpened())
         return;
     // We need to request write permissions from Facebook

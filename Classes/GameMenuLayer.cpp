@@ -302,6 +302,7 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
         return;
     
     iceCount = iceTarget - iceCount;
+    iceCountSave = iceCount;
     
     isDialog = true;
     exitBack = CCLayerColor::create(ccc4(0, 0, 0, 120));
@@ -505,6 +506,8 @@ void GameMenuLayer::playOnCallback(CCObject* pSender)
     isDialog = false;
     if (((GameScene*)getParent())->isEndDialog)
     {
+        playOn->setEnabled(false);
+        exitOn->setEnabled(false);
         if (type == Time)
         {
             popupBooster->popupBoosterInApp((char*)CCLocalizedString("EXTRA_TIME", NULL), (char*)CCLocalizedString("EXTRA_TIME_TEXT", NULL), GreenPopup, TimePopBoot, this, callfuncN_selector(GameMenuLayer::popupOk2), this, callfuncN_selector(GameMenuLayer::unclockMenu));
@@ -1155,6 +1158,11 @@ void GameMenuLayer::popupOk2(CCNode* pSender)
         alertNetwork();
         return;
     }
+    if (((GameScene*)getParent())->isEndDialog)
+    {
+        playOn->setEnabled(true);
+        exitOn->setEnabled(true);
+    }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.5moves");
     popupBooster->loading((char*)CCLocalizedString("CONNECTION", NULL));
     ((GameScene*)getParent())->isEndDialog = false;
@@ -1171,13 +1179,24 @@ void GameMenuLayer::popupOk2(CCNode* pSender)
 void GameMenuLayer::inappPopupCancel(CCNode* sender)
 {
     if (countMoves == 0 && type != Time)
-        ((GameScene*)getParent())->lose(NULL);
+    {
+        ((GameScene*)getParent())->isEndDialog = true;
+        popupExit(iceCountSave, 0);
+    }
     else if (type == Time && time == 0)
-        ((GameScene*)getParent())->lose(NULL);
+    {
+        ((GameScene*)getParent())->isEndDialog = true;
+        popupExit(iceCountSave, 0);
+    }
 }
 
 void GameMenuLayer::unclockMenu(CCNode* pSender)
 {
+    if (((GameScene*)getParent())->isEndDialog)
+    {
+        playOn->setEnabled(true);
+        exitOn->setEnabled(true);
+    }
     menu->setTouchEnabled(true);
     ((CCLayer*)getParent())->setTouchEnabled(true);
 }
@@ -1201,8 +1220,14 @@ int GameMenuLayer::getCurrentScore()
 
 void GameMenuLayer::setCountMoves(int nTargetScore)
 {
+    if (firstStep){
+        firstStep = false;
+        OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() - 1);
+        OptionsPtr->save();
+    }
 	if (type == Time)
 		return;
+    
 	countMoves = nTargetScore;
 	if (movesTitle)
 		movesTitle->removeFromParentAndCleanup(true);

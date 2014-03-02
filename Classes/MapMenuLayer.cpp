@@ -431,6 +431,7 @@ void MapMenuLayer::closeLoading()
         isPopup = false;
     }
     popaplayer->closeLoading();
+    menu->setEnabled(true);
 }
 
 void MapMenuLayer::stageCallback(CCNode* node)
@@ -1665,6 +1666,7 @@ void MapMenuLayer::backCallback(CCObject* pSender)
 
 void MapMenuLayer::playCallback(CCObject* pSender)
 {
+    menu->setEnabled(false);
     if (WINSIZE.height < WINSIZE.width)
     {
         popup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0, -WINSIZE.height))));
@@ -1838,6 +1840,7 @@ void MapMenuLayer::popupOk1(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.superelements");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    menu->setEnabled(false);
 }
 
 void MapMenuLayer::popupOk2(CCNode* pSender)
@@ -1850,6 +1853,7 @@ void MapMenuLayer::popupOk2(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.stripedandbomb");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    menu->setEnabled(false);
 }
 
 void MapMenuLayer::popupOk3(CCNode* pSender)
@@ -1862,6 +1866,7 @@ void MapMenuLayer::popupOk3(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.penguins");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    menu->setEnabled(false);
 }
 
 void MapMenuLayer::unclockMenu(CCNode* pSender)

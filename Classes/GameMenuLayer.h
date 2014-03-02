@@ -200,6 +200,8 @@ private:
     
     CCSprite* mig = NULL;
     CCLabelTTF* labelTTF;
+    int iceCountSave = 0;
+    bool firstStep = true;
 };
 
 #endif

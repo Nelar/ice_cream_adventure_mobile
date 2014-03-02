@@ -19,7 +19,7 @@
   <c t="gr"/>
   <c t="st"/>
   <c t="gr"/>
-  <c t="s"/>
+  <c t="s" oT="cookie"/>
   <c t="st"/>
   <c t="st"/>
   <c t="st"/>

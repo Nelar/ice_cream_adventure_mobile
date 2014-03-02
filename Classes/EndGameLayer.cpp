@@ -931,8 +931,6 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
         second = second - 1800;
     }
     
-    OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() - 1);
-    OptionsPtr->save();
     
     //changeOrientation();
 	char buf[255];
@@ -1358,6 +1356,7 @@ void EndGameLayer::closeCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
 	lock = false;
+    menu->setEnabled(false);
     if (isWin)
     {
         if (currentLevel == 12 && OptionsPtr->getCurrentLevel() <= (currentLevel + 1))
@@ -1399,12 +1398,14 @@ void EndGameLayer::updateFacebookCallback(CCNode* pSender)
 
 void EndGameLayer::backCallback(CCObject* pSender)
 {
+    menu->setEnabled(false);
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
 	CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
 }
 
 void EndGameLayer::playCallback(CCObject* pSender)
 {
+    menu->setEnabled(false);
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     if (OptionsPtr->getLifeCount() <= 0)
         CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(-1));
@@ -1417,6 +1418,7 @@ void EndGameLayer::nextCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     
+    menu->setEnabled(false);
     if (LANDSCAPE)
     {
         popup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0, -WINSIZE.height))));
@@ -1491,6 +1493,11 @@ void EndGameLayer::nextAfterLoading(CCNode* node)
         CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(currentLevel + 1));
 }
 
+void EndGameLayer::nextWithLivePanel(CCNode* node)
+{
+    CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(-111));
+}
+
 void EndGameLayer::retryCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
@@ -1514,11 +1521,55 @@ void EndGameLayer::retryCallback(CCObject* pSender)
     
     social->hideScoreBoard();
     
+    menu->setEnabled(false);
+    
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::retryEnd))));
 }
 
 void EndGameLayer::retryEnd(CCNode* pSender)
 {
+    menu->setEnabled(true);
+    if (OptionsPtr->getLifeCount() == 0)
+    {
+        CCSprite* sprite;
+        if (IPAD)
+        {
+            if (LANDSCAPE)
+                sprite = CCSprite::create("Default-Landscape@2x~ipad.png");
+            else
+                sprite = CCSprite::create("Default-Portrait@2x~ipad.png");
+        }
+        else if (IPAD_MINI)
+        {
+            if (LANDSCAPE)
+                sprite = CCSprite::create("Default-Landscape~ipad.png");
+            else
+                sprite = CCSprite::create("Default-Portrait~ipad.png");
+        }
+        else if (IPHONE_4)
+        {
+            sprite = CCSprite::create("Default@2x.png");
+            if (LANDSCAPE)
+                sprite->setRotation(90);
+            sprite->setScale(1.2f);
+        }
+        else if (IPHONE_5)
+        {
+            sprite = CCSprite::create("Default-568h@2x.png");
+            if (LANDSCAPE)
+                sprite->setRotation(90);
+            sprite->setScale(1.2f);
+        }
+        CCLabelTTF* labelLoad = CCLabelTTF::create("Loading", FONT_COMMON, FONT_SIZE_48);
+        labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+        sprite->addChild(labelLoad);
+        sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        this->addChild(sprite, 1000);
+        sprite->setVisible(false);
+        sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), NULL));
+        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextWithLivePanel)), NULL));
+        return;
+    }
     if (OptionsPtr->getLevelData(currentLevel - 1).levelType != Score)
         levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel - 1).countStar, OptionsPtr->getLevelData(currentLevel - 1).targetScore, OptionsPtr->getLevelData(currentLevel - 1).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else
@@ -1612,6 +1663,7 @@ void EndGameLayer::popupOk1(CCNode* pSender)
     }
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.superelements");
+    menu->setEnabled(false);
 }
 
 void EndGameLayer::popupOk2(CCNode* pSender)
@@ -1624,6 +1676,7 @@ void EndGameLayer::popupOk2(CCNode* pSender)
     }
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.stripedandbomb");
+    menu->setEnabled(false);
 }
 
 void EndGameLayer::popupOk3(CCNode* pSender)
@@ -1636,6 +1689,7 @@ void EndGameLayer::popupOk3(CCNode* pSender)
     }
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.penguins");
+    menu->setEnabled(false);
 }
 
 void EndGameLayer::endTutorial(CCNode* pSender)

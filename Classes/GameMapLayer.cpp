@@ -710,12 +710,17 @@ bool GameMapLayer::init(int nextLevel)
     {
         boy->setPosition(ccp(path[OptionsPtr->getLastGameLevel() - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),
                              path[OptionsPtr->getLastGameLevel() - 1].y + boy->getContentSize().height/1.5f*boy->getScale()));
+        if (nextLevel == -111)
+        {
+            isBuyLive = true;
+            menu->livesCallback(NULL);
+        }
         nextLevel = OptionsPtr->getLastGameLevel();
     }
     
-   /* layerGradient->setPosition(ccp(100,
+    layerGradient->setPosition(ccp(100,
                                  -path[nextLevel - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
-	*/
+	
     
     dark = CCSprite::create("game/cell.png");
     dark->setScale(1000);
@@ -841,7 +846,8 @@ bool GameMapLayer::init(int nextLevel)
 
 void GameMapLayer::showMessageBoard()
 {
-    menu->showMessageboard();
+    if (!isBuyLive)
+        menu->showMessageboard();
 }
 
 void GameMapLayer::hideMessageBoard()
@@ -1079,8 +1085,11 @@ void GameMapLayer::update(CCNode* sender)
         dark->runAction(CCFadeTo::create(0.5f, 150));
         menu->hideLive();
 //        scrollView->setTouchEnabled(false);
-        
-        
+        if (layerGradient->getScale() < layerGradient->minScale())
+            layerGradient->setScale(layerGradient->minScale());
+        else if (layerGradient->getScale() > layerGradient->maxScale())
+            layerGradient->setScale(layerGradient->maxScale());
+        layerGradient->recoverPositionAndScale();
     }
     else if ((!leftDownMenu->isLock() || !menu->isLock()) && lock)
     {
@@ -1105,7 +1114,11 @@ void GameMapLayer::update(CCNode* sender)
         menu->showLive();
         
         layerGradient->gettouches()->removeAllObjects();
-        //scrollView->setTouchEnabled(true);
+        if (layerGradient->getScale() < layerGradient->minScale())
+            layerGradient->setScale(layerGradient->minScale());
+        else if (layerGradient->getScale() > layerGradient->maxScale())
+            layerGradient->setScale(layerGradient->maxScale());
+        layerGradient->recoverPositionAndScale();
     }
     this->runAction(CCSequence::create(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(GameMapLayer::update)), NULL));
 }
