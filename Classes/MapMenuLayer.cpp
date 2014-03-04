@@ -1684,38 +1684,32 @@ void MapMenuLayer::playCallback(CCObject* pSender)
     if (IPAD)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("Default-Landscape@2x~ipad.png");
+            sprite = CCSprite::create("loadingiPadLandscape.png");
         else
-            sprite = CCSprite::create("Default-Portrait@2x~ipad.png");
+            sprite = CCSprite::create("loadingiPadPortrait.png");
     }
     else if (IPAD_MINI)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("Default-Landscape~ipad.png");
+            sprite = CCSprite::create("loadingiPadMiniLandscape.png");
         else
-            sprite = CCSprite::create("Default-Portrait~ipad.png");
+            sprite = CCSprite::create("loadingiPadMiniPortrait.png");
     }
-    else if (IPHONE_4)
+    else if (IPHONE_4||IPHONE_5)
     {
-        sprite = CCSprite::create("Default@2x.png");
         if (LANDSCAPE)
-            sprite->setRotation(90);
-        sprite->setScale(1.2f);
+            sprite = CCSprite::create("loadingIphoneLandscape.png");
+        else
+            sprite = CCSprite::create("loadingIphonePortrait.png");
     }
-    else if (IPHONE_5)
-    {
-        sprite = CCSprite::create("Default-568h@2x.png");
-        if (LANDSCAPE)
-            sprite->setRotation(90);
-        sprite->setScale(1.2f);
-    }
-    CCLabelTTF* labelLoad = CCLabelTTF::create("Loading", FONT_COMMON, FONT_SIZE_48);
+    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
     sprite->addChild(labelLoad);
     sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     this->addChild(sprite, 1000);
     sprite->setVisible(false);
-    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), NULL));
+    sprite->setOpacity(0);
+    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
     
     social->hideScoreBoard();
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME*2.0f), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::playAfterLoad))));

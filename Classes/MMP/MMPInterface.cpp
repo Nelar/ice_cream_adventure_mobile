@@ -571,6 +571,12 @@ namespace Core
         return _mmp->LogEvent( root );
     }
     
+    void MMPInterface::SendSession()
+    {
+        _mmp->SaveEvents();
+        _mmp->SendEvents();
+    }
+    
     MarketingPlatform::Banner* MMPInterface::GetBanner()
     {
         return _mmp->GetBanner();

@@ -121,8 +121,7 @@ TUTORIAL_10 = "Rimuovi tutto il\n ghiaccio abbinando le\n palline di gelato.";
 
 
 NETWORK_MESSAGE="Nessuna connessione a internet,\n per favore riprova più tardi";
-
-
+LOADING = "Loading";
 
 
 

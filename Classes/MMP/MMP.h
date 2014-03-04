@@ -62,8 +62,7 @@ namespace MarketingPlatform
         Banner* _banner;
         void SendRequest( const std::string& batch );
         void PopRequest( MMPRequest* request );
-        void SendEvents();
-        void SaveEvents();
+
         void LoadBanner();
         bool OnNetworkRequest( Core::Event* event );
         bool OnBannerRequest( Core::Event* event );
@@ -73,6 +72,9 @@ namespace MarketingPlatform
         
         MMPLib( const std::string& appKey, const std::string& idfa );
         ~MMPLib();
+        
+        void SendEvents();
+        void SaveEvents();
         
         //!Need call Init and set host and http request header. 
         void Init( const std::string& host = "destiny.li/api/events", const std::string& bannerHost = "destiny.li/api/xpromo", const std::string& header = "Content-Type: application/json" );

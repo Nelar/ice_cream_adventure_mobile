@@ -33,6 +33,8 @@ public:
     void iconsServerResponse(CCHttpClient * client, CCHttpResponse * response);
     void moreGamesServerResponse(CCHttpClient * client, CCHttpResponse * response);
     void moreGamesRequest();
+    void mmpTrackingInit();
+    void trackingServerResponse(CCHttpClient * client, CCHttpResponse * response);
     
 private:
 

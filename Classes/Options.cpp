@@ -39,6 +39,11 @@ int	Options::getCurrentLevel()
 	return currentLevel;
 }
 
+void Options::restoreCurrentLevel(int nCurrentLevel)
+{
+    currentLevel = nCurrentLevel;
+}
+
 void Options::setCurrentLevel(int nCurrentLevel)
 {
 	currentLevel = nCurrentLevel;

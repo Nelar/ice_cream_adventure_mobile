@@ -57,6 +57,8 @@ public:
 
 	int	getCurrentLevel();
 	void setCurrentLevel(int nCurrentLevel);
+    void restoreCurrentLevel(int nCurrentLevel);
+
 
 	void setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock = false);
 	sLevelData getLevelData(int idx);

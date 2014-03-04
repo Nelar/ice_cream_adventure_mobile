@@ -146,7 +146,7 @@ void GameScene::loadLevel(const char* levelName)
     
     
     char buf[255];
-    sprintf(buf, "%d", menu->getCurrentLevel());
+    sprintf(buf, "%0*d", 3, menu->getCurrentLevel());
     Core::MMPInterface::Instance()->LevelStarted(string(buf));
     if (menu->getCurrentLevel() >= 8)
     {
@@ -491,6 +491,7 @@ void GameScene::loadLevel(const char* levelName)
         OptionsPtr->setFishCount(OptionsPtr->getFishCount() - 1);
     }
     OptionsPtr->save();
+    Core::MMPInterface::Instance()->SendSession();
 }
 
 GameScene::~GameScene()
@@ -4437,7 +4438,7 @@ void GameScene::cancelPayment()
 void GameScene::win(CCNode* sender)
 {
     char buf[255];
-    sprintf(buf, "%d", menu->getCurrentLevel());
+    sprintf(buf, "%0*d", 3, menu->getCurrentLevel());
     Core::MMPInterface::Instance()->LevelCompleted(string(buf));
     
     SimpleAudioEngine::sharedEngine()->playEffect("sound/level_completed.mp3");

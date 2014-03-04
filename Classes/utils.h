@@ -12,13 +12,19 @@
 #include <iostream>
 
 const char* version();
+const char* iOSversion();
 const char* idfa();
+const char* idfv();
+const char* device();
+const char* limitAdTracking();
+const char* carrier();
 void goToLink(const char* link);
 
 void sendlocalNotification(float second);
 void removeAllNotification();
 const char* getCountry();
 bool getNetworkStatus();
+const char* networkStatus();
 void alertNetwork();
 
 

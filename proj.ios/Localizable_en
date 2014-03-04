@@ -121,7 +121,7 @@ TUTORIAL_10 = "Clear all the ice.\n Match over the ice to remove it.";
 
 
 NETWORK_MESSAGE = "No internet connection.\n Please try again later";
-
+LOADING = "Loading";
 
 
 

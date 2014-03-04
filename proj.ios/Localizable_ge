@@ -121,7 +121,7 @@ TUTORIAL_10 = "Entferne das Eis,\n indem du Kombinationen erzielst.";
 
 
 NETWORK_MESSAGE = "Keine Internetverbindung.\n Bitte versuchen Sie es später erneut.";
-
+LOADING = "Loading";
 
 
 

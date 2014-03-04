@@ -121,6 +121,7 @@ TUTORIAL_10 = "Elimine todo o gelo\n fazendo combinações.";
 
 
 NETWORK_MESSAGE = "Sem conexão à internet.\n Tente novamente mais tarde";
+LOADING = "Loading";
 
 
 

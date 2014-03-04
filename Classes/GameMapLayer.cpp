@@ -110,6 +110,25 @@ bool GameMapLayer::init(int nextLevel)
             popupScale = 1.0f;
     }
     
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    {
+        vector<int> temp = FacebookPtr->myScores;
+        int lastLevel = 1;
+        for (int i = FacebookPtr->myScores.size(); i > 0; i--)
+        {
+            if (FacebookPtr->myScores[i] > 0)
+            {
+                lastLevel = i;
+                break;
+            }
+        }
+        if (OptionsPtr->getCurrentLevel() < lastLevel)
+        {
+            OptionsPtr->restoreCurrentLevel(lastLevel);
+            OptionsPtr->save();
+        }
+    }
+    
     nextlevelCurr = nextLevel;
 
 	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("sound/map_loop.mp3", true);

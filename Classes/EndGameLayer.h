@@ -74,6 +74,7 @@ public:
     
     void nextAfterLoading(CCNode* node);
     void nextWithLivePanel(CCNode* node);
+    void closeAfterLoading(CCNode* node);
 private:
     
     void explosionCallback(CCNode* sender);

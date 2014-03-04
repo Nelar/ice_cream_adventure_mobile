@@ -15,6 +15,9 @@
 #include "cFacebook.h"
 #include "IAP.h"
 
+#include "MD5.h"
+#include "base64.h"
+
 using namespace cocos2d;
 using namespace std;
 
@@ -57,26 +60,24 @@ bool LoadingScene::init()
     if (IPAD)
     {
         if (LANDSCAPE)
-            background = CCSprite::create("Default-Landscape@2x~ipad.png");
+            background = CCSprite::create("loadingiPadLandscape.png");
         else
-            background = CCSprite::create("Default-Portrait@2x~ipad.png");
+            background = CCSprite::create("loadingiPadPortrait.png");
     }
     else if (IPAD_MINI)
     {
         if (LANDSCAPE)
-            background = CCSprite::create("Default-Landscape~ipad.png");
+            background = CCSprite::create("loadingiPadMiniLandscape.png");
         else
-            background = CCSprite::create("Default-Portrait~ipad.png");
+            background = CCSprite::create("loadingiPadMiniPortrait.png");
     }
-    else if (IPHONE_5)
+    else if (IPHONE_4||IPHONE_5)
     {
-        background = CCSprite::create("Default-568h@2x.png");
+        if (LANDSCAPE)
+            background = CCSprite::create("loadingIphoneLandscape.png");
+        else
+            background = CCSprite::create("loadingIphonePortrait.png");
     }
-    else if (IPHONE_4)
-    {
-        background = CCSprite::create("Default.png");
-    }
-    
     background->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     
     
@@ -84,6 +85,11 @@ bool LoadingScene::init()
     
     if (getNetworkStatus())
     {
+        bool firstMMPInit = CCUserDefault::sharedUserDefault()->getBoolForKey("mmpInit", false);
+        if (!firstMMPInit)
+        {
+            mmpTrackingInit();
+        }
         if (OptionsPtr->isFacebookConnection())
         {
             FacebookPtr->login();
@@ -96,6 +102,90 @@ bool LoadingScene::init()
     }
     
 	return true;
+}
+
+void LoadingScene::trackingServerResponse(CCHttpClient * client, CCHttpResponse * response)
+{
+    std::vector<char> *buffer = response->getResponseData();
+    std::string str = std::string(buffer->begin(), buffer->end());
+    if (str == "OK") {
+        CCUserDefault::sharedUserDefault()->setBoolForKey("mmpInit", true);
+        CCUserDefault::sharedUserDefault()->flush();
+    }
+    return;
+}
+
+void LoadingScene::mmpTrackingInit()
+{
+    string appKey = "8";
+    string appSecret = "876dd287a9a37a485b958b7acb47bba0";
+    string appID = "com.destinygroup.icecreamadventure";
+    string appVersion = string(version());
+    string idfaKey = string(idfa());
+    string idfvKey = string(idfv());
+    string deviceName = string(device());
+    string viOS = string(iOSversion());
+    string osLat = string(limitAdTracking());
+    string net = string(networkStatus());
+    string currCarrier = string(carrier());
+    
+    ccLanguageType curLanguage = CCApplication::sharedApplication()->getCurrentLanguage();
+    string langName;
+    switch (curLanguage) {
+        case kLanguageEnglish:
+            langName = "en";
+            break;
+        case kLanguageRussian:
+            langName = "ru";
+            break;
+        case kLanguageFrench:
+            langName = "fr";
+            break;
+        case kLanguageItalian:
+            langName = "it";
+            break;
+        case kLanguageGerman:
+            langName = "de";
+            break;
+        case kLanguageSpanish:
+            langName = "es";
+            break;
+        case kLanguagePortuguese:
+            langName = "pt";
+            break;
+        default:
+            langName = "en";
+            break;
+    }
+    
+    string sig = appSecret + ";" + appID + ";" + appKey + ";" + appVersion + ";" + currCarrier + ";" + idfaKey + ";" + idfvKey + ";" + "idfa" + ";" + "idfv" + ";"
+    + deviceName + ";" + net + ";" + langName + ";" + osLat + ";" + "iOS" + ";" + viOS + ";;" + appSecret;
+    string sigMD5 = md5(sig);
+
+    
+    string requestStr = "http://ct.destiny.li/api/v1/installs/?app_id=" + appKey +
+        string("&app_eid=") + appID +
+        string("&app_v=") + appVersion +
+        string("&d_eid_type1=idfa") +
+        string("&d_eid1=") + idfaKey +
+        string("&d_eid_type2=idfv") +
+        string("&d_eid2=") + idfvKey +
+        string("&d_model=") + deviceName +
+        string("&os_name=iOS") +
+        string("&os_v=") + viOS +
+        string("&os_lang=") + langName +
+        string("&os_lat=") + osLat +
+        string("&net=") + net +
+        string("&carrier=") + currCarrier +
+        string("&referrer=") +
+        string("&sig=") + sigMD5;
+    
+    CCHttpRequest * request = new CCHttpRequest();
+    request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
+    request->setUrl(requestStr.c_str());
+    request->setResponseCallback(this, httpresponse_selector(LoadingScene::trackingServerResponse));
+    cocos2d::extension::CCHttpClient::getInstance()->send(request);    
+    request->release();
 }
 
 void LoadingScene::moreGamesRequest()

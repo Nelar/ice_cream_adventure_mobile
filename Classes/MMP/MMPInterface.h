@@ -66,6 +66,7 @@ namespace Core
         void InviteFriendsClicked();
         void RateAppClicked( const std::string& choice );
         bool LogEvent( const std::string& jsonStr );
+        void SendSession();
         MarketingPlatform::Banner* GetBanner();
     };
 }

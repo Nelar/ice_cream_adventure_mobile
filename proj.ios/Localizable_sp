@@ -120,7 +120,7 @@ TUTORIAL_9 = "¡Intercambia de lugar la bola\n especial con cualquier otra\n bol
 TUTORIAL_10 = "Elimina todo el hielo\n haciendo combinaciones.";
 
 NETWORK_MESSAGE = "No hay conexión a internet.\n Vuelve a intentarlo más tarde";
-
+LOADING = "Loading";
 
 
 
