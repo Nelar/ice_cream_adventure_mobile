@@ -167,20 +167,20 @@ bool GameMenuLayer::init(eLevelType ntype)
     star1->setScale(0.25f);
     star1->setVisible(false);
     startPolosa_1->addChild(star1, 2);
-    star1->setPosition(ccp(startPolosa_1->getContentSize().width/2.0f, star1->getContentSize().height/1.8f*star1->getScale()));
+    star1->setPosition(ccp(startPolosa_1->getContentSize().width/2.15f, star1->getContentSize().height/1.7f*star1->getScale()));
     
     star2 = CCSprite::createWithSpriteFrameName("common/star2.png");
     star2->setScale(0.25f);
     star2->setVisible(false);
     startPolosa_2->addChild(star2, 2);
-    star2->setPosition(ccp(startPolosa_2->getContentSize().width/2.0f, star2->getContentSize().height/1.8f*star2->getScale()));
+    star2->setPosition(ccp(startPolosa_2->getContentSize().width/2.15f, star2->getContentSize().height/1.7f*star2->getScale()));
 
     
     star3 = CCSprite::createWithSpriteFrameName("common/star3.png");
     star3->setVisible(false);
     star3->setScale(0.25f);
     startPolosa_3->addChild(star3, 2);
-    star3->setPosition(ccp(startPolosa_1->getContentSize().width/2.0f, star3->getContentSize().height/1.8f*star3->getScale()));
+    star3->setPosition(ccp(startPolosa_1->getContentSize().width/2.15f, star3->getContentSize().height/1.7f*star3->getScale()));
 
 
 	booster_1_Button = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/booster_normal.png"),
@@ -1220,11 +1220,6 @@ int GameMenuLayer::getCurrentScore()
 
 void GameMenuLayer::setCountMoves(int nTargetScore)
 {
-    if (firstStep){
-        firstStep = false;
-        OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() - 1);
-        OptionsPtr->save();
-    }
 	if (type == Time)
 		return;
     
@@ -1280,6 +1275,13 @@ void GameMenuLayer::setCountMoves(int nTargetScore)
 void GameMenuLayer::setCurrentScore(int nTargetScore)
 {
 	currentScore = nTargetScore;
+    
+    if (firstStep && nTargetScore!=0)
+    {
+        firstStep = false;
+        OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() - 1);
+        OptionsPtr->save();
+    }
 	
 	if (labelCurrentScore)
 		labelCurrentScore->removeFromParentAndCleanup(true);
@@ -1317,12 +1319,12 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
     if (LANDSCAPE)
     {
         progressBar->setRotation(-90.0f);
-        progressBar->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.01f , downPanel->getContentSize().height/26.0f));
+        progressBar->setPosition(ccp(downPanel->getContentSize().width/8.0f*6.975f , downPanel->getContentSize().height/26.0f));
     }
     else
     {
         progressBar->setRotation(0.0f);
-        progressBar->setPosition(ccp(downPanel->getContentSize().width/5.9f , downPanel->getContentSize().height/5.4f));
+        progressBar->setPosition(ccp(downPanel->getContentSize().width/6.05f , downPanel->getContentSize().height/5.4f));
     }
     
     if (purcent >= targetScore/(thirdStar/100.0f))

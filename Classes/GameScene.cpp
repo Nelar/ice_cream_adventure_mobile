@@ -547,6 +547,8 @@ bool GameScene::init(int levNum)
     batchTexture = CCTextureCache::sharedTextureCache()->addPVRImage("common.pvr.ccz");
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common.plist", batchTexture);
     
+    CCTextureCache::reloadAllTextures();
+    
     batchTexture->setAntiAliasTexParameters();
 
 	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("sound/level_1_loop.mp3", true);
@@ -1994,7 +1996,7 @@ bool GameScene::findMatch()
             break;
 		for (int j = 0; j < columnCount; j++)
 		{
-            if (findGameObject(i, j) >= 0)
+            if (findGameObject(i, j) >= 0 && gameObjects[findGameObject(i, j)]->type != Cookie)
 			if (isSimpleCell(gameField[i][j]) && gameField[i][j] != CageCell && gameField[i][j] != CageIceCell)
 			{
                 if (gameObjects[findGameObject(i, j)]->type != Simple && gameObjects[findGameObject(i, j)]->type != Cookie)
@@ -6697,7 +6699,10 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 		return;
     
     if (leftDownMenu->isLock())
+    {
+        leftDownMenu->menuSettingCallback(NULL);
         return;
+    }
 
 	if (lock)
 		return;

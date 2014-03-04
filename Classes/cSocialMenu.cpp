@@ -359,7 +359,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
         if (LANDSCAPE)
         {
             me->setPosition(-layer->getContentSize().width - me->getContentSize().width/2.0f, layer->getContentSize().height/3.4f);
-            numOne->setPosition(-layer->getContentSize().width + numOne->getContentSize().width/2.0f, layer->getContentSize().height/3.4f);
+            numOne->setPosition(-layer->getContentSize().width + numOne->getContentSize().width, layer->getContentSize().height/3.4f);
         }
         else
         {
@@ -372,13 +372,13 @@ CCNode* SocialLayer::createScoreLayer(int level)
     {
         if (LANDSCAPE)
         {
-            me->setPosition(-layer->getContentSize().width - me->getContentSize().width/2.0f, layer->getContentSize().height/3.4f);
-            numOne->setPosition(-layer->getContentSize().width + numOne->getContentSize().width/2.0f, layer->getContentSize().height/3.4f);
+            me->setPosition(-layer->getContentSize().width - me->getContentSize().width*1.4f, layer->getContentSize().height/3.4f);
+            numOne->setPosition(-layer->getContentSize().width, layer->getContentSize().height/3.4f);
         }
         else
         {
-            me->setPosition(0.0f, -layer->getContentSize().height + me->getContentSize().height*2.0f);
-            numOne->setPosition(numOne->getContentSize().width*1.4f, -layer->getContentSize().height  + numOne->getContentSize().height*2.0f);
+            me->setPosition(0.0f, -layer->getContentSize().height + me->getContentSize().height/2.0f);
+            numOne->setPosition(numOne->getContentSize().width*1.4f, -layer->getContentSize().height  + numOne->getContentSize().height/2.0f);
         }
     }
     
@@ -398,6 +398,8 @@ CCNode* SocialLayer::createScoreLayer(int level)
         {
             label->setPosition(ccp(layer->getContentSize().width/1.5f, layer->getContentSize().height/2.5f));
             label->setFontSize(FONT_SIZE_48);
+            if (IPHONE_5 || IPHONE_4)
+                label->setFontSize(FONT_SIZE_36);
         }
         layer->addChild(label, 3);
         
@@ -407,9 +409,21 @@ CCNode* SocialLayer::createScoreLayer(int level)
         cmenu->addChild(facebook);
         
         if (LANDSCAPE)
+        {
             facebook->setPosition(-layer->getContentSize().width, -layer->getContentSize().height/4.0f);
+            if (IPHONE_5)
+                facebook->setPosition(-layer->getContentSize().width*1.2f, -layer->getContentSize().height/4.0f);
+            if (IPHONE_4)
+                facebook->setPosition(-layer->getContentSize().width/1.1f, -layer->getContentSize().height/4.0f);
+        }
         else
+        {
             facebook->setPosition(layer->getContentSize().width/6.0f, -layer->getContentSize().height + facebook->getContentSize().height/2.0f);
+            if (IPHONE_5)
+                facebook->setPosition(layer->getContentSize().width/6.0f, -layer->getContentSize().height);
+            if (IPHONE_4)
+                facebook->setPosition(layer->getContentSize().width/6.0f, -layer->getContentSize().height + facebook->getContentSize().height);
+        }
     }
     
     level--;

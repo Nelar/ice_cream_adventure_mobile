@@ -398,6 +398,8 @@ void AppDelegate::applicationWillEnterForeground()
     
     MMPInterface::Instance()->StartSession();
     AnalyticX::flurryStartSession("ZSFQWHCR6BVPZVZY9XFM");
+    
+    CCTextureCache::reloadAllTextures();
 }
 
 void AppDelegate::applicationWillChangeOrientation()

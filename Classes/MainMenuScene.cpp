@@ -60,13 +60,15 @@ bool MainMenuScene::init()
 {
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
 	if (!CCLayer::init())
-		return false;    
+		return false;
     
     GlobalsPtr->iceCreamScene = Menu;
     
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common0.plist", CCTextureCache::sharedTextureCache()->addPVRImage("common0.pvr.ccz"));
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common1.plist", CCTextureCache::sharedTextureCache()->addPVRImage("common1.pvr.ccz"));
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("mainMenu.plist", CCTextureCache::sharedTextureCache()->addPVRImage("mainMenu.pvr.ccz"));
+    
+    CCTextureCache::reloadAllTextures();
     
     vector<sRequestData> requests = OptionsPtr->appRequests;
     
@@ -1653,17 +1655,20 @@ void MainMenuScene::menuPlayCallback(CCObject* pSender)
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingIphoneLandscape.png");
+            sprite = CCSprite::create("loadingIphoneLanscape.png");
         else
             sprite = CCSprite::create("loadingIphonePortrait.png");
     }
     CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
-    sprite->addChild(labelLoad);
+    this->addChild(labelLoad, 1001);
     sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     this->addChild(sprite, 1000);
     sprite->setOpacity(0);
     sprite->runAction(CCFadeIn::create(0.3f));
+    labelLoad->setOpacity(0);
+    labelLoad->runAction(CCFadeIn::create(0.3f));
+
     
     this->runAction(CCSequence::create(CCDelayTime::create(0.7f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::playWithLoading)), NULL));
 }

@@ -1698,20 +1698,26 @@ void MapMenuLayer::playCallback(CCObject* pSender)
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingIphoneLandscape.png");
+            sprite = CCSprite::create("loadingIphoneLanscape.png");
         else
             sprite = CCSprite::create("loadingIphonePortrait.png");
+        sprite->setScale(1.2f);
     }
     CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
-    sprite->addChild(labelLoad);
+    this->addChild(labelLoad,1001);
     sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     this->addChild(sprite, 1000);
     sprite->setVisible(false);
     sprite->setOpacity(0);
     sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
     
+    labelLoad->setVisible(false);
+    labelLoad->setOpacity(0);
+    labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+    
     social->hideScoreBoard();
+    
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME*2.0f), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::playAfterLoad))));
 }
 

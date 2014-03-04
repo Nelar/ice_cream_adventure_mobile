@@ -171,7 +171,7 @@ void CCLayerPanZoom::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *
         if ((prevScale + (curScale - prevScale)/2.0f) < minScale())
         {
             float diff = minScale() - (prevScale + (curScale - prevScale)/2.0f);
-            curScale = prevScale + (curScale - prevScale)/(2.0f + diff*100.0f);
+            curScale = prevScale + (curScale - prevScale)/(2.0f + diff*500.0f);
         }
         else if ((prevScale + (curScale - prevScale)/2.0f) > maxScale())
         {

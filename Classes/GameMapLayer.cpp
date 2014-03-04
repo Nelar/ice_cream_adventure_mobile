@@ -94,6 +94,7 @@ bool GameMapLayer::init(int nextLevel)
     GlobalsPtr->iceCreamScene = Map;
     
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("gameMap.plist", CCTextureCache::sharedTextureCache()->addPVRImage("gameMap.pvr.ccz"));
+    CCTextureCache::reloadAllTextures();
     
     if (LANDSCAPE)
     {
@@ -114,7 +115,7 @@ bool GameMapLayer::init(int nextLevel)
     {
         vector<int> temp = FacebookPtr->myScores;
         int lastLevel = 1;
-        for (int i = FacebookPtr->myScores.size(); i > 0; i--)
+        for (int i = 84; i > 0; i--)
         {
             if (FacebookPtr->myScores[i] > 0)
             {
@@ -234,8 +235,9 @@ bool GameMapLayer::init(int nextLevel)
 	layerGradient->addChild(map, 1);
     map->setAnchorPoint(ccp(0.2f,0.1f));
     map->setPosition(ccp(offsetX, offsetY));
+    map->setScale(3.0f);
     if (WINSIZE.width != 2048 && WINSIZE.height != 2048)
-        map->setScale(0.5f);
+        map->setScale(1.5f);
     
     CCTMXTiledMap *boardLeft = CCTMXTiledMap::create("tiles/board.tmx");
 	layerGradient->addChild(boardLeft, 2);
