@@ -369,6 +369,7 @@ private:
     vector<CCPoint> superIceCells;
     
     bool isFinalAction = false;
+    float isTeleportedObject = false;
 };
 
 #endif

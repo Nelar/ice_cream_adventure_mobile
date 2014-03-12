@@ -1,13 +1,13 @@
-<Level background="2" targetScore="35000" width="9" height="9" type="ice" movesCount="55" colorNumber="6" secondStar = "45000" thirdStar = "55000">
+<Level background="2" targetScore="45000" width="9" height="9" type="ice" movesCount="55" colorNumber="6" secondStar = "55000" thirdStar = "65000">
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>
   <c t="n"/>
   <c t="s"/>
-  <c t="i"/>
-  <c t="i"/>
-  <c t="i"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>
@@ -77,7 +77,7 @@
   <c t="s"/>
   <c t="n"/>
   <c t="s"/>
-  <c t="i"/>
-  <c t="i"/>
-  <c t="i"/>
+  <c t="s"/>
+  <c t="s"/>
+  <c t="s"/>
 </Level>

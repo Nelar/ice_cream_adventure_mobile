@@ -4487,7 +4487,6 @@ void GameScene::cleaningTrash(CCNode* sender)
         if (forDeadObjects[i]->sprite)
             forDeadObjects[i]->sprite->removeFromParentAndCleanup(true);
 	}
-
 	forDeadObjects.clear();
 }
 
@@ -5373,6 +5372,8 @@ void GameScene::refillPortals(CCNode* sender)
                 if (isNoneCell(i, j))
                     countShift++;
                 
+                isTeleportedObject = true;
+                
                 if (countObjectRefill > 0)
                 {
                     countObjectRefill--;
@@ -5395,6 +5396,7 @@ void GameScene::refillPortals(CCNode* sender)
                         runAction(CCSequence::create(CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*countShift)), accel), CCCallFuncN::create(this, callfuncN_selector(GameScene::deletingTeleportingObject)), NULL));
                         
                         gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                        newCreateObjects.push_back(gameObjects[findGameObject(i, j)]);
                         
                         
                         eColorGameObject colorTelObject = gameObjects[findGameObject(i, j)]->color;
@@ -5409,6 +5411,8 @@ void GameScene::refillPortals(CCNode* sender)
                         batchNode->addChild(gameObj->node, 2);
                         gameObjects.push_back(gameObj);
                         gameObj->sprite->setPosition(ccp(gameObj->sprite->getPositionX(), gameObj->sprite->getPositionY() + CELL_HEIGHT*(countObjectRefill + countShift)));
+                        
+                        newCreateObjects.push_back(gameObj);
                         
                         if ((countObjectRefill + countShift) == 1)
                             deltaMove = 0.35f;
@@ -6564,17 +6568,22 @@ bool GameScene::checkField()
             checkElement(lastRefillObjects[i]);
     }
     
-/*    for (int i = 0; i < gameObjects.size(); i++)
+
+    if (isTeleportedObject)
     {
-        bool flagCheck = true;
-        for (int j = 0; j < allDeletedChain.size(); j++)
+        isTeleportedObject = false;
+        for (int i = 0; i < gameObjects.size(); i++)
         {
-            if (allDeletedChain[j] == i)
-                flagCheck = false;
+            bool flagCheck = true;
+            for (int j = 0; j < allDeletedChain.size(); j++)
+            {
+                if (allDeletedChain[j] == i)
+                    flagCheck = false;
+            }
+            if (flagCheck)
+                checkElement(i);
         }
-        if (flagCheck)
-            checkElement(i);
-    }*/
+    }
     
     lastRefillObjects.clear();
     
