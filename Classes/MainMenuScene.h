@@ -93,6 +93,7 @@ public:
     
     void unlock(CCNode* sender);
     void lock();
+    void closeLoading();
     
     CCMenu* menu;
 private:

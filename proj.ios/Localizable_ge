@@ -9,9 +9,11 @@ HELP_1 = "Berühre die Eiskugeln und\n bewege sie durch Wischen.\n Erziele eine 
 HELP_2 = "Erziele eine Kombination\n aus vier oder fünf Eiskugeln\n in verschiedenen Formationen,\n um Spezialeiscreme zu erhalten!";
 HELP_3 = "Kombiniere Spezialeiscremekugeln,\n indem du sie vertauschst und so\n einen zusätzlichen Effekt erzielst.";
 NEXT = "Weiter";
+CLOSE = "Close";
 GO = "Los";
 RESTORE = "Wiederherstellen";
 RESET = "Zurücksetzen";
+RESET_TEXT = "Dein aktueller Fortschritt wird gelöscht!\n Möchtest du tatsächlich fortfahren?";
 ON = "Ein";
 OFF = "Aus";
 SETTING_FACEBOOK_TEXT = "Sieh nach, wie es bei\n deinen Freunden läuft!\n Mit Facebook verbinden";
@@ -33,8 +35,8 @@ SELECT_BOOSTER = "Verstärker auswählen";
 FULL = "Vollständig";
 GET_MORE_LIVES = "Mehr Leben erhalten!";
 NO_MORE_LIVES = "Keine Leben mehr";
-ASK_FRIEND = "Deine Freunde bitten!!";
-MORE_LIVES = "Mehr Leben erhalten"
+ASK_FRIEND = "Deine Freunde\n bitten!!";
+MORE_LIVES = "Mehr Leben\n erhalten"
 TIME_NEXT_LIVE = "Zeit zum nächsten Leben";
 HIGH_SCORE = "Bestenliste";
 TARGET = "Ziel";
@@ -57,7 +59,7 @@ SWEET_PENGUIN = "Süße Pinguine x3";
 SWEET_PENGUIN_TEXT = "Gib süße Pinguine zu\n deiner Eiscrememischung -- sie\n entfernen drei Eisstücke,\n wenn du eine Kombination aus\n drei Kugeln erzielst!";
 ME = "Ich";
 SEE_HOW_YOUR_FRIEND = "Sieh dir an, wie es bei\n deinen Freunden läuft!";
-CHECK_ALL = "Alle ansehen";
+CHECK_ALL = "Alle\n ansehen";
 ACCEPT = "Annehmen";
 YOUR_MESSAGE = "Deine Nachrichten";
 YOUR_GOT_GIFT = "Du hast ein Geschenk erhalten!";
@@ -121,11 +123,33 @@ TUTORIAL_10 = "Entferne das Eis,\n indem du Kombinationen erzielst.";
 
 
 NETWORK_MESSAGE = "Keine Internetverbindung.\n Bitte versuchen Sie es später erneut.";
-LOADING = "Loading";
+LOADING = "Loading...";
 
+END_LEVEL_TITLE ="Glückwunsch!";
+END_LEVEL_TEXT = "Du hast es als einer der ersten Spieler durch\n alle Levels geschafft! Folge unserer Facebookseite\n und erfahre ständig das Neueste von uns!\n Sobald wir 100.000 Abonnenten haben,\n veröffentlichen wir ein neues Update,\n an dem unser Team bereits hart arbeitet.";
 
+NEWS_BUTTON = "Teilen";
+SUBSCRIBE = "Folge unserer";
+UNLOCK_STAGE = "Schalte Ebenen?";
+UNLOCK_STAGE_TEXT = "Go ahead and go to bypass?";
+UNLOCK_STAGE_BUTTON = "Bypass";
 
+UNLOCK_END = "Level unlocked";
+UNLOCK_END_TEXT = "You unlocked levels";
 
+POST_ON_WALL = "Post";
+POST_ON_WALL_TEXT = "Post on wall and get a bonus";
 
+INVITE_FRIENDS_TITLE = "Invite friends";
+INVITE_FRIENDS_TEXT = "Invite friends and get a bonus";
+INVITE_FRIENDS_BUTTON = "Invite";
 
+ICE_HAMMER = "Ice hammer x3";
+ICE_HAMMER_TEXT = "Remove ice cream by smashing\n it with the hammer.";
 
+BEGIN_POST = "Ich habe ein fantastisches Arcade-Spiel namens Ice Cream Adventure gespielt! Komm und spiel mit mir, du wirst nicht mehr aufhören wollen!";
+UNLOCK_STAGE_POST = "Ich habe einen neuen Level in Ice Cream Adventure freigeschaltet! Jetzt erwarten mich dort noch mehr Abenteuer und Überraschungen! Versuch mich doch einzuholen, wenn du kannst!";
+HALF_WAY_POST = "Die Hälfte geschafft -- ich habe soeben Stufe 3 von Level 5 abgeschlossen! Kannst du ein höheres Level erreichen?";
+END_STAGE_POST = "Ich habe abgeschlossen und ein Geheimnis dieser magischen Eiscremewelt entdeckt! Spiel mit mir -- du wirst nicht glauben, auf was ich gestoßen bin!";
+
+ITUNES_CONNECTION_ERROR = "iTunes-Verbindungsfehler";

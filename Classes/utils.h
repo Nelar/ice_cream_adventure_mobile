@@ -10,6 +10,7 @@
 #define __IceCream__utils__
 
 #include <iostream>
+#include <string>
 
 const char* version();
 const char* iOSversion();
@@ -26,6 +27,11 @@ const char* getCountry();
 bool getNetworkStatus();
 const char* networkStatus();
 void alertNetwork();
+int networkSignal();
+std::string push_enabled();
+std::string getIsFirstTimeRunning();
+
+void appsFlyerTrackEvent(const char* event, const char* value);
 
 
 #endif /* defined(__IceCream__utils__) */

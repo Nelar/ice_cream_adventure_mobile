@@ -1,4 +1,4 @@
-<Level background="1" targetScore="90000" secondStar = "120000" thirdStar = "150000" width="9" height="9" type="ice" movesCount="50" colorNumber="6">
+<Level background="7" targetScore="90000" secondStar = "120000" thirdStar = "150000" width="9" height="9" type="ice" movesCount="50" colorNumber="6">
   <c t="si"/>
   <c t="si"/>
   <c t="si"/>

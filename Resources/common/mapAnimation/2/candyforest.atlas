@@ -18,22 +18,22 @@ repeat: none
 choc ice
   rotate: true
   xy: 0, 278
-  size: 272, 668
-  orig: 272, 668
+  size: 272, 666
+  orig: 272, 666
   offset: 0, 0
   index: -1
 str ice
   rotate: true
-  xy: 0, 549
-  size: 246, 566
-  orig: 246, 566
-  offset: 0, 0
+  xy: 5, 0
+  size: 276, 594
+  orig: 278, 598
+  offset: 1, 3
   index: -1
 str ice c
   rotate: true
-  xy: 0, 0
-  size: 278, 596
-  orig: 280, 600
+  xy: 5, 0
+  size: 0, 0
+  orig: 0, 0
   offset: 1, 3
   index: -1
 

@@ -6,7 +6,7 @@
 #include <vector>
 #include "NotificationTypes.h"
 
-#define LEVEL_COUNT 110
+#define LEVEL_COUNT 120
 
 enum eLevelType
 {
@@ -123,6 +123,8 @@ public:
     bool getUnlock(int numLevel);
     
     vector<sRequestData> appRequests;
+    
+    int launchCount = 0;
 
 private:
 

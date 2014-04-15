@@ -379,7 +379,7 @@ namespace MarketingPlatform
             case AngryPets::GlobalWorld::NetworkRequest::completeRequest:
             {
                 std::ofstream outfile( _bannerFilePath.c_str(), std::ios::out | std::ios::binary );
-                std::ostream_iterator<char> oi(outfile, '\0');
+                std::ostream_iterator<char> oi(outfile, "\0");
                 copy( getFileRequest->GetResponseData().begin(), getFileRequest->GetResponseData().end(), oi );
                 if( outfile.good() )
                 {

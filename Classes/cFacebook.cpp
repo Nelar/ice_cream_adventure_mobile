@@ -21,15 +21,13 @@
 #include "rapidjson/stringbuffer.h"
 #include "NotificationTypes.h"
 #include <string>
-#include "MMPInterface.h"
+#include "nMMP.h"
 
 #include "GameMapLayer.h"
 #include "GameScene.h"
 #include "cGlobal.h"
 #include <Parse/Parse.h>
 
-using namespace Core;
-using namespace MarketingPlatform;
 using namespace std;
 static const unsigned long long kuFBAppID = 602727043099486;
 string fbAppId = "602727043099486";
@@ -54,6 +52,13 @@ void cFacebook::login()
         {
             //that flag is used to call onLogin callback only once
             loggedInSuccessfully = true;
+            if (GlobalsPtr->iceCreamScene == Menu)
+            {
+                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->facebookButtonHide();
+                OptionsPtr->setFacebookConnection(true);
+                OptionsPtr->save();
+            }
         }
         getScores();
         return;
@@ -144,6 +149,15 @@ void cFacebook::login()
         }];
 }
 
+void cFacebook::logout()
+{
+    [FBSession.activeSession closeAndClearTokenInformation];
+    [[PFFacebookUtils session] closeAndClearTokenInformation];
+    friendsScores.clear();
+    messages.clear();
+    myScores.clear();
+}
+
 void cFacebook::loginWithInvite()
 {
     if(sessionIsOpened())
@@ -152,6 +166,13 @@ void cFacebook::loginWithInvite()
         {
             //that flag is used to call onLogin callback only once
             loggedInSuccessfully = true;
+            if (GlobalsPtr->iceCreamScene == Menu)
+            {
+                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->facebookButtonHide();
+                OptionsPtr->setFacebookConnection(true);
+                OptionsPtr->save();
+            }
         }
         return;
     }
@@ -246,6 +267,11 @@ void cFacebook::loginWithInvite()
 
 bool cFacebook::sessionIsOpened()
 {
+    if ([FBSession activeSession].isOpen == YES)
+        return true;
+    else
+        return false;
+        
     return [FBSession activeSession].isOpen;
 }
 
@@ -270,7 +296,8 @@ void cFacebook::getUserData()
         map<string, string> userData;
         userData.insert(pair<string, string>("name", name));
         userData.insert(pair<string, string>("facebook", idStr));
-        Core::MMPInterface::Instance()->UserProfileUpdated(userData);
+        MMPPtr->facebookConnected(idStr, name);
+        MMPPtr->userIdentified(idStr);
      }
      }];
 }
@@ -413,8 +440,8 @@ void cFacebook::completeLevel(const int nScore)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"level"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:level"
                                                                title:level
-                                                               image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                                                 url:@"http://samples.ogp.me/606897946015729"
+                                                               image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                                                 url:[NSString stringWithUTF8String:ITUNES_LINK]
                                                          description:@""];
     
     [FBRequestConnection startForPostWithGraphPath:@"me/icecreamadventure:complete"
@@ -422,7 +449,7 @@ void cFacebook::completeLevel(const int nScore)
                                  completionHandler:^(FBRequestConnection *connection,
                                                      id result,
                                                      NSError *error) {
-                                     Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                                     MMPPtr->contentShared();
      }];
 }
 
@@ -434,8 +461,8 @@ void cFacebook::boughtItem(string item)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"item"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:item"
                                             title:[NSString stringWithUTF8String:item.c_str()]
-                                            image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                              url:@"http://samples.ogp.me/608850832487107"
+                                            image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                              url:[NSString stringWithUTF8String:ITUNES_LINK]
                                       description:@""];;
     
     [FBRequestConnection startForPostWithGraphPath:@"me/icecreamadventure:bougth"
@@ -443,7 +470,7 @@ void cFacebook::boughtItem(string item)
                                  completionHandler:^(FBRequestConnection *connection,
                                                      id result,
                                                      NSError *error) {
-                                     Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                                     MMPPtr->contentShared();
      }];
 }
 
@@ -455,8 +482,8 @@ void cFacebook::completeStage(string stage)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"stage"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:stage"
                                                                title:[NSString stringWithUTF8String:stage.c_str()]
-                                                               image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                                                 url:@"http://samples.ogp.me/610257549013102"
+                                                               image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                                                 url:[NSString stringWithUTF8String:ITUNES_LINK]
                                                          description:@""];;
     
     [FBRequestConnection startForPostWithGraphPath:@"me/icecreamadventure:complete"
@@ -464,7 +491,7 @@ void cFacebook::completeStage(string stage)
                                  completionHandler:^(FBRequestConnection *connection,
                                                      id result,
                                                      NSError *error) {
-     Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                                     MMPPtr->contentShared();
      }];
 }
 
@@ -476,8 +503,8 @@ void cFacebook::completeTutorial(string item)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"tutorial"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:tutorial"
                                                                   title:[NSString stringWithUTF8String:item.c_str()]
-                                                                  image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                                                    url:@"http://samples.ogp.me/610229035682620"
+                                                                  image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                                                    url:[NSString stringWithUTF8String:ITUNES_LINK]
                                                             description:@""];;
     
     [FBRequestConnection startForPostWithGraphPath:@"me/icecreamadventure:complete"
@@ -485,7 +512,7 @@ void cFacebook::completeTutorial(string item)
                                  completionHandler:^(FBRequestConnection *connection,
                                                      id result,
                                                      NSError *error) {
-     Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                                     MMPPtr->contentShared();
      }];
 }
 
@@ -510,8 +537,8 @@ void cFacebook::setPointsInLevel(int points, int level)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"points"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:points"
                                                                 title:[NSString stringWithUTF8String:pointsBuf]
-                                                                image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                                                  url:@"http://samples.ogp.me/606895472682643"
+                                                                image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                                                  url:[NSString stringWithUTF8String:ITUNES_LINK]
                                                           description:@""];
     
     NSString* graphPath = [NSString stringWithFormat:@"%llu/icecreamadventure:got", fbid];
@@ -538,8 +565,8 @@ void cFacebook::requestHelp(string name)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"help"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:help"
                                             title:[NSString stringWithUTF8String:name.c_str()]
-                                            image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                              url:@"http://samples.ogp.me/624996264205897"
+                                            image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                              url:[NSString stringWithUTF8String:ITUNES_LINK]
                                       description:@""];
     
     [FBRequestConnection startForPostWithGraphPath:@"me/icecreamadventure:request"
@@ -708,15 +735,42 @@ void cFacebook::getFriendScores()
                 }
                 NSLog(@"NO ERROR");
             }
-            if (GlobalsPtr->iceCreamScene == Map)
+            if (GlobalsPtr->isLoadMap)
             {
-                GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
-                layer->updateFacebook();
+                if (GlobalsPtr->iceCreamScene == Map)
+                {
+                    GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->updateFacebook();
+                }
+                else if (GlobalsPtr->iceCreamScene == Game)
+                {
+                    GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->afterGetScores();
+                }
+                else if (GlobalsPtr->iceCreamScene == MainMenu)
+                {
+                    MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->playWithLoading(NULL);
+                }
+                GlobalsPtr->isLoadMap = false;
             }
-            else if (GlobalsPtr->iceCreamScene == Game)
+            else
             {
-                GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
-                layer->updateFacebook();
+                if (GlobalsPtr->iceCreamScene == Map)
+                {
+                    GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->updateFacebook();
+                }
+                else if (GlobalsPtr->iceCreamScene == Game)
+                {
+                    GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->updateFacebook();
+                }
+                else if (GlobalsPtr->iceCreamScene == MainMenu)
+                {
+                    MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->closeLoading();
+                }
             }
 
             NSLog(@"NO ERROR");
@@ -791,8 +845,8 @@ void cFacebook::unlockNewLevel(int level)
     NSMutableDictionary<FBGraphObject> *action = [FBGraphObject graphObject];
     action[@"new_level"] = [FBGraphObject openGraphObjectForPostWithType:@"icecreamadventure:new_level"
                                                                    title:[NSString stringWithUTF8String:levelBuf]
-                                                                   image:@"https://fbstatic-a.akamaihd.net/images/devsite/attachment_blank.png"
-                                                                     url:@"http://samples.ogp.me/610244929014364"
+                                                                   image:@"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png"
+                                                                     url:[NSString stringWithUTF8String:ITUNES_LINK]
                                                              description:@""];;
     
     [FBRequestConnection startForPostWithGraphPath:@"me/icecreamadventure:unlocked"
@@ -800,7 +854,7 @@ void cFacebook::unlockNewLevel(int level)
                                  completionHandler:^(FBRequestConnection *connection,
                                                      id result,
                                                      NSError *error) {
-     Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                                     MMPPtr->contentShared();
      }];
 }
 
@@ -808,7 +862,7 @@ void cFacebook::sendOG()
 {
     if (!sessionIsOpened())
         return;
-    FBRequest* newAction = [[FBRequest alloc]initForPostWithSession:[FBSession activeSession] graphPath:[NSString stringWithFormat:@"me/friendsmashsample:smash?profile=%llu", fbid] graphObject:nil];
+    FBRequest* newAction = [[FBRequest alloc]initForPostWithSession:[FBSession activeSession] graphPath:[NSString stringWithUTF8String:ITUNES_LINK] graphObject:nil];
     
     FBRequestConnection* conn = [[FBRequestConnection alloc] init];
     
@@ -1298,28 +1352,49 @@ bool cFacebook::beginGamePost()
     if (!sessionIsOpened())
         return false;
     
-    NSString *linkURL = [NSString stringWithFormat:@"https://www.friendsmash.com/challenge_brag_%llu", fbid];
-    NSString *pictureURL = @"http://www.friendsmash.com/images/logo_large.jpg";
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     
     // Prepare the native share dialog parameters
     FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
     shareParams.link = [NSURL URLWithString:linkURL];
     shareParams.name = @"Ice Cream Adventure!";
-    shareParams.caption= @"Become a member!";
+    shareParams.caption= @"Ice Cream Adventure!";
     shareParams.picture= [NSURL URLWithString:pictureURL];
-    shareParams.description = @"I started playing in a cool arcade game Ice Cream Adventure!  You can not tear myself away from this game!";
+    shareParams.description = [NSString stringWithUTF8String:CCLocalizedString("BEGIN_POST", NULL)];
     
     if ([FBDialogs canPresentShareDialogWithParams:shareParams]){
         
         [FBDialogs presentShareDialogWithParams:shareParams
                                     clientState:nil
                                         handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                            if(error) {
-                                                NSLog(@"Error publishing story.");
-                                            } else if (results[@"completionGesture"] && [results[@"completionGesture"] isEqualToString:@"cancel"]) {
-                                                NSLog(@"User canceled story publishing.");
-                                            } else {
-                                                NSLog(@"Story published.");
+                                            if (error) {
+                                                if ([FBErrorUtility shouldNotifyUserForError:error]) {
+                                                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook-Error!" message:[FBErrorUtility userMessageForError:error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                    [alert show];
+                                                }
+                                            }
+                                            else if (results[@"completionGesture"])
+                                            {
+                                                if ([results[@"completionGesture"] isEqualToString:@"cancel"])
+                                                {
+                                                    NSLog(@"User canceled story publishing.");
+                                                } else if ([results[@"completionGesture"] isEqualToString:@"post"])
+                                                {
+                                                    NSLog(@"Story published.");
+                                                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                    OptionsPtr->save();
+                                                    if (GlobalsPtr->iceCreamScene == Game)
+                                                    {
+                                                        GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                                                        layer->updateBoosters();
+                                                    }
+                                                    MMPPtr->contentShared();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"Usr");
                                             }
                                         }];
         
@@ -1344,11 +1419,33 @@ bool cFacebook::beginGamePost()
              } else {
                  if (result == FBWebDialogResultDialogNotCompleted) {
                      NSLog(@"User canceled story publishing.");
-                 } else {
-                     NSLog(@"Story published.");
-                     Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                 } else{
+                     NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
+                     NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
+                     for (NSString *pair in pairs) {
+                         NSArray *kv = [pair componentsSeparatedByString:@"="];
+                         NSString *val =
+                         [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                         urlParams[kv[0]] = val;
+                     }
+                     
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User cancelled.
+                         NSLog(@"User cancelled.");
+                     } else {
+                         // User clicked the Share button
+                         OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                         OptionsPtr->save();
+                         if (GlobalsPtr->iceCreamScene == Game)
+                         {
+                             GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                             layer->updateBoosters();
+                         }
+                         MMPPtr->contentShared();
+                     }
                  }
-             }}];
+             }
+             }];
     }
 }
 
@@ -1356,14 +1453,14 @@ bool cFacebook::endTutorial()
 {
     if (!sessionIsOpened())
         return false;
-    NSString *linkURL = [NSString stringWithFormat:@"https://www.friendsmash.com/challenge_brag_%llu", fbid];
-    NSString *pictureURL = @"http://www.friendsmash.com/images/logo_large.jpg";
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     
     // Prepare the native share dialog parameters
     FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
     shareParams.link = [NSURL URLWithString:linkURL];
     shareParams.name = @"Ice Cream Adventure!";
-    shareParams.caption= @"End Tutorial!";
+    shareParams.caption= @"Ice Cream Adventure!";
     shareParams.picture= [NSURL URLWithString:pictureURL];
     shareParams.description = @"I graduated from the Ice Cream Adventure! Now I am waiting for a sweet adventure! Most come in the game and go along with me!";
     
@@ -1372,12 +1469,33 @@ bool cFacebook::endTutorial()
         [FBDialogs presentShareDialogWithParams:shareParams
                                     clientState:nil
                                         handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                            if(error) {
-                                                NSLog(@"Error publishing story.");
-                                            } else if (results[@"completionGesture"] && [results[@"completionGesture"] isEqualToString:@"cancel"]) {
-                                                NSLog(@"User canceled story publishing.");
-                                            } else {
-                                                NSLog(@"Story published.");
+                                            if (error) {
+                                                if ([FBErrorUtility shouldNotifyUserForError:error]) {
+                                                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook-Error!" message:[FBErrorUtility userMessageForError:error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                    [alert show];
+                                                }
+                                            }
+                                            else if (results[@"completionGesture"])
+                                            {
+                                                if ([results[@"completionGesture"] isEqualToString:@"cancel"])
+                                                {
+                                                    NSLog(@"User canceled story publishing.");
+                                                } else if ([results[@"completionGesture"] isEqualToString:@"post"])
+                                                {
+                                                    NSLog(@"Story published.");
+                                                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                    OptionsPtr->save();
+                                                    if (GlobalsPtr->iceCreamScene == Game)
+                                                    {
+                                                        GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                                                        layer->updateBoosters();
+                                                    }
+                                                    MMPPtr->contentShared();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"Usr");
                                             }
                                         }];
         
@@ -1402,9 +1520,7 @@ bool cFacebook::endTutorial()
              } else {
                  if (result == FBWebDialogResultDialogNotCompleted) {
                      NSLog(@"User canceled story publishing.");
-                 } else {
-                     NSLog(@"Story published.");
-                     
+                 } else{
                      NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
                      NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
                      for (NSString *pair in pairs) {
@@ -1414,15 +1530,11 @@ bool cFacebook::endTutorial()
                          urlParams[kv[0]] = val;
                      }
                      
-                     if (![urlParams count]) {
-                         // User clicked the Cancel button
-                         NSLog(@"User canceled request.");
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User cancelled.
+                         NSLog(@"User cancelled.");
                      } else {
-                         // User clicked the Send button
-                         NSString *requestID = [urlParams valueForKey:@"request"];
-                         NSLog(@"Request ID: %@", requestID);
-                         
-                         OptionsPtr->setJubPost();
+                         // User clicked the Share button
                          OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
                          OptionsPtr->save();
                          if (GlobalsPtr->iceCreamScene == Game)
@@ -1430,39 +1542,64 @@ bool cFacebook::endTutorial()
                              GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
                              layer->updateBoosters();
                          }
-                         Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                         MMPPtr->contentShared();
                      }
                  }
              }}];
     }
 }
 
-bool cFacebook::unlockStage()
+bool cFacebook::unlockStage(int stage)
 {
     if (!sessionIsOpened())
         return false;
-    NSString *linkURL = [NSString stringWithFormat:@"https://www.friendsmash.com/challenge_brag_%llu", fbid];
-    NSString *pictureURL = @"http://www.friendsmash.com/images/logo_large.jpg";
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     
     // Prepare the native share dialog parameters
     FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
     shareParams.link = [NSURL URLWithString:linkURL];
     shareParams.name = @"Ice Cream Adventure!";
-    shareParams.caption= @"Hooray!";
+    shareParams.caption= @"Ice Cream Adventure!";
     shareParams.picture= [NSURL URLWithString:pictureURL];
-    shareParams.description = @"I opened a new stage in the Ice Cream Adventure! Now I am waiting for more action and surprise! And you'll be able to catch up with me?";
+    shareParams.description = [NSString stringWithUTF8String:CCLocalizedString("UNLOCK_STAGE_POST", NULL)];
     
     if ([FBDialogs canPresentShareDialogWithParams:shareParams]){
         
         [FBDialogs presentShareDialogWithParams:shareParams
                                     clientState:nil
                                         handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                            if(error) {
-                                                NSLog(@"Error publishing story.");
-                                            } else if (results[@"completionGesture"] && [results[@"completionGesture"] isEqualToString:@"cancel"]) {
-                                                NSLog(@"User canceled story publishing.");
-                                            } else {
-                                                NSLog(@"Story published.");
+                                            if (error) {
+                                                if ([FBErrorUtility shouldNotifyUserForError:error]) {
+                                                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook-Error!" message:[FBErrorUtility userMessageForError:error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                    [alert show];
+                                                }
+                                            }
+                                            else if (results[@"completionGesture"])
+                                            {
+                                                if ([results[@"completionGesture"] isEqualToString:@"cancel"])
+                                                {
+                                                    NSLog(@"User canceled story publishing.");
+                                                } else if ([results[@"completionGesture"] isEqualToString:@"post"])
+                                                {
+                                                    NSLog(@"Story published.");
+                                                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                    OptionsPtr->save();
+                                                    if (GlobalsPtr->iceCreamScene == Map)
+                                                    {
+                                                        GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                                                        layer->updateMenuBooster();
+                                                    }
+                                                    MMPPtr->contentShared();
+                                                    char buf[255];
+                                                    sprintf(buf, "unlock%d", stage);
+                                                    CCUserDefault::sharedUserDefault()->setBoolForKey(buf, true);
+                                                    CCUserDefault::sharedUserDefault()->flush();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"Usr");
                                             }
                                         }];
         
@@ -1487,9 +1624,7 @@ bool cFacebook::unlockStage()
              } else {
                  if (result == FBWebDialogResultDialogNotCompleted) {
                      NSLog(@"User canceled story publishing.");
-                 } else {
-                     NSLog(@"Story published.");
-                     
+                 } else{
                      NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
                      NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
                      for (NSString *pair in pairs) {
@@ -1499,17 +1634,24 @@ bool cFacebook::unlockStage()
                          urlParams[kv[0]] = val;
                      }
                      
-                     if (![urlParams count]) {
-                         // User clicked the Cancel button
-                         NSLog(@"User canceled request.");
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User cancelled.
+                         NSLog(@"User cancelled.");
                      } else {
-                         // User clicked the Send button
-                         NSString *requestID = [urlParams valueForKey:@"request"];
-                         NSLog(@"Request ID: %@", requestID);
-                         
+                         // User clicked the Share button
                          OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
                          OptionsPtr->save();
-                         Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                         if (GlobalsPtr->iceCreamScene == Map)
+                         {
+                             GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                             layer->updateMenuBooster();
+                         }
+                         MMPPtr->contentShared();
+                         
+                         char buf[255];
+                         sprintf(buf, "unlock%d", stage);
+                         CCUserDefault::sharedUserDefault()->setBoolForKey(buf, true);
+                         CCUserDefault::sharedUserDefault()->flush();
                      }
                  }
              }}];
@@ -1520,28 +1662,50 @@ bool cFacebook::jubileePost()
 {
     if (!sessionIsOpened())
         return false;
-    NSString *linkURL = [NSString stringWithFormat:@"https://www.friendsmash.com/challenge_brag_%llu", fbid];
-    NSString *pictureURL = @"http://www.friendsmash.com/images/logo_large.jpg";
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     
     // Prepare the native share dialog parameters
     FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
     shareParams.link = [NSURL URLWithString:linkURL];
     shareParams.name = @"Ice Cream Adventure!";
-    shareParams.caption= @"Half way to victory !";
+    shareParams.caption= @"Ice Cream Adventure!";
     shareParams.picture= [NSURL URLWithString:pictureURL];
-    shareParams.description = @"I'm already half way to victory and passed Level 5 3rd stage! And you can get more?";
+    shareParams.description = [NSString stringWithUTF8String:CCLocalizedString("HALF_WAY_POST", NULL)];
     
     if ([FBDialogs canPresentShareDialogWithParams:shareParams]){
         
         [FBDialogs presentShareDialogWithParams:shareParams
                                     clientState:nil
                                         handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                            if(error) {
-                                                NSLog(@"Error publishing story.");
-                                            } else if (results[@"completionGesture"] && [results[@"completionGesture"] isEqualToString:@"cancel"]) {
-                                                NSLog(@"User canceled story publishing.");
-                                            } else {
-                                                NSLog(@"Story published.");
+                                            if (error) {
+                                                if ([FBErrorUtility shouldNotifyUserForError:error]) {
+                                                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook-Error!" message:[FBErrorUtility userMessageForError:error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                    [alert show];
+                                                }
+                                            }
+                                            else if (results[@"completionGesture"])
+                                            {
+                                                if ([results[@"completionGesture"] isEqualToString:@"cancel"])
+                                                {
+                                                    NSLog(@"User canceled story publishing.");
+                                                } else if ([results[@"completionGesture"] isEqualToString:@"post"])
+                                                {
+                                                    NSLog(@"Story published.");
+                                                    OptionsPtr->setJubPost();
+                                                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                    OptionsPtr->save();
+                                                    if (GlobalsPtr->iceCreamScene == Map)
+                                                    {
+                                                        GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                                                        layer->updateMenuBooster();
+                                                    }
+                                                    MMPPtr->contentShared();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"Usr");
                                             }
                                         }];
         
@@ -1566,9 +1730,7 @@ bool cFacebook::jubileePost()
              } else {
                  if (result == FBWebDialogResultDialogNotCompleted) {
                      NSLog(@"User canceled story publishing.");
-                 } else {
-                     NSLog(@"Story published.");
-                     
+                 } else{
                      NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
                      NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
                      for (NSString *pair in pairs) {
@@ -1578,14 +1740,12 @@ bool cFacebook::jubileePost()
                          urlParams[kv[0]] = val;
                      }
                      
-                     if (![urlParams count]) {
-                         // User clicked the Cancel button
-                         NSLog(@"User canceled request.");
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User cancelled.
+                         NSLog(@"User cancelled.");
                      } else {
-                         // User clicked the Send button
-                         NSString *requestID = [urlParams valueForKey:@"request"];
-                         NSLog(@"Request ID: %@", requestID);
-                         
+                         // User clicked the Share button
+                         OptionsPtr->setJubPost();
                          OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
                          OptionsPtr->save();
                          if (GlobalsPtr->iceCreamScene == Map)
@@ -1593,7 +1753,98 @@ bool cFacebook::jubileePost()
                              GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
                              layer->updateMenuBooster();
                          }
-                         Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                         MMPPtr->contentShared();
+                     }
+                 }
+             }}];
+    }
+}
+
+bool cFacebook::endGame()
+{
+    if (!sessionIsOpened())
+        return false;
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
+    
+    // Prepare the native share dialog parameters
+    FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
+    shareParams.link = [NSURL URLWithString:linkURL];
+    shareParams.name = @"Ice Cream Adventure!";
+    shareParams.caption= @"Ice Cream Adventure!";
+    shareParams.picture= [NSURL URLWithString:pictureURL];
+    //    string post = "I discovered the secret fairy world Ice Cream passing" + stage +"! Come, and you will find incredible!";
+    shareParams.description = [NSString stringWithUTF8String:CCLocalizedString("END_STAGE_POST", NULL)];
+    
+    if ([FBDialogs canPresentShareDialogWithParams:shareParams]){
+        
+        [FBDialogs presentShareDialogWithParams:shareParams
+                                    clientState:nil
+                                        handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                            if (error) {
+                                                if ([FBErrorUtility shouldNotifyUserForError:error]) {
+                                                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook-Error!" message:[FBErrorUtility userMessageForError:error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                    [alert show];
+                                                }
+                                            }
+                                            else if (results[@"completionGesture"])
+                                            {
+                                                if ([results[@"completionGesture"] isEqualToString:@"cancel"])
+                                                {
+                                                    NSLog(@"User canceled story publishing.");
+                                                } else if ([results[@"completionGesture"] isEqualToString:@"post"])
+                                                {
+                                                    NSLog(@"Story published.");
+                                                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                    OptionsPtr->save();
+                                                    MMPPtr->contentShared();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"Usr");
+                                            }
+                                        }];
+        
+    }else {
+        
+        // Prepare the web dialog parameters
+        NSDictionary *params = @{
+                                 @"name" : shareParams.name,
+                                 @"caption" : shareParams.caption,
+                                 @"description" : shareParams.description,
+                                 @"picture" : pictureURL,
+                                 @"link" : linkURL
+                                 };
+        
+        // Invoke the dialog
+        [FBWebDialogs presentFeedDialogModallyWithSession:nil
+                                               parameters:params
+                                                  handler:
+         ^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+             if (error) {
+                 NSLog(@"Error publishing story.");
+             } else {
+                 if (result == FBWebDialogResultDialogNotCompleted) {
+                     NSLog(@"User canceled story publishing.");
+                 } else{
+                     NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
+                     NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
+                     for (NSString *pair in pairs) {
+                         NSArray *kv = [pair componentsSeparatedByString:@"="];
+                         NSString *val =
+                         [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                         urlParams[kv[0]] = val;
+                     }
+                     
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User cancelled.
+                         NSLog(@"User cancelled.");
+                     } else {
+                         // User clicked the Share button
+                         OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                         OptionsPtr->save();
+                         MMPPtr->contentShared();
                      }
                  }
              }}];
@@ -1604,29 +1855,45 @@ bool cFacebook::endStage(string stage)
 {
     if (!sessionIsOpened())
         return false;
-    NSString *linkURL = [NSString stringWithFormat:@"https://www.friendsmash.com/challenge_brag_%llu", fbid];
-    NSString *pictureURL = @"http://www.friendsmash.com/images/logo_large.jpg";
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     
     // Prepare the native share dialog parameters
     FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
     shareParams.link = [NSURL URLWithString:linkURL];
     shareParams.name = @"Ice Cream Adventure!";
-    shareParams.caption= @"Come, and you will find incredible!";
+    shareParams.caption= @"Ice Cream Adventure!";
     shareParams.picture= [NSURL URLWithString:pictureURL];
-    string post = "I discovered the secret fairy world Ice Cream passing" + stage +"! Come, and you will find incredible!";
-    shareParams.description = [NSString stringWithUTF8String:post.c_str()];
+//    string post = "I discovered the secret fairy world Ice Cream passing" + stage +"! Come, and you will find incredible!";
+    shareParams.description = [NSString stringWithUTF8String:CCLocalizedString("END_STAGE_POST", NULL)];
     
     if ([FBDialogs canPresentShareDialogWithParams:shareParams]){
         
         [FBDialogs presentShareDialogWithParams:shareParams
                                     clientState:nil
                                         handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                            if(error) {
-                                                NSLog(@"Error publishing story.");
-                                            } else if (results[@"completionGesture"] && [results[@"completionGesture"] isEqualToString:@"cancel"]) {
-                                                NSLog(@"User canceled story publishing.");
-                                            } else {
-                                                NSLog(@"Story published.");
+                                            if (error) {
+                                                if ([FBErrorUtility shouldNotifyUserForError:error]) {
+                                                    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Facebook-Error!" message:[FBErrorUtility userMessageForError:error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                    [alert show];
+                                                }
+                                            }
+                                            else if (results[@"completionGesture"])
+                                            {
+                                                if ([results[@"completionGesture"] isEqualToString:@"cancel"])
+                                                {
+                                                    NSLog(@"User canceled story publishing.");
+                                                } else if ([results[@"completionGesture"] isEqualToString:@"post"])
+                                                {
+                                                    NSLog(@"Story published.");
+                                                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                    OptionsPtr->save();
+                                                    MMPPtr->contentShared();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                NSLog(@"Usr");
                                             }
                                         }];
         
@@ -1651,8 +1918,7 @@ bool cFacebook::endStage(string stage)
              } else {
                  if (result == FBWebDialogResultDialogNotCompleted) {
                      NSLog(@"User canceled story publishing.");
-                 } else {
-                     NSLog(@"Story published.");
+                 } else{
                      NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
                      NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
                      for (NSString *pair in pairs) {
@@ -1662,22 +1928,14 @@ bool cFacebook::endStage(string stage)
                          urlParams[kv[0]] = val;
                      }
                      
-                     if (![urlParams count]) {
-                         // User clicked the Cancel button
-                         NSLog(@"User canceled request.");
+                     if (![urlParams valueForKey:@"post_id"]) {
+                         // User cancelled.
+                         NSLog(@"User cancelled.");
                      } else {
-                         // User clicked the Send button
-                         NSString *requestID = [urlParams valueForKey:@"request"];
-                         NSLog(@"Request ID: %@", requestID);
-                         
+                         // User clicked the Share button
                          OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
                          OptionsPtr->save();
-                         if (GlobalsPtr->iceCreamScene == Game)
-                         {
-                             GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
-                             layer->updateBoosters();
-                         }
-                         Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+                         MMPPtr->contentShared();
                      }
                  }
              }}];
@@ -1779,8 +2037,8 @@ void cFacebook::sendBrag(const int nScore)
 {
     if (!sessionIsOpened())
         return;
-    NSString *linkURL = [NSString stringWithFormat:@"https://www.friendsmash.com/challenge_brag_%llu", fbid];
-    NSString *pictureURL = @"http://www.friendsmash.com/images/logo_large.jpg";
+    NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
+    NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     
     // Prepare the native share dialog parameters
     FBShareDialogParams *shareParams = [[FBShareDialogParams alloc] init];
@@ -1828,7 +2086,7 @@ void cFacebook::sendBrag(const int nScore)
          NSLog(@"User canceled story publishing.");
          } else {
          NSLog(@"Story published.");
-            Core::MMPInterface::Instance()->ShareContentClicked("facebook");
+            MMPPtr->contentShared();
          }
          }}];
     }

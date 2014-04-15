@@ -1,4 +1,4 @@
-<Level background="1" targetScore="15000" width="9" height="9" type="bringDown" movesCount="15" colorNumber="4" bringDownCount="1">
+<Level background="5" targetScore="15000" width="9" height="9" type="bringDown" movesCount="15" colorNumber="4" bringDownCount="1">
   <c t="st"/>
   <c t="st"/>
   <c t="st"/>
@@ -27,7 +27,7 @@
   <c t="gr"/>
   <c t="gr"/>
   <c t="st"/>
-  <c t="s"/>
+  <c t="s" color="g"/>
   <c t="s"/>
   <c t="st"/>
   <c t="s"/>
@@ -35,9 +35,9 @@
   <c t="st"/>
   <c t="gr"/>
   <c t="gr"/>
+  <c t="s" color="g"/>
   <c t="s"/>
-  <c t="s"/>
-  <c t="s"/>
+  <c t="s" color="g"/>
   <c t="st"/>
   <c t="s"/>
   <c t="s"/>

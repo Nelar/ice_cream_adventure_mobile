@@ -121,10 +121,8 @@ bool ComixScene::init(int num)
         
         if (IPHONE_5)
         {
-            borderLeft->setScaleY(1.5f);
-            borderRight->setScaleY(1.5f);
-            borderLeft->setScaleX(1.0f);
-            borderRight->setScaleX(1.0f);
+            borderLeft->setScale(2.1f);
+            borderRight->setScale(2.1f);
         }
     }
     else
@@ -134,10 +132,8 @@ bool ComixScene::init(int num)
         borderRight->setPosition(ccp(WINSIZE.width/2.0f, borderLeft->getContentSize().height/2.0f));
         if (IPHONE_5)
         {
-            borderLeft->setScaleY(1.0f);
-            borderRight->setScaleY(1.0f);
-            borderLeft->setScaleX(1.5f);
-            borderRight->setScaleX(1.5f);
+            borderLeft->setScale(2.1f);
+            borderRight->setScale(2.1f);
         }
     }
     
@@ -299,8 +295,12 @@ void ComixScene::pauseComix(CCNode* sender)
         text->removeFromParentAndCleanup(true);
         text = NULL;
     }
-    text = CCLabelTTF::create("", FONT_COMMON, FONT_SIZE_32);
+    text = CCLabelTTF::create("", FONT_COMMON, FONT_SIZE_40);
     text->setColor(ccBLACK);
+    if (!IPAD)
+    {
+        text->setFontSize(50);
+    }
     
     next->setVisible(true);
     comix->addChild(text, 100);
@@ -572,10 +572,8 @@ void ComixScene::changeOrientation()
         
         if (IPHONE_5)
         {
-            borderLeft->setScaleY(1.5f);
-            borderRight->setScaleY(1.5f);
-            borderLeft->setScaleX(1.0f);
-            borderRight->setScaleX(1.0f);
+            borderLeft->setScale(2.1f);
+            borderRight->setScale(2.1f);
         }
     }
     else
@@ -591,10 +589,8 @@ void ComixScene::changeOrientation()
         
         if (IPHONE_5)
         {
-            borderLeft->setScaleY(1.0f);
-            borderRight->setScaleY(1.0f);
-            borderLeft->setScaleX(1.2f);
-            borderRight->setScaleX(1.2f);
+            borderLeft->setScale(2.1f);
+            borderRight->setScale(2.1f);
         }
     }    
 }
@@ -608,32 +604,32 @@ void ComixScene::comix_1()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/1/1 boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy", false);
+    boy->addAnimation("walk-copy", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 2);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/1/icecream.json", "comix/1/icecream.atlas");
-    icecream->setAnimation("walk-copy", false);
+    icecream->addAnimation("walk-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream,2);
     
     CCSkeletonAnimation* arials = CCSkeletonAnimation::createWithFile("comix/1/arials.json", "comix/1/arials.atlas");
-    arials->setAnimation("animation", false);
+    arials->addAnimation("animation", false);
     arials->setPosition(ccp(x, y));
     comix->addChild(arials, 3);
     
     bubbles = CCSkeletonAnimation::createWithFile("comix/1/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 2);
  
     CCSkeletonAnimation* zad = CCSkeletonAnimation::createWithFile("comix/1/zad.json", "comix/1/zad.atlas");
-    zad->setAnimation("animation", false);
+    zad->addAnimation("animation", false);
     zad->setPosition(ccp(x, y));
     comix->addChild(zad);
    
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/1/front.json", "comix/1/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     front->setPosition(ccp(x, y));
     comix->addChild(front);
     
@@ -665,32 +661,32 @@ void ComixScene::comix_1_end()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/1/1 boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy2", false);
+    boy->addAnimation("walk-copy2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 2);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/1/icecream.json", "comix/1/icecream.atlas");
-    icecream->setAnimation("walk-copy2", false);
+    icecream->addAnimation("walk-copy2", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream,2);
     
     CCSkeletonAnimation* arials = CCSkeletonAnimation::createWithFile("comix/1/arials.json", "comix/1/arials.atlas");
-    arials->setAnimation("animation-copy", false);
+    arials->addAnimation("animation-copy", false);
     arials->setPosition(ccp(x, y));
     comix->addChild(arials, 3);
     
     bubbles = CCSkeletonAnimation::createWithFile("comix/1/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 2);
     
     CCSkeletonAnimation* zad = CCSkeletonAnimation::createWithFile("comix/1/zad.json", "comix/1/zad.atlas");
-    zad->setAnimation("animation-copy", false);
+    zad->addAnimation("animation-copy", false);
     zad->setPosition(ccp(x, y));
     comix->addChild(zad);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/1/front.json", "comix/1/front.atlas");
-    front->setAnimation("animation-copy", false);
+    front->addAnimation("animation-copy", false);
     front->setPosition(ccp(x, y));
     comix->addChild(front);
     
@@ -720,27 +716,27 @@ void ComixScene::comix_2()
     comix = CCLayerColor::create(ccc4(0, 0, 0, 255));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/2/begin/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy2", false);
+    boy->addAnimation("walk-copy2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 2);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/2/begin/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk-copy", false);
+    icecream->addAnimation("walk-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream,2);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/2/begin/bubbles.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 2);
     
     CCSkeletonAnimation* skeleton_copy = CCSkeletonAnimation::createWithFile("comix/2/begin/skeleton-copy.json", "comix/2/skeleton-copy.atlas");
-    skeleton_copy->setAnimation("animation", false);
+    skeleton_copy->addAnimation("animation", false);
     skeleton_copy->setPosition(ccp(x, y));
     comix->addChild(skeleton_copy, 1);
     
     CCSkeletonAnimation* top = CCSkeletonAnimation::createWithFile("comix/2/begin/top.json", "comix/2/top.atlas");
-    top->setAnimation("animation", false);
+    top->addAnimation("animation", false);
     top->setPosition(ccp(x, y));
     comix->addChild(top, 3);
     
@@ -769,27 +765,27 @@ void ComixScene::comix_2_end()
     comix = CCLayerColor::create(ccc4(0, 0, 0, 255));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/2/begin/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy2", false);
+    boy->addAnimation("walk-copy2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 2);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/2/begin/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk-copy", false);
+    icecream->addAnimation("walk-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream,2);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/2/begin/bubbles.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 2);
     
     CCSkeletonAnimation* skeleton_copy = CCSkeletonAnimation::createWithFile("comix/2/begin/skeleton-copy.json", "comix/2/skeleton-copy.atlas");
-    skeleton_copy->setAnimation("animation", false);
+    skeleton_copy->addAnimation("animation", false);
     skeleton_copy->setPosition(ccp(x, y));
     comix->addChild(skeleton_copy, 1);
     
     CCSkeletonAnimation* top = CCSkeletonAnimation::createWithFile("comix/2/begin/top.json", "comix/2/top.atlas");
-    top->setAnimation("animation", false);
+    top->addAnimation("animation", false);
     top->setPosition(ccp(x, y));
     comix->addChild(top, 3);
     
@@ -822,27 +818,27 @@ void ComixScene::comix_3()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/3/begin/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy2", false);
+    boy->addAnimation("walk-copy2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 2);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/3/begin/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk-copy", false);
+    icecream->addAnimation("walk-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream,2);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/3/begin/bubbles.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 2);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/3/begin/back.json", "comix/3/begin/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
 /*    CCSkeletonAnimation* forward = CCSkeletonAnimation::createWithFile("comix/3/begin/top.json", "comix/3/begin/top.atlas");
-    forward->setAnimation("animation", false);
+    forward->addAnimation("animation", false);
     comix->addChild(forward, 4);*/
     
     
@@ -874,27 +870,27 @@ void ComixScene::comix_3_end()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/3/end/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk out", false);
+    boy->addAnimation("walk out", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 3);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/3/end/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk out", false);
+    icecream->addAnimation("walk out", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream,2);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/3/end/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 2);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/3/end/back.json", "comix/3/end/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/3/end/front.json", "comix/3/end/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     front->setPosition(ccp(x, y));
     comix->addChild(front, 4);
     
@@ -928,42 +924,42 @@ void ComixScene::comix_4()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/4/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy", false);
+    boy->addAnimation("walk-copy", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/4/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk", false);
+    icecream->addAnimation("walk", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/4/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* bubbles2 = CCSkeletonAnimation::createWithFile("comix/4/bubbles-copy.json", "comix/bubbles.atlas");
-    bubbles2->setAnimation("animation-copy", false);
+    bubbles2->addAnimation("animation-copy", false);
     bubbles2->setPosition(ccp(x, y));
     comix->addChild(bubbles2, 4);
     
     CCSkeletonAnimation* bubbles3 = CCSkeletonAnimation::createWithFile("comix/4/bubbles.json", "comix/bubbles.atlas");
-    bubbles3->setAnimation("animation-copy", false);
+    bubbles3->addAnimation("animation-copy", false);
     bubbles3->setPosition(ccp(x, y));
     comix->addChild(bubbles3, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/4/back.json", "comix/4/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* giant = CCSkeletonAnimation::createWithFile("comix/4/giant.json", "comix/4/giant.atlas");
-    giant->setAnimation("animation", false);
+    giant->addAnimation("animation", false);
     giant->setPosition(ccp(x, y));
     comix->addChild(giant, 2);
     
     CCSkeletonAnimation* mountain = CCSkeletonAnimation::createWithFile("comix/4/mountains forward.json", "comix/4/mountains forward.atlas");
-    mountain->setAnimation("animation", false);
+    mountain->addAnimation("animation", false);
     mountain->setPosition(ccp(x, y));
     comix->addChild(mountain, 3);
     
@@ -998,42 +994,42 @@ void ComixScene::comix_4_end()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/4/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy2", false);
+    boy->addAnimation("walk-copy2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/4/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk-copy", false);
+    icecream->addAnimation("walk-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/4/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* bubbles2 = CCSkeletonAnimation::createWithFile("comix/4/bubbles-copy.json", "comix/bubbles.atlas");
-    bubbles2->setAnimation("animation-copy2", false);
+    bubbles2->addAnimation("animation-copy2", false);
     bubbles2->setPosition(ccp(x, y));
     comix->addChild(bubbles2, 4);
     
     CCSkeletonAnimation* bubbles3 = CCSkeletonAnimation::createWithFile("comix/4/bubbles.json", "comix/bubbles.atlas");
-    bubbles3->setAnimation("animation-copy2", false);
+    bubbles3->addAnimation("animation-copy2", false);
     bubbles3->setPosition(ccp(x, y));
     comix->addChild(bubbles3, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/4/back.json", "comix/4/back.atlas");
-    back->setAnimation("animation-copy", false);
+    back->addAnimation("animation-copy", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* giant = CCSkeletonAnimation::createWithFile("comix/4/giant.json", "comix/4/giant.atlas");
-    giant->setAnimation("animation-copy", false);
+    giant->addAnimation("animation-copy", false);
     giant->setPosition(ccp(x, y));
     comix->addChild(giant, 2);
     
     CCSkeletonAnimation* mountain = CCSkeletonAnimation::createWithFile("comix/4/mountains forward.json", "comix/4/mountains forward.atlas");
-    mountain->setAnimation("animation-copy", false);
+    mountain->addAnimation("animation-copy", false);
     mountain->setPosition(ccp(x, y));
     comix->addChild(mountain, 3);
     
@@ -1068,32 +1064,32 @@ void ComixScene::comix_5()
 
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/5/boy.json", "comix/boy.atlas");
-    boy->setAnimation("stay in boat", false);
+    boy->addAnimation("stay in boat", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/5/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("stay in boat", false);
+    icecream->addAnimation("stay in boat", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/5/bubbles boy.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* boat = CCSkeletonAnimation::createWithFile("comix/5/boat.json", "comix/5/boat.atlas");
-    boat->setAnimation("animation", false);
+    boat->addAnimation("animation", false);
     boat->setPosition(ccp(x, y));
     comix->addChild(boat, 2);
     
     CCSkeletonAnimation* pirate = CCSkeletonAnimation::createWithFile("comix/5/pirate cookies.json", "comix/5/pirate cookies.atlas");
-    pirate->setAnimation("animation", false);
+    pirate->addAnimation("animation", false);
     pirate->setPosition(ccp(x, y));
     comix->addChild(pirate, 3);
     
     CCSkeletonAnimation* ship = CCSkeletonAnimation::createWithFile("comix/5/ship.json", "comix/5/ship.atlas");
-    ship->setAnimation("animation", false);
+    ship->addAnimation("animation", false);
     ship->setPosition(ccp(x, y));
     comix->addChild(ship, 1);
     
@@ -1128,32 +1124,32 @@ void ComixScene::comix_5_end()
     
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/5/boy.json", "comix/boy.atlas");
-    boy->setAnimation("stay in boat-copy", false);
+    boy->addAnimation("stay in boat-copy", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/5/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("stay in boat-copy", false);
+    icecream->addAnimation("stay in boat-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/5/bubbles boy.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* boat = CCSkeletonAnimation::createWithFile("comix/5/boat.json", "comix/5/boat.atlas");
-    boat->setAnimation("animation-copy", false);
+    boat->addAnimation("animation-copy", false);
     boat->setPosition(ccp(x, y));
     comix->addChild(boat, 2);
     
     CCSkeletonAnimation* pirate = CCSkeletonAnimation::createWithFile("comix/5/pirate cookies.json", "comix/5/pirate cookies.atlas");
-    pirate->setAnimation("animation-copy", false);
+    pirate->addAnimation("animation-copy", false);
     pirate->setPosition(ccp(x, y));
     comix->addChild(pirate, 3);
     
     CCSkeletonAnimation* ship = CCSkeletonAnimation::createWithFile("comix/5/ship.json", "comix/5/ship.atlas");
-    ship->setAnimation("animation-copy", false);
+    ship->addAnimation("animation-copy", false);
     ship->setPosition(ccp(x, y));
     comix->addChild(ship, 1);
     
@@ -1189,27 +1185,27 @@ void ComixScene::comix_6()
 
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/6/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk rest 2", false);
+    boy->addAnimation("walk rest 2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/6/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk rest", false);
+    icecream->addAnimation("walk rest", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/6/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/6/back.json", "comix/6/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 2);
     
     CCSkeletonAnimation* tap = CCSkeletonAnimation::createWithFile("comix/6/tap front.json", "comix/6/tap front.atlas");
-    tap->setAnimation("animation", false);
+    tap->addAnimation("animation", false);
     tap->setPosition(ccp(x, y));
     comix->addChild(tap, 5);
     
@@ -1242,27 +1238,27 @@ void ComixScene::comix_6_end()
     
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/6/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk rest 2-copy", false);
+    boy->addAnimation("walk rest 2-copy", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/6/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk rest-copy", false);
+    icecream->addAnimation("walk rest-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/6/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/6/back.json", "comix/6/back.atlas");
-    back->setAnimation("animation-copy", false);
+    back->addAnimation("animation-copy", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 2);
     
     CCSkeletonAnimation* tap = CCSkeletonAnimation::createWithFile("comix/6/tap front.json", "comix/6/tap front.atlas");
-    tap->setAnimation("animation-copy", false);
+    tap->addAnimation("animation-copy", false);
     tap->setPosition(ccp(x, y));
     comix->addChild(tap, 5);
     
@@ -1294,32 +1290,32 @@ void ComixScene::comix_7()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/7/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk slide", false);
+    boy->addAnimation("walk slide", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/7/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk slide", false);
+    icecream->addAnimation("walk slide", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/7/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/7/back.json", "comix/7/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* backCow = CCSkeletonAnimation::createWithFile("comix/7/back cow.json", "comix/7/back cow.atlas");
-    backCow->setAnimation("animation", false);
+    backCow->addAnimation("animation", false);
     backCow->setPosition(ccp(x, y));
     comix->addChild(backCow, 2);
     
     CCSkeletonAnimation* frontCow = CCSkeletonAnimation::createWithFile("comix/7/front cows.json", "comix/7/front cows.atlas");
-    frontCow->setAnimation("animation", false);
+    frontCow->addAnimation("animation", false);
     frontCow->setPosition(ccp(x, y));
     comix->addChild(frontCow, 3);
     
@@ -1351,32 +1347,32 @@ void ComixScene::comix_7_end()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/7/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk slide-copy", false);
+    boy->addAnimation("walk slide-copy", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/7/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk slide-copy", false);
+    icecream->addAnimation("walk slide-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/7/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/7/back.json", "comix/7/back.atlas");
-    back->setAnimation("animation-copy", false);
+    back->addAnimation("animation-copy", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* backCow = CCSkeletonAnimation::createWithFile("comix/7/back cow.json", "comix/7/back cow.atlas");
-    backCow->setAnimation("animation-copy", false);
+    backCow->addAnimation("animation-copy", false);
     backCow->setPosition(ccp(x, y));
     comix->addChild(backCow, 2);
     
     CCSkeletonAnimation* frontCow = CCSkeletonAnimation::createWithFile("comix/7/front cows.json", "comix/7/front cows.atlas");
-    frontCow->setAnimation("animation-copy", false);
+    frontCow->addAnimation("animation-copy", false);
     frontCow->setPosition(ccp(x, y));
     comix->addChild(frontCow, 3);
     
@@ -1409,37 +1405,37 @@ void ComixScene::comix_8()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/8/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy", false);
+    boy->addAnimation("walk-copy", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/8/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk on", false);
+    icecream->addAnimation("walk on", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/8/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/8/back.json", "comix/8/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* cookie = CCSkeletonAnimation::createWithFile("comix/8/cookie.json", "comix/8/cookie.atlas");
-    cookie->setAnimation("animation-copy", false);
+    cookie->addAnimation("animation-copy", false);
     cookie->setPosition(ccp(x, y));
     comix->addChild(cookie, 3);
 
     CCSkeletonAnimation* iceCookie = CCSkeletonAnimation::createWithFile("comix/8/ice cookie.json", "comix/8/ice cookie.atlas");
-    iceCookie->setAnimation("animation-copy", false);
+    iceCookie->addAnimation("animation-copy", false);
     iceCookie->setPosition(ccp(x, y));
     comix->addChild(iceCookie, 3);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/8/front.json", "comix/8/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     front->setPosition(ccp(x, y));
     comix->addChild(front, 5);
     
@@ -1472,37 +1468,37 @@ void ComixScene::comix_8_end()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/8/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy2", false);
+    boy->addAnimation("walk-copy2", false);
     boy->setPosition(ccp(x, y));
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/8/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk on-copy", false);
+    icecream->addAnimation("walk on-copy", false);
     icecream->setPosition(ccp(x, y));
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/8/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation-copy", false);
+    bubbles->addAnimation("animation-copy", false);
     bubbles->setPosition(ccp(x, y));
     comix->addChild(bubbles, 6);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/8/back.json", "comix/8/back.atlas");
-    back->setAnimation("animation-copy", false);
+    back->addAnimation("animation-copy", false);
     back->setPosition(ccp(x, y));
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* cookie = CCSkeletonAnimation::createWithFile("comix/8/cookie.json", "comix/8/cookie.atlas");
-     cookie->setAnimation("animation-copy2", false);
+     cookie->addAnimation("animation-copy2", false);
      cookie->setPosition(ccp(x, y));
      comix->addChild(cookie, 3);
      
      iceCookie = CCSkeletonAnimation::createWithFile("comix/8/ice cookie.json", "comix/8/ice cookie.atlas");
-     iceCookie->setAnimation("animation-copy2", false);
+     iceCookie->addAnimation("animation-copy2", false);
      iceCookie->setPosition(ccp(x, y));
      comix->addChild(iceCookie, 3);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/8/front.json", "comix/8/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     front->setPosition(ccp(x, y));
     comix->addChild(front, 5);
     
@@ -1534,31 +1530,31 @@ void ComixScene::comix_9()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/9/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy", false);
+    boy->addAnimation("walk-copy", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/9/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk", false);
+    icecream->addAnimation("walk", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/9/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/9/back.json", "comix/9/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     
  /*   CCSkeletonAnimation* cookie = CCSkeletonAnimation::createWithFile("comix/9/cookie.json", "comix/9/cookie.atlas");
-    cookie->setAnimation("animation-copy2", false);
+    cookie->addAnimation("animation-copy2", false);
     comix->addChild(cookie, 3);
     
     CCSkeletonAnimation* cookie2 = CCSkeletonAnimation::createWithFile("comix/9/cookie-copy.json", "comix/9/cookie-copy.atlas");
-    cookie2->setAnimation("animation-copy2", false);
+    cookie2->addAnimation("animation-copy2", false);
     comix->addChild(cookie2, 3);
    */
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/9/front fountain.json", "comix/9/front fountain.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     comix->addChild(front, 3);
     
     
@@ -1606,27 +1602,27 @@ void ComixScene::comix_10()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/10/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy", false);
+    boy->addAnimation("walk-copy", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/10/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk", false);
+    icecream->addAnimation("walk", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/10/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/10/back.json", "comix/10/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     /*
     CCSkeletonAnimation* cookie = CCSkeletonAnimation::createWithFile("comix/10/cookie.json", "comix/10/cookie.atlas");
-    cookie->setAnimation("animation-copy2", false);
+    cookie->addAnimation("animation-copy2", false);
     comix->addChild(cookie, 3);
     */
     CCSkeletonAnimation* car = CCSkeletonAnimation::createWithFile("comix/10/car.json", "comix/10/car.atlas");
-    car->setAnimation("animation", false);
+    car->addAnimation("animation", false);
     comix->addChild(car, 3);
     
     
@@ -1676,27 +1672,27 @@ void ComixScene::comix_11()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/11/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk to light", false);
+    boy->addAnimation("walk to light", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/11/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk to light", false);
+    icecream->addAnimation("walk to light", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/11/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 4);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/11/back.json", "comix/11/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* bird = CCSkeletonAnimation::createWithFile("comix/11/bird.json", "comix/11/bird.atlas");
-    bird->setAnimation("animation", false);
+    bird->addAnimation("animation", false);
     comix->addChild(bird, 2);
      
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/11/front.json", "comix/11/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     comix->addChild(front, 3);
     
     
@@ -1746,31 +1742,31 @@ void ComixScene::comix_12()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/12/boy.json", "comix/12/boy.atlas");
-    boy->setAnimation("walk swim", false);
+    boy->addAnimation("walk swim", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/12/icecream.json", "comix/12/icecream.atlas");
-    icecream->setAnimation("walk", false);
+    icecream->addAnimation("walk", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/12/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 6);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/12/back.json", "comix/12/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* whale = CCSkeletonAnimation::createWithFile("comix/12/whale.json", "comix/12/whale.atlas");
-    whale->setAnimation("animation-copy", false);
+    whale->addAnimation("animation-copy", false);
     comix->addChild(whale, 5);
     
     CCSkeletonAnimation* whale2 = CCSkeletonAnimation::createWithFile("comix/12/whale 2.json", "comix/12/whale 2.atlas");
-    whale2->setAnimation("animation-copy front", false);
+    whale2->addAnimation("animation-copy front", false);
     comix->addChild(whale2, 5);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/12/front.json", "comix/12/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     comix->addChild(front, 3);
     
     
@@ -1820,23 +1816,23 @@ void ComixScene::comix_13()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/13/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk tr", false);
+    boy->addAnimation("walk tr", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/13/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk tr", false);
+    icecream->addAnimation("walk tr", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/13/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 6);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/13/back.json", "comix/13/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/13/front house.json", "comix/13/front house.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     comix->addChild(front, 6);
     
     
@@ -1886,27 +1882,27 @@ void ComixScene::comix_14()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/14/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk in", false);
+    boy->addAnimation("walk in", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/14/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk in", false);
+    icecream->addAnimation("walk in", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/14/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 6);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/14/back.json", "comix/14/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* guardLeft = CCSkeletonAnimation::createWithFile("comix/14/guard left.json", "comix/14/guard left.atlas");
-    guardLeft->setAnimation("animation", false);
+    guardLeft->addAnimation("animation", false);
     comix->addChild(guardLeft, 3);
     
     CCSkeletonAnimation* guardLeft2 = CCSkeletonAnimation::createWithFile("comix/14/guard left-copy.json", "comix/14/guard left-copy.atlas");
-    guardLeft2->setAnimation("animation", false);
+    guardLeft2->addAnimation("animation", false);
     comix->addChild(guardLeft2, 3);
     
     
@@ -1956,23 +1952,23 @@ void ComixScene::comix_15()
     comix->setContentSize(CCSize(2048, 2048));
     
     CCSkeletonAnimation* boy = CCSkeletonAnimation::createWithFile("comix/15/boy.json", "comix/boy.atlas");
-    boy->setAnimation("walk-copy", false);
+    boy->addAnimation("walk-copy", false);
     comix->addChild(boy, 4);
     
     CCSkeletonAnimation* icecream = CCSkeletonAnimation::createWithFile("comix/15/icecream.json", "comix/icecream.atlas");
-    icecream->setAnimation("walk", false);
+    icecream->addAnimation("walk", false);
     comix->addChild(icecream, 4);
     
     CCSkeletonAnimation* bubbles = CCSkeletonAnimation::createWithFile("comix/15/bubbles-copy2.json", "comix/bubbles.atlas");
-    bubbles->setAnimation("animation", false);
+    bubbles->addAnimation("animation", false);
     comix->addChild(bubbles, 6);
     
     CCSkeletonAnimation* back = CCSkeletonAnimation::createWithFile("comix/15/back.json", "comix/15/back.atlas");
-    back->setAnimation("animation", false);
+    back->addAnimation("animation", false);
     comix->addChild(back, 1);
     
     CCSkeletonAnimation* front = CCSkeletonAnimation::createWithFile("comix/15/front.json", "comix/15/front.atlas");
-    front->setAnimation("animation", false);
+    front->addAnimation("animation", false);
     comix->addChild(front, 5);
     
     

@@ -26,9 +26,9 @@ ice balls
   index: -1
 tap back new
   rotate: false
-  xy: 0, 92
-  size: 512, 377
-  orig: 512, 377
+  xy: 0, 93
+  size: 512, 370
+  orig: 512, 370
   offset: 0, 0
   index: -1
 

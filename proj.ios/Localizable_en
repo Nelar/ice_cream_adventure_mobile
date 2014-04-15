@@ -9,13 +9,15 @@ HELP_1 = "Touch ice cream and\n swipe it with your finger\n. Match 3 ice cream o
 HELP_2 = "Match 4 or 5 ice cream in\n different formations to\n generate special ice cream!";
 HELP_3 = "Combine special ice cream by\n switching them with each \nother for additional effect.";
 NEXT = "Next";
+CLOSE = "Close";
 GO = "Go";
 RESTORE = "Restore";
 RESET = "Reset";
+RESET_TEXT = "All your current progress will be erased!\n Are you sure you want to continue?";
 ON = "On";
 OFF = "Off";
 SETTING_FACEBOOK_TEXT = "See how your friends are doing!\n Connect to Facebook";
-SETTING_ASK_TEXT = "Do you have a problem with the game or\n wonder about a game mechanic?\n Check out the Frequently Asked Questions!\n (this will minimize the game and go to a website)";
+SETTING_ASK_TEXT = "Do you have a problem with the game or\n wonder about a game mechanic?\n Check out the Frequently Asked Questions!\n (this will minimize the game\n and go to a website)";
 SETTING_RESTORE_TEXT = "Have you made a purchase\n in the game that does not show up?\n Try restoring in-App purchases";
 SETTING_RESET_TEXT = "Reset All in-game progress and\n restart from level 1.\n You will be logged out of Facebook,\n but your progress will be\n restored if you reconnect";
 SETTING_NOTIF_TEXT = "Lives full";
@@ -33,8 +35,8 @@ SELECT_BOOSTER = "Select boosters";
 FULL = "Full";
 GET_MORE_LIVES = "Get more lives";
 NO_MORE_LIVES = "No more lives";
-ASK_FRIEND = "Ask friends!";
-MORE_LIVES = "More lives now"
+ASK_FRIEND = "Ask\n friends!";
+MORE_LIVES = "More lives\n now"
 TIME_NEXT_LIVE = "Time to next live";
 HIGH_SCORE = "High score";
 TARGET = "Target";
@@ -57,7 +59,7 @@ SWEET_PENGUIN = "Sweet penguins x3";
 SWEET_PENGUIN_TEXT = "Adds Sweet Penguins to the ice cream mix,\n which clears three pieces of ice\n when you match three ice cream!";
 ME = "Me";
 SEE_HOW_YOUR_FRIEND = "See how your friends are doing!";
-CHECK_ALL = "Check all";
+CHECK_ALL = "Check\n all";
 ACCEPT = "Accept";
 YOUR_MESSAGE = "Your messages";
 YOUR_GOT_GIFT = "You got a gift!";
@@ -80,9 +82,9 @@ SCORE = "Score";
 DID_NOT_ICE = "You did not clear\n all the ices";
 DID_NOT_BRING = "You did not clear\n all ingridient";
 DID_NOT_MOVES = "You did not clear\n all the ices";
-COMIX_1_1 = "Hi!\n Before we can depart to\n the Ice Cream Land we\n have to prepare for journey!";
-COMIX_1_2 = "Ready!\n Let's not waste any time!\n Off we go!";
-COMIX_2_1 = "Woah!\n Isn't it a forest\n of ice cream?\n Let's see what is in there!";
+COMIX_1_1 = "Hi!\n Before we can depart to\n the Ice Cream Land we\n have to prepare\n for journey!";
+COMIX_1_2 = "Ready!\n Let's not waste\n any time!\n Off we go!";
+COMIX_2_1 = "Woah!\n Isn't it a forest\n of ice cream?\n Let's see what\n is in there!";
 COMIX_2_2 = "Finally we were \nable to find an exit!";
 COMIX_3_1 = "How can we traverse\n those mountains?";
 COMIX_3_2 = "I will help you\n if you manage to\n complete my trials!";
@@ -121,12 +123,34 @@ TUTORIAL_10 = "Clear all the ice.\n Match over the ice to remove it.";
 
 
 NETWORK_MESSAGE = "No internet connection.\n Please try again later";
-LOADING = "Loading";
+LOADING = "Loading...";
+
+END_LEVEL_TITLE ="Congratulations!";
+END_LEVEL_TEXT = "You are one of the first players to make it through all the available levels!\n Like our Facebook page to stay up to date\n on all our latest news!\n As soon as we reach 100,000 subscribers,\n we'll launch a new update our team\n is already hard at work on.";
+
+NEWS_BUTTON = "Share";
+SUBSCRIBE = "Like";
+UNLOCK_STAGE = "Unlock levels?";
+UNLOCK_STAGE_TEXT = "Go ahead and go to bypass?";
+UNLOCK_STAGE_BUTTON = "Bypass";
+
+UNLOCK_END = "Level unlocked";
+UNLOCK_END_TEXT = "You unlocked levels";
+
+POST_ON_WALL = "Post";
+POST_ON_WALL_TEXT = "Post on wall and get a bonus";
+
+INVITE_FRIENDS_TITLE = "Invite friends";
+INVITE_FRIENDS_TEXT = "Invite friends and get a bonus";
+INVITE_FRIENDS_BUTTON = "Invite";
+
+ICE_HAMMER = "Ice hammer x3";
+ICE_HAMMER_TEXT = "Remove ice cream by smashing\n it with the hammer.";
 
 
+BEGIN_POST = "I have been playing this awesome arcade game called Ice Cream Adventure! Come join me, it is crazy addictive!";
+UNLOCK_STAGE_POST = "I have unlocked a new level in the Ice Cream Adventure! Now there is more adventures and surprises waiting for me there! Catch up to me if you can!";
+HALF_WAY_POST = "I am on the half way to victory and completed level 48! I dare you to do better!";
+END_STAGE_POST = "I have discovered a secret of the wonderful ice cream world! Join me and you will learn the unbelievable!!!!";
 
-
-
-
-
-
+ITUNES_CONNECTION_ERROR = "iTunes connection error, \n please check your connection \n and try again!";

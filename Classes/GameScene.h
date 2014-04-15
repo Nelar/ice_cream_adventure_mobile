@@ -77,6 +77,7 @@ public:
 	virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
 
 	bool checkField();
+    bool checkFieldLast();
 	bool checkFieldFirst();
 	bool checkElement(int i);
 	void afterDeleting();
@@ -156,6 +157,8 @@ public:
     bool timesLeftDownLock = false;
     
     void closeLoading();
+    
+    void afterGetScores();
     
 private:
     
@@ -291,7 +294,8 @@ private:
     bool isEnd;
     
     CCLayer* tutorialLayer;
-    vector<CCPoint> tutorialCell;
+    vector<pair<CCPoint, int>> tutorialCell;
+    
     bool isTutorial;
     bool isSecondTutorial;
     
@@ -370,6 +374,12 @@ private:
     
     bool isFinalAction = false;
     float isTeleportedObject = false;
+    
+    bool isTestLandscape = false;
+    
+    bool isNotElementFish = false;
+    
+    bool isFishNeedRun = false;
 };
 
 #endif

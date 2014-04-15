@@ -1,7 +1,7 @@
 #include "Options.h"
 #include "cGlobal.h"
 #include "cocos2d.h"
-#include "MMPInterface.h"
+#include "nMMP.h"
 #include "cFacebook.h"
 
 
@@ -65,7 +65,6 @@ sLevelData Options::getLevelData(int idx)
 
 void Options::setLifeCount(int nLife)
 {
-    Core::MMPInterface::Instance()->VirtualBalanceChanged(nLife - currentLife, "life");
     currentLife = nLife;
 }
 
@@ -76,7 +75,6 @@ int Options::getLifeCount()
 
 void Options::setCrystalCount(int nCrystal)
 {
-    Core::MMPInterface::Instance()->VirtualBalanceChanged(nCrystal - crystalCount, "crystal");
     crystalCount = nCrystal;
 }
 
@@ -87,7 +85,6 @@ int Options::getCrystalCOunt()
 
 void Options::setBombCount(int nCrystal)
 {
-    Core::MMPInterface::Instance()->VirtualBalanceChanged(nCrystal - bombCount, "stripes&bomb");
     bombCount = nCrystal;
 }
 
@@ -98,7 +95,6 @@ int Options::getBombCount()
 
 void Options::setFishCount(int nCrystal)
 {
-    Core::MMPInterface::Instance()->VirtualBalanceChanged(nCrystal - fishCount, "penguin");
     fishCount = nCrystal;
 }
 
@@ -293,7 +289,7 @@ void Options::load()
     _useMusic = CCUserDefault::sharedUserDefault()->getBoolForKey("music", true);
     _notif = CCUserDefault::sharedUserDefault()->getBoolForKey("notif", false);
     _facebook = CCUserDefault::sharedUserDefault()->getBoolForKey("facebook", false);
-    currentLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLevel", 84);
+    currentLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLevel", 1);
     currentLife = CCUserDefault::sharedUserDefault()->getIntegerForKey("currentLife", 5);
     crystalCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("crystalCount", 0);
     bombCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("bombCount", 0);
@@ -301,8 +297,9 @@ void Options::load()
     donutCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("donutCount", 0);
     lastTime = CCUserDefault::sharedUserDefault()->getFloatForKey("lastTime", 0);
     firstGame = CCUserDefault::sharedUserDefault()->getBoolForKey("firstGame", true);
-    hammerCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("hammerCount", 1);
+    hammerCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("hammerCount", 0);
     lastGameLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("lastGameLevel", 1);
+    launchCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("launchCount", 0);
     
     firstPayMove = CCUserDefault::sharedUserDefault()->getBoolForKey("payMove", true);
     firstPayLife = CCUserDefault::sharedUserDefault()->getBoolForKey("payLife", true);
@@ -622,6 +619,21 @@ void Options::load()
     
     levels[106].levelType = Ice;
     levels[106].targetScore = 50000;
+    
+    levels[107].levelType = Score;
+    levels[107].targetScore = 100;
+    
+    levels[108].levelType = Score;
+    levels[108].targetScore = 100;
+    
+    levels[109].levelType = Score;
+    levels[109].targetScore = 100;
+    
+    levels[110].levelType = Score;
+    levels[110].targetScore = 100;
+    
+    levels[111].levelType = Score;
+    levels[111].targetScore = 100;
 }
 
 void Options::save()
@@ -638,6 +650,8 @@ void Options::save()
     CCUserDefault::sharedUserDefault()->setIntegerForKey("firstGame", firstGame);
     CCUserDefault::sharedUserDefault()->setIntegerForKey("hammerCount", hammerCount);
     CCUserDefault::sharedUserDefault()->setIntegerForKey("lastGameLevel", lastGameLevel);
+    CCUserDefault::sharedUserDefault()->setIntegerForKey("launchCount", launchCount);
+
     
     CCUserDefault::sharedUserDefault()->setBoolForKey("payMove", firstPayMove);
     CCUserDefault::sharedUserDefault()->setBoolForKey("payLife", firstPayLife);

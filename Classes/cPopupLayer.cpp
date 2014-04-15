@@ -2,7 +2,7 @@
 #include "cGlobal.h"
 #include "Options.h"
 #include "SimpleAudioEngine.h"
-#include "MMPInterface.h"
+#include "nMMP.h"
 #include "IAP.h"
 
 using namespace cocos2d;
@@ -52,12 +52,12 @@ void PopupLayer::popup(char* title, char* text, char* buttonText, ePopupColor po
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_40);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_48);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
     plate->addChild(titleLabel);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_32);
-    textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/2.0f));
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_48);
+    textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(textLabel);
     
     CCMenuItemSprite* close = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/close.png"), CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(PopupLayer::closePopup));
@@ -90,9 +90,7 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
                        eBoosterPopupType typeBoo,
                        CCObject* npSelectorTarget, SEL_CallFuncN nselector,
                        CCObject* ncloseSelectorTarget, SEL_CallFuncN ncloseselector)
-{
-    Core::MMPInterface::Instance()->StoreOpened();
-    
+{        
     isPopup = true;
     pSelectorTarget = npSelectorTarget;
     selector = nselector;
@@ -123,7 +121,7 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_40);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_48);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
     plate->addChild(titleLabel);
     
@@ -152,7 +150,7 @@ void PopupLayer::popupBoosterInApp(char* title, char* text, ePopupColor popupCol
     boost->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/1.4f));
     plate->addChild(boost);
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_32);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_48);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/3.0f));
     plate->addChild(textLabel);
     
@@ -206,7 +204,7 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_40);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(title, FONT_COMMON, FONT_SIZE_48);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
     plate->addChild(titleLabel);
     
@@ -239,7 +237,7 @@ void PopupLayer::popupPost(char* title, char* text, char* buttonText, ePopupColo
     if (!IPAD)
         multiplier = 0.5f;
     
-    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_32);
+    CCLabelTTF* textLabel = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_48);
     textLabel->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().width/3.0f));
     plate->addChild(textLabel);
     
@@ -280,7 +278,7 @@ void PopupLayer::loading(char* closeLoading)
     menu->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(menu);
     
-    CCLabelTTF* titleLabel = CCLabelTTF::create(closeLoading, FONT_COMMON, FONT_SIZE_40);
+    CCLabelTTF* titleLabel = CCLabelTTF::create(closeLoading, FONT_COMMON, FONT_SIZE_48);
     titleLabel->setPosition(ccp(plate->getContentSize().width/2.0f, 9.0f*plate->getContentSize().height/10.0f));
 
     plate->addChild(titleLabel);
@@ -290,7 +288,7 @@ void PopupLayer::loading(char* closeLoading)
 
     boost->setPosition(ccp(plate->getContentSize().width/2.0f, plate->getContentSize().height/2.0f));
     plate->addChild(boost);
-    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(20.0f), CCCallFuncN::create(this, callfuncN_selector(PopupLayer::closeLoading))));
+    callAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(PopupLayer::closeLoading))));
     
     plate->runAction(CCMoveBy::create(0.2f, ccp(-WINSIZE.width, 0.0f)));
 }
@@ -299,6 +297,7 @@ void PopupLayer::closeLoading()
 {
     if (!plate)
         return;
+    this->stopAction(callAction);
     isPopup = false;
     background->setVisible(false);
     plate->removeFromParentAndCleanup(true);

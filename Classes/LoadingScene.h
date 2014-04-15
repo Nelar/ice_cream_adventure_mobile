@@ -40,6 +40,7 @@ private:
 
     CCSprite* background;
     int sizeMoreGames;
+    CCAction* action = NULL;
 };
 
 #endif

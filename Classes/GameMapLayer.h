@@ -25,14 +25,14 @@ public:
 
     virtual ~GameMapLayer();
     
-	virtual bool init(int nextLevel);
+	virtual bool init(int nextLevel, bool reinit);
 
-	static cocos2d::CCScene* scene(int nextLevel = -1);
+	static cocos2d::CCScene* scene(int nextLevel = -1, bool reinit = false);
 
 	void levelCallback(CCObject* pSender);
     void superLevelCallback(CCObject* pSender);
 	
-	static GameMapLayer* create(int nextLevel);
+	static GameMapLayer* create(int nextLevel, bool reinit);
 
 	void drawPoins(CCNode* sender);
     
@@ -62,11 +62,14 @@ public:
     
     void closeLoading();
     
+    void closeMessageBoard();
+    
 private:
 
     int nextLevelForSender = 0;
     void levelPicsDraw();
     void levelLabelsDraw();
+    void extraLevelsDraw();
 	vector<CCMenuItemSprite*> levelArray;
     
     PopupLayer* popupLayer;

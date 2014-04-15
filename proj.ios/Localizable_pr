@@ -9,9 +9,11 @@ HELP_1 = "Toque nas bolas de sorvete e\n mova-as deslizando. Combine três bolas
 HELP_2 = "Combine 4 ou 5 bolas de sorvetes\n em diferentes formações\n para gerar um sorvete especial!";
 HELP_3 = "Combine bolas de sorvete especial\n trocando-as de lugar uma com a\n outra para gerar um efeito adicional.";
 NEXT = "Próximo";
+CLOSE = "Close";
 GO = "Ir";
 RESTORE = "Recuperar";
 RESET = "Reiniciar";
+RESET_TEXT = "Todo o seu progresso atual será apagado!\n Tem certeza de que quer continuar?";
 ON = "Em";
 OFF = "Desligado";
 SETTING_FACEBOOK_TEXT = "Veja como seus amigos estão indo!\n Conectar-se ao Facebook";
@@ -33,8 +35,8 @@ SELECT_BOOSTER = "Selecionar reforços";
 FULL = "Cheia";
 GET_MORE_LIVES = "Ganhar mais vidas!";
 NO_MORE_LIVES = "Vidas esgotadas";
-ASK_FRIEND = "Peça a amigos!";
-MORE_LIVES = "Ganhar mais vidas"
+ASK_FRIEND = "Peça\n a amigos!";
+MORE_LIVES = "Ganhar\n mais vidas"
 TIME_NEXT_LIVE = "Tempo até a próxima vida";
 HIGH_SCORE = "Recorde";
 TARGET = "Alvo";
@@ -57,7 +59,7 @@ SWEET_PENGUIN = "Pinguins doces x3";
 SWEET_PENGUIN_TEXT = "Adiciona Pinguins doces à\n mistura de sorvete — eles\n eliminam três gelos quando você\n combina três bolas de sorvete!";
 ME = "Eu";
 SEE_HOW_YOUR_FRIEND = "Veja como seus amigos estão indo!";
-CHECK_ALL = "Selecionar tudo";
+CHECK_ALL = "Selecionar\n tudo";
 ACCEPT = "Aceitar";
 YOUR_MESSAGE = "Suas mensagens";
 YOUR_GOT_GIFT = "Você ganhou um presente! ";
@@ -121,11 +123,33 @@ TUTORIAL_10 = "Elimine todo o gelo\n fazendo combinações.";
 
 
 NETWORK_MESSAGE = "Sem conexão à internet.\n Tente novamente mais tarde";
-LOADING = "Loading";
+LOADING = "Loading...";
 
+END_LEVEL_TITLE ="Parabéns!";
+END_LEVEL_TEXT = "Você é um dos primeiros jogadores a completar\n todos os niveis!\n Curta nossa página no Facebook para ficar em dia\n com nossas últimas novidades!\n Assim que atingirmos 100.000 assinantes,\n vamos lançar uma nova atualização,\n na qual nossa equie já está trabalhando.";
 
+NEWS_BUTTON = "Compartilhe";
+SUBSCRIBE = "Curta nossa";
+UNLOCK_STAGE = "Desbloqueie níveis?";
+UNLOCK_STAGE_TEXT = "Go ahead and go to bypass?";
+UNLOCK_STAGE_BUTTON = "Bypass";
 
+UNLOCK_END = "Level unlocked";
+UNLOCK_END_TEXT = "You unlocked levels";
 
+POST_ON_WALL = "Post";
+POST_ON_WALL_TEXT = "Post on wall and get a bonus";
 
+INVITE_FRIENDS_TITLE = "Invite friends";
+INVITE_FRIENDS_TEXT = "Invite friends and get a bonus";
+INVITE_FRIENDS_BUTTON = "Invite";
 
+ICE_HAMMER = "Ice hammer x3";
+ICE_HAMMER_TEXT = "Remove ice cream by smashing\n it with the hammer.";
 
+BEGIN_POST = "Estou jogando um incrível jogo de arcade chamado Ice Cream Adventure! Junte-se a mim, é extremamente cativante!";
+UNLOCK_STAGE_POST = "Eu desbloqueei um novo nível em Ice Cream Adventure! Agora, tenho ainda mais aventuras e surpresas esperando por mim! Tente me alcançar!";
+HALF_WAY_POST = "Estou a um passo da vitória — completei o nível 5 do estágio 3! Acha que consegue chegar mais longe?";
+END_STAGE_POST = "Eu completei  e descobri um segredo deste mundo mágico de sorvete! Junte-se a mim no jogo — você não vai acreditar no que eu descobri!";
+
+ITUNES_CONNECTION_ERROR = "Erro de conexão com iTunes";

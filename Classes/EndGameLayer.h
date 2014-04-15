@@ -8,19 +8,22 @@
 #include "Options.h"
 #include "cPopupLayer.h"
 #include "cSocialMenu.h"
-#include "MMPInterface.h"
-#include "MMP/Banner.h"
 #include "utils.h"
 #include "MapMenuLayer.h"
 #include <spine/spine.h>
 #include <spine/spine-cocos2dx.h>
 
-using namespace Core;
-using namespace MarketingPlatform;
 using namespace std;
 using namespace cocos2d;
 
 using namespace extension;
+
+enum AfterLoadingType
+{
+    AfterLoadingTypeClose = 0,
+    AfterLoadingTypeNext,
+    AfterLoadingTypeLives
+};
 
 
 class EndGameLayer : public cocos2d::CCLayer
@@ -75,6 +78,8 @@ public:
     void nextAfterLoading(CCNode* node);
     void nextWithLivePanel(CCNode* node);
     void closeAfterLoading(CCNode* node);
+    
+    void afterGetScores();
 private:
     
     void explosionCallback(CCNode* sender);
@@ -144,6 +149,12 @@ private:
     CCLabelTTF* targetPopupTitle;
     
     CCLabelTTF* labelTTF;
+    
+    CCSprite* booster1Check = NULL;
+    CCSprite* booster2Check = NULL;
+    CCSprite* booster3Check = NULL;
+    
+    AfterLoadingType afterLoadingType;
 };
 
 #endif

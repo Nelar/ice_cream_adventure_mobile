@@ -9,13 +9,15 @@ HELP_1 = "Toca las bolas de helado y desplázalas\n deslizando el dedo. Alinea t
 HELP_2 = "¡Alinea cuatro o cinco bolas\n de helado de distintas formas\n para generar un helado especial!";
 HELP_3 = "Combina bolas de helado especial\n intercambiándolas de lugar\n para crear un efecto adicional.";
 NEXT = "Siguiente";
+CLOSE = "Close";
 GO = "Ir";
 RESTORE = "Restablecer";
 RESET = "Restablecer";
+RESET_TEXT = "¡Se eliminarán todos tus progresos actuales!\n ¿Seguro que quieres continuar?";
 ON = "Sí";
 OFF = "No";
 SETTING_FACEBOOK_TEXT = "¡Echa un vistazo a lo que hacen tus amigos!\n Conectarse a Facebook";
-SETTING_ASK_TEXT = "¿Tienes algún problema con la partida o no tienes\n clara la mecánica del juego?\n ¡Consulta las preguntas frecuentes!\n (Esto minimizará el juego y te llevará a un sitio web.)";
+SETTING_ASK_TEXT = "¿Tienes algún problema con la partida o no tienes\n clara la mecánica del juego?\n ¡Consulta las preguntas frecuentes!\n (Esto minimizará el juego\n y te llevará a un sitio web.)";
 SETTING_RESTORE_TEXT = "¿Has realizado una compra en el\n juego que no aparece?\n Prueba a restablecer las compras\n dentro de aplicaciones.";
 SETTING_RESET_TEXT = "Restablece todos tus progresos en el juego\n y vuelve a empezar desde el nivel 1.\n Se cerrará tu sesión de Facebook,\n pero tus progresos se restablecerán si\n vuelves a conectarte.";
 SETTING_NOTIF_TEXT = "Vidas máximas";
@@ -34,7 +36,7 @@ FULL = "Lleno";
 GET_MORE_LIVES = "Conseguir más vidas!";
 NO_MORE_LIVES = "Sin vidas";
 ASK_FRIEND = "¡Pídele esto\n tus amigos!!";
-MORE_LIVES = "Conseguir más vidas"
+MORE_LIVES = "Conseguir\n más vidas"
 TIME_NEXT_LIVE = "Tiempo hasta la próxima vida";
 HIGH_SCORE = "Récord";
 TARGET = "Objetivo";
@@ -57,7 +59,7 @@ SWEET_PENGUIN = "Pingüinos dulzones x3";
 SWEET_PENGUIN_TEXT = "Añade pingüinos dulzones a la\n mezcla de helados; ¡eliminan tres pedazos\n de hielo cuando alineas tres bolas!";
 ME = "Yo";
 SEE_HOW_YOUR_FRIEND = "¡Echa un vistazo a lo\n que hacen tus amigos!";
-CHECK_ALL = "Marcar todo";
+CHECK_ALL = "Marcar\n todo";
 ACCEPT = "Aceptar";
 YOUR_MESSAGE = "Tus mensajes";
 YOUR_GOT_GIFT = "¡Tienes un regalo!";
@@ -120,11 +122,33 @@ TUTORIAL_9 = "¡Intercambia de lugar la bola\n especial con cualquier otra\n bol
 TUTORIAL_10 = "Elimina todo el hielo\n haciendo combinaciones.";
 
 NETWORK_MESSAGE = "No hay conexión a internet.\n Vuelve a intentarlo más tarde";
-LOADING = "Loading";
+LOADING = "Loading...";
 
+END_LEVEL_TITLE ="¡Enhorabuena!";
+END_LEVEL_TEXT = "Eres uno de los primeros jugadores que han\n logrado superar todos los niveles.\nDale a "Me gusta" en nuestra página de Facebook para enterarte\n de todas nuestras novedades.\n ¡Además, en cuanto lleguemos a los 100 000 suscriptores,\n publicaremos la nueva actualización que estamos preparando!";
 
+NEWS_BUTTON = "Dale";
+SUBSCRIBE = "¡Comparte\n la noticia!";
+UNLOCK_STAGE = "Desbloquear los niveles?";
+UNLOCK_STAGE_TEXT = "Go ahead and go to bypass?";
+UNLOCK_STAGE_BUTTON = "Bypass";
 
+UNLOCK_END = "Level unlocked";
+UNLOCK_END_TEXT = "You unlocked levels";
 
+POST_ON_WALL = "Post";
+POST_ON_WALL_TEXT = "Post on wall and get a bonus";
 
+INVITE_FRIENDS_TITLE = "Invite friends";
+INVITE_FRIENDS_TEXT = "Invite friends and get a bonus";
+INVITE_FRIENDS_BUTTON = "Invite";
 
+ICE_HAMMER = "Ice hammer x3";
+ICE_HAMMER_TEXT = "Remove ice cream by smashing\n it with the hammer.";
 
+BEGIN_POST = "He estado jugando a un juego arcade chulísimo llamado Ice Cream Adventure. ¡Únete a mí, es muy adictivo!";
+UNLOCK_STAGE_POST = "¡He desbloqueado un nuevo nivel de Ice Cream Adventure! ¡En él me aguardan aún más aventuras y sorpresas! ¡Alcánzame si puedes!";
+HALF_WAY_POST = "Ya huelo la victoria... ¡Acabo de superar la fase 3 del nivel 5! ¿Crees que puedes llegar más lejos?";
+END_STAGE_POST = "¡He superado: y descubierto un secreto de este mágico mundo de helado! Únete a mí en el juego; ¡no te vas a creer lo que he descubierto!";
+
+ITUNES_CONNECTION_ERROR = "Error de conexión a iTunes";

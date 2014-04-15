@@ -1,4 +1,4 @@
-<Level background="7" targetScore="2000" width="8" height="9" type="bringDown" movesCount="40" colorNumber="5" bringDownCount="4">
+<Level background="4" targetScore="2000" width="8" height="9" type="bringDown" movesCount="40" colorNumber="5" bringDownCount="4">
   <c t="n"/>
   <c t="s"/>
   <c t="s"/>

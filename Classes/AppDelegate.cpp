@@ -8,19 +8,17 @@
 #include "GameMapLayer.h"
 #include "Options.h"
 #include "cGlobal.h"
-#include "MMPInterface.h"
 #include "utils.h"
 #include "AnalyticX.h"
 #include "IAP.h"
 #include "cFacebook.h"
+#include "nMMP.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
 using namespace CocosDenshion;
-using namespace MarketingPlatform;
-using namespace Core;
 
 
 USING_NS_CC;
@@ -124,24 +122,11 @@ bool AppDelegate::applicationDidFinishLaunching()
     // run
     pDirector->runWithScene(pScene);
     
-//    NSString *idfaString = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-//    MMPLib* mmp = new MMPLib("5f1e4b81492175dcef20d9d18a5d7014", [idfaString UTF8String]);
     AnalyticX::flurrySetAppVersion(version());
     AnalyticX::flurrySetDebugLogEnabled(true);
     AnalyticX::flurrySetSessionContinueSeconds(143);
     AnalyticX::flurrySetSecureTransportEnabled(false);
     AnalyticX::flurryStartSession("ZSFQWHCR6BVPZVZY9XFM");
-
-    string appKey = "5f1e4b81492175dcef20d9d18a5d7014";
-    string idfaKey = string(idfa());
-    
-    CCLOG("init serverProxy ");
-    _serverProxy = new AngryPets::GlobalWorld::Network::ServerProxy();
-    _serverProxy->Init();
-    
-    MMPInterface* mmp = new MMPInterface();
-    MMPInterface::Instance()->Init(appKey, idfaKey);
-    MMPInterface::Instance()->StartSession();
     
     vector<string> pi;
     pi.push_back("com.destiny.icecreamadventure.5lives");
@@ -278,26 +263,36 @@ void AppDelegate::provideContentForProductIdentifier(string productIdentifier)
     {
         int idx = 24;
         OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+        if (OptionsPtr->getCurrentLevel() < idx)
+            OptionsPtr->restoreCurrentLevel(idx);
     }
     else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack2")
     {
         int idx = 36;
         OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+        if (OptionsPtr->getCurrentLevel() < idx)
+            OptionsPtr->restoreCurrentLevel(idx);
     }
     else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack3")
     {
         int idx = 48;
         OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+        if (OptionsPtr->getCurrentLevel() < idx)
+            OptionsPtr->restoreCurrentLevel(idx);
     }
     else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack4")
     {
         int idx = 60;
         OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+        if (OptionsPtr->getCurrentLevel() < idx)
+            OptionsPtr->restoreCurrentLevel(idx);
     }
     else if(productIdentifier ==  "com.destiny.icecreamadventure.unlocklevelpack")
     {
         int idx = 72;
         OptionsPtr->setLevelData(idx, OptionsPtr->getLevelData(idx).countStar, OptionsPtr->getLevelData(idx).countScore, OptionsPtr->getLevelData(idx).levelType, false);
+        if (OptionsPtr->getCurrentLevel() < idx)
+            OptionsPtr->restoreCurrentLevel(idx);
     }
     OptionsPtr->save();
 }
@@ -309,7 +304,7 @@ void AppDelegate::applicationDidEnterBackground()
     CCDirector::sharedDirector()->pause();
 //    SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 //    SimpleAudioEngine::sharedEngine()->stopAllEffects();
-    MMPInterface::Instance()->EndSession();
+    MMPPtr->endedSession();
     AnalyticX::flurryEndSession();
     
     if (!OptionsPtr->isNotification())
@@ -396,7 +391,7 @@ void AppDelegate::applicationWillEnterForeground()
     SimpleAudioEngine::sharedEngine()->preloadEffect("sound/transformation.mp3");
     
     
-    MMPInterface::Instance()->StartSession();
+    MMPPtr->startSession();
     AnalyticX::flurryStartSession("ZSFQWHCR6BVPZVZY9XFM");
     
     CCTextureCache::reloadAllTextures();

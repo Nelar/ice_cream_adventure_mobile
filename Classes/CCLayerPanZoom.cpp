@@ -148,6 +148,8 @@ void CCLayerPanZoom::ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *
 
 void CCLayerPanZoom::ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent){
     bool multitouch = _touches->count() > 1;
+    if (_touches->data->num == 0)
+        return;
     if (multitouch)
     {
         // Get the two first touches
@@ -565,6 +567,23 @@ void CCLayerPanZoom::deaccelerateScale(float dt)
 }
 
 void CCLayerPanZoom::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent){
+    _singleTouchTimestamp = INFINITY;
+    zoomStart = false;
+    scrollStart = false;
+    scaleSub = 2.0f;
+    
+    // Process click event in single touch.
+    //ToDo add delegate
+    if (  (_touchDistance < _maxTouchDistanceToClick) /*&& (self.delegate) */
+        && (_touches->count() == 1))
+    {
+        CCTouch *touch = (CCTouch*)_touches->objectAtIndex(0);
+        CCPoint curPos = CCDirector::sharedDirector()->convertToGL(touch->getLocationInView());
+        //ToDo add delegate
+        /*[self.delegate layerPanZoom: self
+         clickedAtPoint: [self convertToNodeSpace: curPos]
+         tapCount: [touch tapCount]];*/
+    }
     
     CCTouch *pTouch;
     CCSetIterator setIter;
@@ -578,6 +597,80 @@ void CCLayerPanZoom::ccTouchesCancelled(cocos2d::CCSet *pTouches, cocos2d::CCEve
     {
         _touchDistance = 0.0f;
     }
+    
+    if (!lastScaling.empty())
+    {
+        float xDiff = 0.0f;
+        float idx = 0;
+        for (int i = lastScaling.size(); i >= 0; i--)
+        {
+            xDiff+=lastScaling[i];
+            idx++;
+            if (idx >= 5)
+                break;
+        }
+        xDiff/=idx;
+        
+        deaccelScale = xDiff;
+        lastScaling.clear();
+        
+        if (getScale() < minScale())
+        {
+            deaccelScale = 0.02f;
+            this->schedule(schedule_selector(CCLayerPanZoom::deaccelerateScaleRecoveryMin));
+            isMinMaxScaling = true;
+        }
+        else if (getScale() > maxScale())
+        {
+            deaccelScale = -0.04f;
+            this->schedule(schedule_selector(CCLayerPanZoom::deaccelerateScaleRecoveryMax));
+            isMinMaxScaling = true;
+        }
+    }
+    
+    if (!lastScrolling.empty() && !isMinMaxScaling)
+    {
+        float xDiff = 0.0f;
+        float yDiff = 0.0f;
+        float idx = 0;
+        for (int i = lastScrolling.size(); i >= 0; i--)
+        {
+            if (fabs(lastScrolling[i].x) > 1000.0f || fabs(lastScrolling[i].y) > 1000.0f)
+                continue;
+            xDiff+=lastScrolling[i].x;
+            yDiff+=lastScrolling[i].y;
+            idx++;
+            if (idx >= 5)
+                break;
+        }
+        xDiff/=idx;
+        yDiff/=idx;
+        
+        deaccelDiff = CCPoint(xDiff, yDiff);
+        lastScrolling.clear();
+        
+        this->schedule(schedule_selector(CCLayerPanZoom::deaccelerate));
+    }
+    
+    if (!_touches->count() && !_rubberEffectRecovering && !isMinMaxScaling)
+    {
+        _touches->removeAllObjects();
+        this->recoverPositionAndScale();
+    }
+    
+    
+    /*if (getScale() < minScale())
+     {
+     float deltaX = (realCurPosLayer.x - this->getAnchorPoint().x * this->getContentSize().width) * (minScale() - this->getScale());
+     float deltaY = (realCurPosLayer.y - this->getAnchorPoint().y * this->getContentSize().height) * (minScale() - this->getScale());
+     this->runAction(CCSpawn::createWithTwoActions(CCScaleTo::create(0.2f, minScale()), CCMoveTo::create(0.2f, ccp(this->getPosition().x - deltaX, this->getPosition().y - deltaY))));
+     }
+     else if (getScale() > maxScale())
+     {
+     float deltaX = (realCurPosLayer.x - this->getAnchorPoint().x * this->getContentSize().width) * (maxScale() - this->getScale());
+     float deltaY = (realCurPosLayer.y - this->getAnchorPoint().y * this->getContentSize().height) * (maxScale() - this->getScale());
+     this->runAction(CCSpawn::createWithTwoActions(CCScaleTo::create(0.2f, maxScale()), CCMoveTo::create(0.2f, ccp(this->getPosition().x - deltaX, this->getPosition().y - deltaY))));
+     }*/
 }
 
 
@@ -639,6 +732,9 @@ void CCLayerPanZoom::setPanBoundsRect(CCRect rect){
 
 bool CCLayerPanZoom::setSimplePosition(CCPoint  position)
 {
+    CCLOG("MAP POSITION x = %f  y = %f", position.x, position.y);
+    if (isnan(position.x) || isnan(position.y))
+        return true;
     CCNode::setPosition(position);
     return true;
 }
@@ -646,7 +742,12 @@ bool CCLayerPanZoom::setSimplePosition(CCPoint  position)
 bool CCLayerPanZoom::setPosition(CCPoint  position){
     CCPoint prevPosition = this->getPosition();
     //May be it wouldnot work
+    if (isnan(position.x) || isnan(position.y))
+        return true;
+    
     CCNode::setPosition(position);
+    
+    CCLOG("MAP POSITION x = %f  y = %f", position.x, position.y);
     
     bool result = false;
     if (!_panBoundsRect.equals(CCRectZero) && !_rubberEffectZooming)
@@ -709,7 +810,8 @@ bool CCLayerPanZoom::setPosition(CCPoint  position){
 }
 
 void CCLayerPanZoom::setScale(float scale){
-//    CCLayer::setScale( MIN(MAX(scale, _minScale), _maxScale));
+    if (isnan(scale))
+        return;
     CCLayer::setScale(scale);
 }
 

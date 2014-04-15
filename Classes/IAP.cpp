@@ -14,11 +14,13 @@
 
 #include "rapidjson/document.h"
 
-#include "MMPInterface.h"
 #include "Options.h"
+#include "nMMP.h"
 
-using namespace MarketingPlatform;
-using namespace Core;
+#include "cFacebook.h"
+#import "AppsFlyerTracker.h"
+#import <AdSupport/AdSupport.h>
+#include "cGlobal.h"
 
 //
 //Cocos2d object to catch responses
@@ -31,35 +33,24 @@ public:
 
 void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * response)
 {
-    std::vector<char> *buffer = response->getResponseData();   
+    std::vector<char> *buffer = response->getResponseData();
     std::string str = std::string(buffer->begin(), buffer->end());
+    if(response->getResponseData() == NULL)
+        return;
     
-    rapidjson::Document d;
-    d.Parse<0>(str.c_str());
-    
-    string code = d["code"].GetString();
-
-    if(code == "COMPLETED")
+    if(str.find("COMPLETED"))
     {
         string productIdentifier = response->getHttpRequest()->getTag();
         if(IAP::sharedInstance().provideContentForProductIdentifier)
         {
             IAP::sharedInstance().provideContentForProductIdentifier(productIdentifier);
         }
+        MMPPtr->purchaseMade(productIdentifier.c_str(), GlobalsPtr->currency, GlobalsPtr->price, true);
     }
-    else if(code == "CANCEL")
+    else
     {
-        //wrong params
-        //do nothing
-    }
-    else if(code == "WAIT")
-    {
-        //call again
-    }else if(code == "ERROR")
-    {
-        //do nothing
-    }else{
-        //strange
+        string productIdentifier = response->getHttpRequest()->getTag();
+        MMPPtr->purchaseMade(productIdentifier.c_str(), GlobalsPtr->currency, GlobalsPtr->price, false);
     }
 }
 
@@ -111,17 +102,25 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     
     if(product == nil)return;
     
-    string productIdentifier = [transaction.payment.productIdentifier UTF8String];
+    MMPPtr->purchaseConfirmed();
     
-    string url = "https://payments.ddestiny.ru/mobile/ios/";
+    string productIdentifier = [transaction.payment.productIdentifier UTF8String];
+    string do_test = "do_test";
+    
+    
+    string url = "https://payments.ddestiny.ru/mobile/ios/?";
     string currency  = [[product.priceLocale localeIdentifier] UTF8String];
     string packet    = [[[NSString alloc]initWithData:transaction.transactionReceipt encoding:NSUTF8StringEncoding] UTF8String];
     string base64packet = base64_encode(reinterpret_cast<const unsigned char*>(packet.c_str()), packet.length());
     string project   = "com.destinygroup.icecreamadventure";
     string password  = "tPRVWTFA0tCmD9pAh0h7WFXi3cDXBd3s";
+    
+    //    string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + do_test + ";" + password;
     string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + password;
     string md5signature = md5(signature);
+    //    string requestData = "project=" + project + "&test=" + do_test + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
     string requestData = "project=" + project + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
+    
     IAP::sharedInstance().validateReciept(url, requestData, productIdentifier);
     
     productIdentifier = [[product productIdentifier] UTF8String];
@@ -146,8 +145,41 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
         flagPay = true;
     
     string subCurrency = currency.substr(currency.find('=')+1, currency.size());
+    GlobalsPtr->currency = subCurrency;
+    GlobalsPtr->price = price;
     
-    Core::MMPInterface::Instance()->PurchaseMade(price, productIdentifier.c_str(), subCurrency, flagPay);
+    
+    NSString *currencyCode = [product.priceLocale objectForKey:NSLocaleCurrencyCode];
+    [AppsFlyerTracker sharedTracker].currencyCode = currencyCode;
+    
+    
+/*    bool shouldTrack = true;
+    if (shouldTrack)
+    {
+        NSString *eventName = @"purchase";        
+        if (nil != product)
+        {
+            NSString *currencyCode = [product.priceLocale objectForKey:NSLocaleCurrencyCode];
+            int quantity = transaction.payment.quantity;
+            float unitPrice = [product.price floatValue];
+            float revenue = unitPrice * quantity;
+            MATEventItem *eventItem = [MATEventItem eventItemWithName:product.localizedTitle unitPrice:unitPrice quantity:quantity revenue:revenue attribute1:@"attr1" attribute2:@"attr2" attribute3:@"attr3" attribute4:@"attr4" attribute5:@"attr5"];
+            NSArray *arrEventItems = @[ eventItem ];
+            float extraRevenue = 0;
+            
+            if (FacebookPtr->sessionIsOpened())
+                [MobileAppTracker setFacebookUserId:[NSString stringWithFormat:@"%llu", FacebookPtr->fbid]];
+            
+            [MobileAppTracker measureAction:eventName
+                                  eventItems:arrEventItems
+                                 referenceId:transaction.transactionIdentifier
+                               revenueAmount:extraRevenue
+                                currencyCode:currencyCode];
+            NSLog(@"Transaction event tracked: %@", eventName);
+        }
+    }*/
+
+    MMPPtr->purchaseConfirmed();
 }
 
 -(void)productsRecieved{
@@ -164,6 +196,7 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     {
         IAP::sharedInstance().cancelProductPayment();
     }
+    MMPPtr->purchaseCanceled();
 }
 
 -(void)dealloc
@@ -279,8 +312,6 @@ void IAP::requestProducts(){
          }
      }
      ];
-    
-
 }
 
 
@@ -295,6 +326,7 @@ void IAP::buyProduct(string productIdentifier)
         SKProduct * product = (SKProduct *)[listener.products objectAtIndex:i];
         if([_productIdentifier isEqualToString:product.productIdentifier]){
             [helper buyProduct:product];
+            MMPPtr->purchaseStarted();
             return;
         }
     }

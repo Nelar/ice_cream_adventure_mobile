@@ -9,9 +9,11 @@ HELP_1 = "Tocca le palline di gelato\n e trascinale con il tuo dito.\n Abbina 3 
 HELP_2 = "Abbina quattro o cinque\n gelati in formazioni\n diverse per creare un\n gelato speciale!";
 HELP_3 = "Combina palline di gelato\n speciali invertendole\n tra loro per ottenere\n un effetto aggiuntivo.";
 NEXT = "Avanti";
+CLOSE = "Close";
 GO = "Vai";
 RESTORE = "Ripristina";
 RESET = "Azzera";
+RESET_TEXT = "Tutti i tuoi progressi verranno cancellati!\n Vuoi davvero continuare?";
 ON = "On";
 OFF = "Off";
 SETTING_FACEBOOK_TEXT = "Guarda come se la passano i\n tuoi amici! Collegati a Facebook";
@@ -33,8 +35,8 @@ SELECT_BOOSTER = "Seleziona i bonus";
 FULL = "Completo";
 GET_MORE_LIVES = "Ottieni altre vite!";
 NO_MORE_LIVES = "Senza vite";
-ASK_FRIEND = "Chiedi ai tuoi amici!!";
-MORE_LIVES = "Ottieni altre vite"
+ASK_FRIEND = "Chiedi ai\n tuoi amici!!";
+MORE_LIVES = "Ottieni\n altre vite"
 TIME_NEXT_LIVE = "Tempo rimasto alla prossima vita";
 HIGH_SCORE = "Punteggio\n massimo";
 TARGET = "Obiettivo";
@@ -57,7 +59,7 @@ SWEET_PENGUIN = "Pinguini dolci x3";
 SWEET_PENGUIN_TEXT = "Aggiunge ai gusti di gelato i Pinguini\n dolci: quando combini tre palline\n rimuovono tre pezzi di ghiaccio!";
 ME = "Io";
 SEE_HOW_YOUR_FRIEND = "Guarda come se la\n passano i tuoi amici!!";
-CHECK_ALL = "Controlla tutti";
+CHECK_ALL = "Controlla\n tutti";
 ACCEPT = "Accetta";
 YOUR_MESSAGE = "I tuoi messaggi";
 YOUR_GOT_GIFT = "Hai ricevuto un regalo!";
@@ -121,10 +123,33 @@ TUTORIAL_10 = "Rimuovi tutto il\n ghiaccio abbinando le\n palline di gelato.";
 
 
 NETWORK_MESSAGE="Nessuna connessione a internet,\n per favore riprova più tardi";
-LOADING = "Loading";
+LOADING = "Loading...";
 
+END_LEVEL_TITLE ="Congratulazioni!";
+END_LEVEL_TEXT = "Sei uno dei primi giocatori ad avere completato\n tutti i livelli disponibili! Clicca "Mi piace" sulla nostra\n pagina di Facebook per ricevere tutte le ultime notizie!\n Appena raggiungeremo 100.000 iscritti\n rilasceremo un nuovo aggiornamento su cui\n stiamo già lavorando.";
 
+NEWS_BUTTON = "Condividi";
+SUBSCRIBE = "Mi piace";
+UNLOCK_STAGE = "Sblocca livelli?";
+UNLOCK_STAGE_TEXT = "Go ahead and go to bypass?";
+UNLOCK_STAGE_BUTTON = "Bypass";
 
+UNLOCK_END = "Level unlocked";
+UNLOCK_END_TEXT = "You unlocked levels";
 
+POST_ON_WALL = "Post";
+POST_ON_WALL_TEXT = "Post on wall and get a bonus";
 
+INVITE_FRIENDS_TITLE = "Invite friends";
+INVITE_FRIENDS_TEXT = "Invite friends and get a bonus";
+INVITE_FRIENDS_BUTTON = "Invite";
 
+ICE_HAMMER = "Ice hammer x3";
+ICE_HAMMER_TEXT = "Remove ice cream by smashing\n it with the hammer.";
+
+BEGIN_POST = "Ho giocato a un magnifico gioco arcade chiamato Ice Cream Adventure! Unisciti a me, è incredibilmente avvincente!";
+UNLOCK_STAGE_POST = "Ho sbloccato un nuovo livello su Ice Cream Adventure! Ancora più avventure e sorprese mi attendono! Raggiungimi quando puoi!";
+HALF_WAY_POST = "Sono a metà strada, ho appena completato il livello 5, parte 3! Credi di riuscire ad arrivare più avanti?";
+END_STAGE_POST = "Ho completato e ho scoperto un segreto di questo magico mondo di gelati! Vieni a giocare con me: non crederai a quello che ho scoperto!";
+
+ITUNES_CONNECTION_ERROR = "errore nel collegamento a iTunes";

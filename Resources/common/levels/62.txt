@@ -1,4 +1,4 @@
-<Level background="1" targetScore="25000" secondStar = "35000" thirdStar = "45000" width="9" height="9" type="bringDown" movesCount="50" colorNumber="6" bringDownCount="4">
+<Level background="6" targetScore="15000" secondStar = "20000" thirdStar = "25000" width="9" height="9" type="bringDown" movesCount="50" colorNumber="6" bringDownCount="4">
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>

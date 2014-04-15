@@ -1,4 +1,4 @@
-<Level background="5" targetScore="10000" width="9" height="9" type="ice" movesCount="40" colorNumber="5">
+<Level background="3" targetScore="10000" width="9" height="9" type="ice" movesCount="40" colorNumber="5">
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>

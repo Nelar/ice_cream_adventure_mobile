@@ -9,9 +9,11 @@ HELP_1 = "Touche les boules de glace et\n déplace-les en balayant l'écran.\n R
 HELP_2 = "Forme diverses combinaisons en\n regroupant quatre ou cinq boules\n de glace identiques et tu\n créeras une méga glace !";
 HELP_3 = "Mélange les boules de méga glace\n entre elles pour créer un\n effet qui va t'en faire\n voir de toutes les couleurs !";
 NEXT = "Suivant";
+CLOSE = "Close";
 GO = "Accéder";
 RESTORE = "Rétablir";
 RESET = "Réinitialiser";
+RESET_TEXT = "Toute ta progression en cours sera effacée!\n Veux-tu vraiment continuer ?";
 ON = "Oui";
 OFF = "Non";
 SETTING_FACEBOOK_TEXT = "Regarde un peu comment\n tes amis se débrouillent !\n Connecte-toi à Facebook";
@@ -33,8 +35,8 @@ SELECT_BOOSTER = "Sélectionner des boosts";
 FULL = "Plein";
 GET_MORE_LIVES = "Obtiens plus de vies!";
 NO_MORE_LIVES = "Plus aucune vie";
-ASK_FRIEND = "Demande à tes amis!";
-MORE_LIVES = "Obtiens plus de vies";
+ASK_FRIEND = "Demande à\n tes amis!";
+MORE_LIVES = "Obtiens plus\n de vies";
 TIME_NEXT_LIVE = "Durée avant la prochaine vie";
 HIGH_SCORE = "Meilleurs scores";
 TARGET = "Cible";
@@ -57,7 +59,7 @@ SWEET_PENGUIN = "Pingouins sucrés x3";
 SWEET_PENGUIN_TEXT = "Permet d'ajouter des pingouins sucrés\n dans le mélange glacé\n (trois morceaux de glace seront alors éliminés\n lorsque tu regrouperas trois boules identiques).";
 ME = "Moi";
 SEE_HOW_YOUR_FRIEND = "Regarde un peu comment \ntes amis se débrouillent !";
-CHECK_ALL = "Tout cocher";
+CHECK_ALL = "Tout\n cocher";
 ACCEPT = "Accepter";
 YOUR_MESSAGE = "Tes messages";
 YOUR_GOT_GIFT = "Tu as reçu une vie de la part de ";
@@ -121,8 +123,33 @@ TUTORIAL_10 = "Élimine toute la glace\n en réalisant des\n combinaisons !";
 
 
 NETWORK_MESSAGE = "Aucune connexion Internet.\n Veuillez réessayer ultérieurement";
-LOADING = "Loading";
+LOADING = "Loading...";
 
+END_LEVEL_TITLE ="Félicitations!";
+END_LEVEL_TEXT = "Vous êtes l'un des premiers joueurs à avoir\n terminé tous les niveaux disponibles! Likez notre page\n Facebook pour rester au top de notre actualité!\n Dès que nous aurons atteint les 100000 abonnés,\n nous lancerons une nouvelle mise à jour sur laquelle\n notre équipe travaille d’ores et déjà\n d'arrache-pied.;
 
+NEWS_BUTTON = "Partager";
+SUBSCRIBE = "Likez";
+UNLOCK_STAGE = "Débloquer des niveaux?";
+UNLOCK_STAGE_TEXT = "Go ahead and go to bypass?";
+UNLOCK_STAGE_BUTTON = "Bypass";
 
+UNLOCK_END = "Level unlocked";
+UNLOCK_END_TEXT = "You unlocked levels";
 
+POST_ON_WALL = "Post";
+POST_ON_WALL_TEXT = "Post on wall and get a bonus";
+
+INVITE_FRIENDS_TITLE = "Invite friends";
+INVITE_FRIENDS_TEXT = "Invite friends and get a bonus";
+INVITE_FRIENDS_BUTTON = "Invite";
+
+ICE_HAMMER = "Ice hammer x3";
+ICE_HAMMER_TEXT = "Remove ice cream by smashing\n it with the hammer.";
+
+BEGIN_POST = "J'ai découvert Ice Cream Adventure ! Viens jouer avec moi, ce jeu d'arcade génialissime rend carrément accro !";
+UNLOCK_STAGE_POST = "J'ai débloqué un nouveau niveau à Ice Cream Adventure ! De nouvelles aventures et de merveilleuses surprises m'attendent dans ce super jeu ! Essaye de me rattraper si tu y arrives !";
+HALF_WAY_POST = "Je touche au but ! J'ai terminé le 5e niveau du 3e stage ! Tu penses pouvoir aller plus loin ?";
+END_STAGE_POST = "En terminant le niveau "%level name%", j'ai découvert un incroyable secret enfoui au plus profond du monde des glaces ! Rejoins-moi et tu n'en croiras pas tes yeux !";
+
+ITUNES_CONNECTION_ERROR = "Erreur de connexion iTunes";

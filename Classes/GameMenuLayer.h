@@ -109,6 +109,7 @@ public:
 	int currentScore;
     
     void closeLoading();
+    bool isDialog = false;
 private:
     
     void playOnCallback(CCObject* pSender);
@@ -177,7 +178,7 @@ private:
     
     int beginTime;
     
-    int isDialog = false;
+    
     
     CCSprite* upBack;
     CCSprite* downBack;

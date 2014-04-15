@@ -43,6 +43,7 @@ public:
     ~cFacebook(){};
     
     void login();
+    void logout();
     void loginWithInvite();
     void getUserData();
     string& getAvatar();
@@ -78,9 +79,10 @@ public:
     
     bool beginGamePost();
     bool endTutorial();
-    bool unlockStage();
+    bool unlockStage(int stage);
     bool jubileePost();
     bool endStage(string stage);
+    bool endGame();
     
     void askLife(string fromId);
     vector<int> myScores;

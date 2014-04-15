@@ -3,7 +3,6 @@
 
 #include "cocos2d.h"
 #include <string>
-#include "MMP/Network/GameServer/ServerProxy.h"
 
 using namespace std;
 
@@ -45,8 +44,6 @@ public:
     
     float prevWidth;
     float prevHeight;
-    
-    AngryPets::GlobalWorld::Network::ServerProxy*  _serverProxy;
 };
 
 #endif  // __APP_DELEGATE_H__

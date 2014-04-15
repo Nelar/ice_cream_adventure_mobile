@@ -55,6 +55,10 @@ public:
     
     bool isInvite = false;
 
+    bool isSetting;
+    
+    void hideMenu();
+    bool buttonIsSelected();
 private:
 
 	bool islock;
@@ -70,7 +74,7 @@ private:
 
 	CCSprite* settingBlob;
 
-	bool isSetting;
+	
 	CCMenu* menu;
 
 	CCSprite* tutorialPopup;

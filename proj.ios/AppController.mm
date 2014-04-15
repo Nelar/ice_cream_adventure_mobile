@@ -17,8 +17,10 @@
 #include "SimpleAudioEngine.h"
 //#include "GAI.h"
 #import <Parse/Parse.h>
-
 #import <Tapjoy/Tapjoy.h>
+#import "AppsFlyerTracker.h"
+#import <AdSupport/AdSupport.h>
+
 using namespace CocosDenshion;
 
 @implementation AppController
@@ -128,7 +130,20 @@ static AppDelegate s_sharedApplication;
         int a = 0;
     }
     
+    // Replace App_ID & Dev_Key with your values
+    // App_ID = Your iTunes App ID, e.g. 34320065
+    // Dev_Key = Your unique developer ID, which is accessible from your account, e.g. R5AKpQjiER6LzSQ6iX
+    // For example:
+    
+    [AppsFlyerTracker sharedTracker].appsFlyerDevKey = @"YJq3qzRGdkR6ZQZHmkozQn";
+    [AppsFlyerTracker sharedTracker].appleAppID = @"705058125";
+    
     return YES;
+}
+
+- (void) onConversionDataRequestFailure:(NSError *)error
+{
+    int a;
 }
 
 - (BOOL) checkAppUsageTrigger {
@@ -225,6 +240,7 @@ static AppDelegate s_sharedApplication;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [[AppsFlyerTracker sharedTracker] trackAppLaunch];
     [FBAppCall handleDidBecomeActive];
     
     cocos2d::CCDirector::sharedDirector()->resume();
@@ -246,6 +262,7 @@ static AppDelegate s_sharedApplication;
     [push sendPushInBackground];
 
     */
+    
     cocos2d::CCApplication::sharedApplication()->applicationDidEnterBackground();
     SimpleAudioEngine::sharedEngine()->pauseAllEffects();
 }

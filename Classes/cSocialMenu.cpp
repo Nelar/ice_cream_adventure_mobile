@@ -115,7 +115,7 @@ CCLayerColor* SocialLayer::createUserNode(int place, string avatarFileName, stri
 //    sendFriend->setScale(multiplier);
     sendFriend->setTag(place - 1);
     
-    if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus())
+    if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus() || !OptionsPtr->isFacebookConnection())
     {
         sendFriend->setVisible(false);
     }
@@ -382,7 +382,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
         }
     }
     
-    if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus())
+    if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus() || !OptionsPtr->isFacebookConnection())
     {
         me->setVisible(false);
         numOne->setVisible(false);
@@ -430,7 +430,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
     users.clear();
     
     ScoreboardCell meUser;
-    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus() && OptionsPtr->isFacebookConnection())
     {
         meUser.score = OptionsPtr->getLevelData(level).countScore;
         char buf[255];
@@ -482,7 +482,7 @@ CCNode* SocialLayer::createScoreLayer(int level)
             userPosition = i + 1;
             str = FacebookPtr->getAvatar();
         }
-        if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus())
+        if (!FacebookPtr->sessionIsOpened() || !getNetworkStatus() || !OptionsPtr->isFacebookConnection())
         {
             str = "user.png";
         }
@@ -496,6 +496,12 @@ CCNode* SocialLayer::createScoreLayer(int level)
         {
             node->setPosition(ccp(userNodeSize*i, 0.0f));
         }
+    }
+    
+    if (countUserIsScoreboard < 4)
+    {
+        me->setVisible(false);
+        numOne->setVisible(false);
     }
 
     
@@ -684,10 +690,9 @@ CCNode* SocialLayer::createMessageboard()
     greyBack->addChild(scrollMessage, 3);
     
     
-    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("YOUR_MESSAGE", NULL), FONT_COMMON, FONT_SIZE_48);
+    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("YOUR_MESSAGE", NULL), FONT_COMMON, FONT_SIZE_64);
     layer->addChild(highScoreLabel, 3);
     highScoreLabel->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height*0.9f));
-    highScoreLabel->setScale(multiplier);
     highScoreLabel->setColor(color);
     
     CCMenu* cmenu = CCMenu::create();
@@ -702,11 +707,11 @@ CCNode* SocialLayer::createMessageboard()
     
     checkAll = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::checkCallback));
     
-    labelTTF = CCLabelTTF::create(CCLocalizedString("CHECK_ALL", NULL), FONT_COMMON, FONT_SIZE_32);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CHECK_ALL", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     checkAll->addChild(labelTTF);
-    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.75f, labelTTF->getParent()->getContentSize().height/2.0f));
     
     
     cmenu->addChild(checkAll);
@@ -763,17 +768,19 @@ CCNode* SocialLayer::createMessageboard()
 
     scrollMessage->setContainer(container);
     
+    if (IPHONE_4 || IPHONE_5)
+        layer->setScale(0.87f);
     return layer;
 }
 
 void SocialLayer::closeMessageboardCallback(CCObject* pSender)
 {
+    hideMessageboard();
     if (GlobalsPtr->iceCreamScene == Map)
     {
         GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
-        layer->showMessageBoard();
+        layer->closeMessageBoard();
     }
-    hideMessageboard();
 }
 
 CCNode* SocialLayer::createMessage(string fromId, string from, NotificationType notif, int idxRequest)
@@ -822,7 +829,7 @@ CCNode* SocialLayer::createMessage(string fromId, string from, NotificationType 
     else if (notif == HELP_ME)
         sprintf(buf, "%s \n %s %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
     
-    CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_32);
+    CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_40);
     ccColor3B color;
     color.r = 0xba;
 	color.g = 0x29;

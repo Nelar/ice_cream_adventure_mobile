@@ -55,7 +55,6 @@ public:
     void validationServerResponse(HttpClient * client, HttpResponse * response);
     
     ~IAP();
-    
 private:
     IAP();              
     IAP(IAP const&);

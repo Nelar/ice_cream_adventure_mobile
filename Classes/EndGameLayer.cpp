@@ -2,7 +2,6 @@
 #include "MainMenuScene.h"
 #include "GameScene.h"
 #include "cGlobal.h"
-#include "MMPInterface.h"
 #include "IAP.h"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
@@ -12,16 +11,11 @@
 #include "GameMapLayer.h"
 #include "cComixScene.h"
 
-#include "MMPInterface.h"
-#include "MMP/Banner.h"
 #include "utils.h"
 
 #include "SimpleAudioEngine.h"
 
 using namespace CocosDenshion;
-
-using namespace Core;
-using namespace MarketingPlatform;
 
 using namespace cocos2d;
 using namespace extension;
@@ -40,20 +34,11 @@ bool EndGameLayer::init()
 	if (!CCLayer::init())
 		return false;
     
-    if (LANDSCAPE)
-    {
-        if (WINSIZE.height == 640)
-            this->setScale(0.88f);
-        else
-            this->setScale(1.0f);
-    }
+
+    if (IPHONE_4 || IPHONE_5)
+        this->setScale(0.88f);
     else
-    {
-        if (WINSIZE.width == 640)
-            this->setScale(0.88f);
-        else
-            this->setScale(1.0f);
-    }
+        this->setScale(1.0f);
     
 	menu = CCMenu::create();
 	this->addChild(menu, 12);
@@ -299,7 +284,7 @@ void EndGameLayer::changeOrientation()
     
     if (LANDSCAPE)
     {
-        popup->setPosition(ccp(popup->getContentSize().width/2.0f, WINSIZE.height/2.0f));
+        popup->setPosition(ccp(popup->getContentSize().width/2.0f, WINSIZE.height/2.0f));        
     }
     else
     {
@@ -349,6 +334,20 @@ void EndGameLayer::changeOrientation()
             help->setPosition(play->getPositionX() - play->getContentSize().width, play->getPositionY());
         if (helpModal)
             helpModal->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, CCDirector::sharedDirector()->getWinSize().height/1.5f));
+    }
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            this->setScale(0.88f);
+            social->setScale(1.0f);
+        }
+        else
+        {
+            this->setScale(0.8f);
+            social->setScale(0.91f);
+        }
     }
 }
 
@@ -437,6 +436,7 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     {
         levelTitle->setString(CCLocalizedString("EXTRA_LEVEL", NULL));
         levelTitle->setFontSize(FONT_SIZE_48);
+        close->setVisible(false);
     }
 
 	levelTitle->setPosition(ccp(levelTitle->getParent()->getContentSize().width/2.0f, levelTitle->getParent()->getContentSize().height/1.1f));
@@ -445,7 +445,7 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     
     if (typeLevel == Ice)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/iceStudy.png"), CCSprite::createWithSpriteFrameName("common/iceStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/iceStudy.png"), CCSprite::createWithSpriteFrameName("common/iceStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/iceStudyModal.png");
         
         CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
@@ -465,7 +465,7 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     }
     else if (typeLevel == Score)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/scoreStudy.png"), CCSprite::createWithSpriteFrameName("common/scoreStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/scoreStudy.png"), CCSprite::createWithSpriteFrameName("common/scoreStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/scoreStudyModal.png");
         
         CCLabelTTF* helpLabel = CCLabelTTF::create("15", FONT_COMMON, FONT_SIZE_64);
@@ -495,7 +495,7 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     }
     else if (typeLevel == BringDown)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/bringStudy.png"), CCSprite::createWithSpriteFrameName("common/bringStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/bringStudy.png"), CCSprite::createWithSpriteFrameName("common/bringStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/bringStudyModal.png");
         
         CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
@@ -515,7 +515,7 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     }
     else if (typeLevel == Time)
     {
-        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/timeStudy.png"), CCSprite::createWithSpriteFrameName("common/timeStudyDown.png"), this, menu_selector(MapMenuLayer::helpModalCallback));
+        help = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/timeStudy.png"), CCSprite::createWithSpriteFrameName("common/timeStudyDown.png"), this, menu_selector(EndGameLayer::helpModalCallback));
         helpModal = CCSprite::createWithSpriteFrameName("common/timeStudyModal.png");
         
         CCLabelTTF* titlehelp = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
@@ -587,12 +587,12 @@ void EndGameLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     booster_3->setScale(0.7f);
 	booster_3->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
-    if (typeLevel == Score)
-        booster_3->setVisible(false);
-        
     help->stopAllActions();
     help->setScale(0.7f);
 	help->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    if (typeLevel == Score)
+        booster_3->setVisible(false);
 }
 
 void EndGameLayer::postOnWall(CCNode* pSender)
@@ -603,19 +603,17 @@ void EndGameLayer::postOnWall(CCNode* pSender)
         {
             if (currentLevel == 6)
             {
-                if (!OptionsPtr->getTutorialPost())
+                if (!OptionsPtr->getTutorialPost() && FacebookPtr->sessionIsOpened())
                 {
-                    popaplayer->popupPost("Post on wall", "Post on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
-                                          this, callfuncN_selector(EndGameLayer::endTutorial), this, callfuncN_selector(EndGameLayer::unclockMenu));
+                    popaplayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::endTutorial), this, callfuncN_selector(EndGameLayer::unclockMenu));
                     menu->setEnabled(false);
                 }
             }
         }
         
-        if (!(currentLevel%12))
+        if (!(currentLevel%12) && FacebookPtr->sessionIsOpened())
         {
-            popaplayer->popupPost("Post on wall", "Post on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
-                                  this, callfuncN_selector(EndGameLayer::endStage), this, callfuncN_selector(EndGameLayer::unclockMenu));
+            popaplayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot, this, callfuncN_selector(EndGameLayer::endStage), this, callfuncN_selector(EndGameLayer::unclockMenu));
             menu->setEnabled(false);
         }
     }
@@ -659,9 +657,9 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
     
     if (currentLevel == OptionsPtr->getCurrentLevel())
     {
+        FacebookPtr->completeLevel(currentLevel);
         if (currentLevel == 2 || currentLevel == 3 || currentLevel == 4 || currentLevel == 6)
         {
-            FacebookPtr->completeLevel(currentLevel);
             if (currentLevel == 6)
             {
                 FacebookPtr->completeTutorial(" ");
@@ -838,23 +836,51 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
 	levelTitle->setString(buf);
     if (currentLevel > 105)
     {
-        levelTitle->setString(CCLocalizedString("LEVEL"));
+        levelTitle->setString(CCLocalizedString("EXTRA_LEVEL", NULL));
         levelTitle->setFontSize(FONT_SIZE_48);
+        close->setOpacity(0);
+        close->setEnabled(false);
     }
 	levelTitle->setPosition(ccp(levelTitle->getParent()->getContentSize().width/2.0f, levelTitle->getParent()->getContentSize().height/1.1f));
     
     if (currentLevel == 106 && OptionsPtr->getCurrentLevel() < 35)
         OptionsPtr->setCurrentLevel(35);
+    else if (currentLevel == 107)
+        OptionsPtr->setLevelData(24, OptionsPtr->getLevelData(24).countStar, OptionsPtr->getLevelData(24).countScore, OptionsPtr->getLevelData(24).levelType, false);
+    else if (currentLevel == 108)
+        OptionsPtr->setLevelData(36, OptionsPtr->getLevelData(36).countStar, OptionsPtr->getLevelData(36).countScore, OptionsPtr->getLevelData(36).levelType, false);
+    else if (currentLevel == 109)
+        OptionsPtr->setLevelData(48, OptionsPtr->getLevelData(48).countStar, OptionsPtr->getLevelData(48).countScore, OptionsPtr->getLevelData(48).levelType, false);
+    else if (currentLevel == 110)
+        OptionsPtr->setLevelData(60, OptionsPtr->getLevelData(60).countStar, OptionsPtr->getLevelData(60).countScore, OptionsPtr->getLevelData(60).levelType, false);
+    else if (currentLevel == 111)
+        OptionsPtr->setLevelData(72, OptionsPtr->getLevelData(72).countStar, OptionsPtr->getLevelData(72).countScore, OptionsPtr->getLevelData(72).levelType, false);
 	else if (currentLevel == OptionsPtr->getCurrentLevel())
 		OptionsPtr->setCurrentLevel(currentLevel + 1);
     
-	int cStar = OptionsPtr->getLevelData(currentLevel - 1).countStar;
-	int cScore = OptionsPtr->getLevelData(currentLevel - 1).countScore;
+	int cStar;
+	int cScore;;
+    if (currentLevel > 105)
+    {
+        cStar = OptionsPtr->getLevelData(currentLevel).countStar;
+        cScore = OptionsPtr->getLevelData(currentLevel).countScore;
+    }
+    else
+    {
+        cStar = OptionsPtr->getLevelData(currentLevel - 1).countStar;
+        cScore = OptionsPtr->getLevelData(currentLevel - 1).countScore;
+    }
+        
 	if (cStar < countStart)
 		cStar = countStart;
 	if (cScore < countScore)
 		cScore = countScore;
-	OptionsPtr->setLevelData(currentLevel - 1, cStar, cScore, OptionsPtr->getLevelData(currentLevel - 1).levelType);
+    
+    if (currentLevel > 105)
+        OptionsPtr->setLevelData(currentLevel, cStar, cScore, OptionsPtr->getLevelData(currentLevel).levelType);
+    else
+        OptionsPtr->setLevelData(currentLevel - 1, cStar, cScore, OptionsPtr->getLevelData(currentLevel - 1).levelType);
+    
 	OptionsPtr->save();
     
     retry->stopAllActions();
@@ -1002,6 +1028,7 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
     if (currentLevel > 105)
     {
         levelTitle->setString(CCLocalizedString("EXTRA_LEVEL"));
+        levelTitle->setFontSize(FONT_SIZE_48);
     }
     
 	levelTitle->setPosition(ccp(levelTitle->getParent()->getContentSize().width/2.0f, levelTitle->getParent()->getContentSize().height/1.1f));
@@ -1021,6 +1048,7 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
 void EndGameLayer::closeLoading()
 {
     popaplayer->closeLoading();
+    menu->setEnabled(true);
 }
 
 void EndGameLayer::updateBoosters()
@@ -1028,11 +1056,29 @@ void EndGameLayer::updateBoosters()
     char buf[255];
     
     if (boosterPlus_1)
-        boosterPlus_1->removeAllChildrenWithCleanup(true);
+    {
+        for (int i = 0; i > boosterPlus_1->getChildrenCount(); i++)
+        {
+            if (((CCSprite*)boosterPlus_1->getChildren()->objectAtIndex(i)) != booster1Check)
+                ((CCNode*)boosterPlus_1->getChildren()->objectAtIndex(i))->removeFromParentAndCleanup(true);
+        }
+    }
     if (boosterPlus_2)
-        boosterPlus_2->removeAllChildrenWithCleanup(true);
+    {
+        for (int i = 0; i > boosterPlus_2->getChildrenCount(); i++)
+        {
+            if (((CCSprite*)boosterPlus_2->getChildren()->objectAtIndex(i)) != booster2Check)
+                ((CCNode*)boosterPlus_2->getChildren()->objectAtIndex(i))->removeFromParentAndCleanup(true);
+        }
+    }
     if (boosterPlus_3)
-        boosterPlus_3->removeAllChildrenWithCleanup(true);
+    {
+        for (int i = 0; i > boosterPlus_3->getChildrenCount(); i++)
+        {
+            if (((CCSprite*)boosterPlus_3->getChildren()->objectAtIndex(i)) != booster3Check)
+                ((CCNode*)boosterPlus_3->getChildren()->objectAtIndex(i))->removeFromParentAndCleanup(true);
+        }
+    }
     
     if (firstBooster == BoosterCrystal)
 	{
@@ -1047,7 +1093,7 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_1->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             label->setColor(ccWHITE);
             
             boosterPlus_1->addChild(label);
@@ -1057,108 +1103,10 @@ void EndGameLayer::updateBoosters()
         {
             boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
         }
-	}
-	else if (firstBooster == BoosterBomb)
-	{
-        booster_1->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
-        booster->setScale(0.8f);
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_1->addChild(booster);
-        
-        if (OptionsPtr->getBombCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_1->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_1->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (firstBooster == BoosterFish)
-	{
-        booster_1->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_1->addChild(booster);
-        
-        if (OptionsPtr->getFishCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_1->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            
-            boosterPlus_1->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-    else if (firstBooster == BoosterDonut)
-	{
-        booster_1->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_1->addChild(booster);
-        
-        if (OptionsPtr->getDonutCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_1->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            
-            boosterPlus_1->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else
-	{
-		booster_1->setVisible(false);
 	}
     
-	if (secondBooster == BoosterCrystal)
-	{
-        booster_2->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_2->addChild(booster);
-        
-        if (OptionsPtr->getCrystalCOunt() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("gameMap/boosterBack.png");
-            boosterPlus_2->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_2->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (secondBooster == BoosterBomb)
+    
+	if (secondBooster == BoosterBomb)
 	{
         booster_2->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
@@ -1171,9 +1119,8 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_2->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             label->setColor(ccWHITE);
-            
             boosterPlus_2->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
         }
@@ -1181,105 +1128,9 @@ void EndGameLayer::updateBoosters()
         {
             boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
         }
-	}
-	else if (secondBooster == BoosterFish)
-	{
-        booster_2->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_2->addChild(booster);
-        
-        if (OptionsPtr->getFishCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_2->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_2->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-    else if (secondBooster == BoosterDonut)
-	{
-        booster_2->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_2->addChild(booster);
-        
-        if (OptionsPtr->getDonutCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_2->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_2->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else
-	{
-		booster_2->setVisible(false);
 	}
     
-	if (thirdBooster == BoosterCrystal)
-	{
-        booster_3->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_3->addChild(booster);
-        
-        if (OptionsPtr->getCrystalCOunt() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_3->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_3->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (thirdBooster == BoosterBomb)
-	{
-        booster_3->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_3->addChild(booster);
-        
-        if (OptionsPtr->getBombCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_3->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_3->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (thirdBooster == BoosterFish)
+    if (thirdBooster == BoosterFish)
 	{
         booster_3->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
@@ -1292,7 +1143,7 @@ void EndGameLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_3->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             label->setColor(ccWHITE);
             
             boosterPlus_3->addChild(label);
@@ -1302,33 +1153,6 @@ void EndGameLayer::updateBoosters()
         {
             boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
         }
-	}
-    else if (thirdBooster == BoosterDonut)
-	{
-        booster_3->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_3->addChild(booster);
-        
-        if (OptionsPtr->getDonutCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_3->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_3->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else
-	{
-		booster_3->setVisible(false);
 	}
     
     OptionsPtr->save();
@@ -1389,9 +1213,9 @@ void EndGameLayer::closeCallback(CCObject* pSender)
         sprite->setScale(1.2f);
     }
     
-    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
+    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
-    this->addChild(labelLoad);
+    this->addChild(labelLoad, 1001);
     sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     this->addChild(sprite, 1000);
     sprite->setVisible(false);
@@ -1400,7 +1224,31 @@ void EndGameLayer::closeCallback(CCObject* pSender)
     labelLoad->setVisible(false);
     labelLoad->setOpacity(0);
     labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
-    this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::closeAfterLoading)), NULL));
+    afterLoadingType = AfterLoadingTypeClose;
+    
+    if (getNetworkStatus() && FacebookPtr->sessionIsOpened() && OptionsPtr->isFacebookConnection())
+    {
+        GlobalsPtr->isLoadMap = true;
+        FacebookPtr->getScores();
+    }
+    else
+        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::closeAfterLoading)), NULL));
+}
+
+void EndGameLayer::afterGetScores()
+{
+    if (afterLoadingType ==  AfterLoadingTypeClose)
+    {
+        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::closeAfterLoading)), NULL));
+    }
+    else if (afterLoadingType ==AfterLoadingTypeNext)
+    {
+        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextAfterLoading)), NULL));
+    }
+    else if (afterLoadingType == AfterLoadingTypeLives)
+    {
+        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextWithLivePanel)), NULL));
+    }
 }
 
 void EndGameLayer::closeAfterLoading(CCNode* node)
@@ -1504,7 +1352,7 @@ void EndGameLayer::nextCallback(CCObject* pSender)
         sprite->setScale(1.2f);
     }
     
-    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
+    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
     this->addChild(labelLoad,10001);
     sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
@@ -1515,7 +1363,16 @@ void EndGameLayer::nextCallback(CCObject* pSender)
     labelLoad->setVisible(false);
     labelLoad->setOpacity(0);
     labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
-    this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextAfterLoading)), NULL));
+
+    afterLoadingType = AfterLoadingTypeNext;
+    
+    if (getNetworkStatus() && FacebookPtr->sessionIsOpened() && OptionsPtr->isFacebookConnection())
+    {
+        GlobalsPtr->isLoadMap = true;
+        FacebookPtr->getScores();
+    }
+    else
+        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextAfterLoading)), NULL));
 }
 
 void EndGameLayer::nextAfterLoading(CCNode* node)
@@ -1602,7 +1459,7 @@ void EndGameLayer::retryEnd(CCNode* pSender)
             sprite->setScale(1.2f);
         }
         
-        CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
+        CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
         labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
         this->addChild(labelLoad,1001);
         sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
@@ -1613,7 +1470,16 @@ void EndGameLayer::retryEnd(CCNode* pSender)
         labelLoad->setVisible(false);
         labelLoad->setOpacity(0);
         labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
-        this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextWithLivePanel)), NULL));
+        
+        afterLoadingType = AfterLoadingTypeLives;
+        
+        if (getNetworkStatus() && FacebookPtr->sessionIsOpened() && OptionsPtr->isFacebookConnection())
+        {
+            GlobalsPtr->isLoadMap = true;
+            FacebookPtr->getScores();
+        }
+        else
+            this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextWithLivePanel)), NULL));
         return;
     }
     if (OptionsPtr->getLevelData(currentLevel - 1).levelType != Score)
@@ -1628,6 +1494,28 @@ void EndGameLayer::booster_1_Callback(CCObject* pSender)
     booster_1->stopAllActions();
     booster_1->setScale(0.7f);
 	booster_1->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    if (OptionsPtr->getCrystalCOunt() > 0)
+    {
+        if (GlobalsPtr->booster_1)
+        {
+            if (booster1Check)
+            {
+                booster1Check->removeFromParentAndCleanup(true);
+                booster1Check = NULL;
+            }
+            GlobalsPtr->booster_1 = false;
+        }
+        else
+        {
+            booster1Check = CCSprite::create("okSend.png");
+            boosterPlus_1->addChild(booster1Check,100);
+            booster1Check->setPosition(ccp(boosterPlus_1->getContentSize().width/2.1f, boosterPlus_1->getContentSize().height/1.9f));
+            booster1Check->setScale(0.71f);
+            GlobalsPtr->booster_1 = true;
+        }
+        return;
+    }
     
     menu->setEnabled(false);
     if (firstBooster == BoosterCrystal)
@@ -1655,6 +1543,28 @@ void EndGameLayer::booster_2_Callback(CCObject* pSender)
     booster_2->setScale(0.7f);
 	booster_2->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
+    if (OptionsPtr->getBombCount() > 0)
+    {
+        if (GlobalsPtr->booster_2)
+        {
+            if (booster2Check)
+            {
+                booster2Check->removeFromParentAndCleanup(true);
+                booster2Check = NULL;
+            }
+            GlobalsPtr->booster_2 = false;
+        }
+        else
+        {
+            booster2Check = CCSprite::create("okSend.png");
+            boosterPlus_2->addChild(booster2Check,100);
+            booster2Check->setPosition(ccp(boosterPlus_2->getContentSize().width/2.1f, boosterPlus_2->getContentSize().height/1.9f));
+            booster2Check->setScale(0.71f);
+            GlobalsPtr->booster_2 = true;
+        }
+        return;
+    }
+    
     menu->setEnabled(false);
     if (secondBooster == BoosterCrystal)
     {
@@ -1680,6 +1590,28 @@ void EndGameLayer::booster_3_Callback(CCObject* pSender)
     booster_3->stopAllActions();
     booster_3->setScale(0.7f);
 	booster_3->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    if (OptionsPtr->getFishCount() > 0)
+    {
+        if (GlobalsPtr->booster_3)
+        {
+            if (booster3Check)
+            {
+                booster3Check->removeFromParentAndCleanup(true);
+                booster3Check = NULL;
+            }
+            GlobalsPtr->booster_3 = false;
+        }
+        else
+        {
+            booster3Check = CCSprite::create("okSend.png");
+            boosterPlus_3->addChild(booster3Check,100);
+            booster3Check->setPosition(ccp(boosterPlus_3->getContentSize().width/2.1f, boosterPlus_3->getContentSize().height/1.9f));
+            booster3Check->setScale(0.71f);
+            GlobalsPtr->booster_3 = true;
+        }
+        return;
+    }
     
     menu->setEnabled(false);
     if (thirdBooster == BoosterCrystal)
@@ -1709,6 +1641,7 @@ void EndGameLayer::popupOk1(CCNode* pSender)
     }
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.superelements");
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::closeLoading))));
     menu->setEnabled(false);
 }
 
@@ -1722,6 +1655,7 @@ void EndGameLayer::popupOk2(CCNode* pSender)
     }
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.stripedandbomb");
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::closeLoading))));
     menu->setEnabled(false);
 }
 
@@ -1735,6 +1669,7 @@ void EndGameLayer::popupOk3(CCNode* pSender)
     }
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.penguins");
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::closeLoading))));
     menu->setEnabled(false);
 }
 

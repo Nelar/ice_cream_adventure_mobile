@@ -1,4 +1,4 @@
-<Level background="1" targetScore="20000" width="9" height="9" type="time" movesCount="25" colorNumber="6" time="150">
+<Level background="6" targetScore="20000" width="9" height="9" type="time" movesCount="25" colorNumber="6" time="150">
   <c t="s"/>
   <c t="s"/>
   <c t="s"/>

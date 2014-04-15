@@ -14,7 +14,7 @@
 //com.destinygroup.icecreamadventure
 //com.triada.icecream
 
-#define IPHONE_MULTIPLIER ((CCDirector::sharedDirector()->getWinSize().height == 640 || CCDirector::sharedDirector()->getWinSize().width == 640)?0.87f:1.0f)
+#define IPHONE_MULTIPLIER ((CCDirector::sharedDirector()->getWinSize().height == 640 || CCDirector::sharedDirector()->getWinSize().width == 640)?0.86f:1.0f)
 #define CELL_WIDTH  ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?143.0f*(IPHONE_MULTIPLIER):72.0f*(IPHONE_MULTIPLIER))
 #define CELL_HEIGHT ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?157.0f*(IPHONE_MULTIPLIER):79.0f*(IPHONE_MULTIPLIER))
 
@@ -38,7 +38,7 @@
 
 #define WINSIZE CCDirector::sharedDirector()->getWinSize()
 
-#define  LANDSCAPE CCDirector::sharedDirector()->getWinSize().height < CCDirector::sharedDirector()->getWinSize().width
+#define  LANDSCAPE (CCDirector::sharedDirector()->getWinSize().height < CCDirector::sharedDirector()->getWinSize().width)
 #define FONT_COMMON "Appetite"
 
 #define FONT_SIZE_200 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?170:85
@@ -53,6 +53,10 @@
 #define FONT_SIZE_26 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?26:13
 #define FONT_SIZE_22 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?22:11
 #define MULTIPLIER (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?1.0f:0.5f
+
+#define ITUNES_LINK "https://itunes.apple.com/us/app/ice-cream-adventure/id705058125?l=ru&ls=1&mt=8"
+
+#define CONNECTION_TIME 70.0f
 
 
 static const cocos2d::ccColor3B IceCreamPink={0xba, 0x29, 0x91};
@@ -72,10 +76,18 @@ enum IceCreamScene
 class Globals : public cSingleton<Globals>
 {
 public:
-	Globals():iceCreamScene(Invalid) {};
+	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false) {};
 	~Globals(){};
     IceCreamScene iceCreamScene;
     vector<sMoreGames> globalMoreGames;
+    bool booster_1;
+    bool booster_2;
+    bool booster_3;
+    
+    string currency;
+    float price;
+    
+    bool isLoadMap = false;
 };
 
 #define GlobalsPtr	Globals::GetSingletonPtr()

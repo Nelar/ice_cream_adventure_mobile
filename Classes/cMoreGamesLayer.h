@@ -56,6 +56,9 @@ private:
     
     CCNode* messageboard;
     CCLabelTTF* title;
+    CCLabelTTF* copyright;
+    CCMenu* menu;
+    CCScrollView* scrollView;
     
     bool isMessageBoard;
     bool lock;

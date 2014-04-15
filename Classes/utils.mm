@@ -21,8 +21,18 @@
 
 #include <sys/sysctl.h>
 #include <sys/utsname.h>
+#include <string>
 
+#import "AppsFlyerTracker.h"
+#import <AdSupport/AdSupport.h>
 
+using namespace std;
+
+void appsFlyerTrackEvent(const char* event, const char* value)
+{
+    [[AppsFlyerTracker sharedTracker] trackEvent:[NSString stringWithUTF8String:event] withValue:[NSString stringWithUTF8String:value]];
+}
+    
 const char* device()
 {
     struct utsname systemInfo;
@@ -80,26 +90,15 @@ const char* idfv()
 void goToLink(const char* link)
 {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:link]]];
+    appsFlyerTrackEvent("install_link", link);
 }
 
 void sendlocalNotification(float second)
 {
-    NSDate *setTime = [NSDate dateWithTimeIntervalSinceNow:((NSTimeInterval)second)];
-        
-    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
-    if (localNotif == nil)
-        return;
-    
-    localNotif.fireDate = setTime;
-    localNotif.timeZone = [NSTimeZone defaultTimeZone];
-    
-    localNotif.alertBody = @"Lives is full!";
-    localNotif.alertAction = @"View";
-    
-    localNotif.soundName = UILocalNotificationDefaultSoundName;
-    localNotif.applicationIconBadgeNumber = 1;
-    
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotif];
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    notification.fireDate = [[NSDate date] dateByAddingTimeInterval:second];
+    notification.alertBody = [NSString stringWithUTF8String:CCLocalizedString("SETTING_NOTIF_TEXT", NULL)];
+    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
 
 void removeAllNotification()
@@ -120,15 +119,33 @@ const char* getCountry()
 
 bool getNetworkStatus()
 {
-    Reachability* reachability = [Reachability reachabilityForInternetConnection];
+    /*Reachability* reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
     
     if(remoteHostStatus == NotReachable)
         return false;
-    else if (remoteHostStatus == ReachableViaWiFi || remoteHostStatus == ReachableViaWWAN)
+    else if (remoteHostStatus == ReachableViaWiFi)
+    {
         return true;
+    }
+    else if (remoteHostStatus == ReachableViaWWAN)
+    {
+        return true;
+    }
     
-    return false;
+    return false;*/
+    const char *host_name = "www.google.com";
+    BOOL _isDataSourceAvailable = NO;
+    Boolean success;
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
+    SCNetworkReachabilityFlags flags;
+    success = SCNetworkReachabilityGetFlags(reachability, &flags);
+    _isDataSourceAvailable = success &&
+    (flags & kSCNetworkFlagsReachable) &&
+    !(flags & kSCNetworkFlagsConnectionRequired);
+    
+    CFRelease(reachability);
+    return _isDataSourceAvailable;
 }
 
 const char* networkStatus()
@@ -152,4 +169,32 @@ void alertNetwork()
                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
     [alert release];
+}
+
+
+std::string push_enabled()
+{
+    UIRemoteNotificationType types = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+    if (types == UIRemoteNotificationTypeNone)
+    {
+        return "false";
+    }
+    else
+    {
+        return "true";
+    }
+}
+
+std::string getIsFirstTimeRunning()
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunchedOnce"])
+    {
+        return "false";
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunchedOnce"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        return "true";
+    }
 }

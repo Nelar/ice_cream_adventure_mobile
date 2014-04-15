@@ -39,12 +39,15 @@ void GameMenuLayer::snowCallback(CCObject* pSender)
     {
         isSnow = false;
         particle->setVisible(false);
+        CCUserDefault::sharedUserDefault()->setBoolForKey("snow", false);
     }
     else
     {
         isSnow = true;
         particle->setVisible(true);
+        CCUserDefault::sharedUserDefault()->setBoolForKey("snow", true);
     }
+    CCUserDefault::sharedUserDefault()->flush();
 }
 
 GameMenuLayer::~GameMenuLayer()
@@ -52,7 +55,6 @@ GameMenuLayer::~GameMenuLayer()
     this->stopAllActions();
     this->unscheduleAllSelectors();
     this->removeAllChildrenWithCleanup(true);
-    CCTextureCache::sharedTextureCache()->removeUnusedTextures();
 }
 
 void GameMenuLayer::addPopap()
@@ -222,7 +224,11 @@ bool GameMenuLayer::init(eLevelType ntype)
         char buf[255];
         sprintf(buf, "%d", OptionsPtr->getHammerCount());
         CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
-        label->setColor(ccWHITE);
+        ccColor3B color;
+        color.r = 0x16;
+        color.g = 0x78;
+        color.b = 0xa6;
+        label->setColor(color);
         if (!IPAD)
             label->setScale(0.5f);
         
@@ -258,6 +264,12 @@ bool GameMenuLayer::init(eLevelType ntype)
         else
             snow->setPosition(WINSIZE.width/2.0f - snow->getContentSize().width/1.5f, -WINSIZE.height/2.0f+ snow->getContentSize().height/1.5f);
     }
+    
+    bool tempSnow = CCUserDefault::sharedUserDefault()->getBoolForKey("snow", false);
+    if (tempSnow)
+        isSnow = true;
+    else
+        isSnow = false;
     
     if (IPHONE_4)
     {
@@ -310,6 +322,18 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     ((CCLayer*)this->getParent())->setTouchEnabled(false);
     exitBack->setColor(ccBLACK);
     ((GameScene*)getParent())->leftDownMenu->setVisible(false);
+    
+    if (IPHONE_5 || IPHONE_4)
+    {
+        if (LANDSCAPE)
+        {
+            exitBack->setScale(1.0f);
+        }
+        else
+        {
+            exitBack->setScale(0.913f);
+        }
+    }
     
     float multuplier;
     
@@ -485,6 +509,7 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     {
         downBack->setScaleY(0.9f);
         downBack->setPosition(ccp(WINSIZE.width/2.0f + WINSIZE.width, WINSIZE.height/3.4f));
+        menuExit->setPositionY(menuExit->getPositionY() + 50);
     }
     else
     {
@@ -498,10 +523,17 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     exitOn->stopAllActions();
     exitOn->setScale(0.7f);
 	exitOn->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    booster_1_Button->setEnabled(false);
+    booster_2_Button->setEnabled(false);
+    booster_3_Button->setEnabled(false);
+    snow->setEnabled(false);
 }
 
 void GameMenuLayer::playOnCallback(CCObject* pSender)
 {
+    booster_1_Button->setEnabled(true);
+    booster_2_Button->setEnabled(true);
+    booster_3_Button->setEnabled(true);
     ((CCLayer*)this->getParent())->setTouchEnabled(true);
     isDialog = false;
     if (((GameScene*)getParent())->isEndDialog)
@@ -529,6 +561,9 @@ void GameMenuLayer::playOnCallback(CCObject* pSender)
 
 void GameMenuLayer::exitOnCallback(CCObject* pSender)
 {
+    booster_1_Button->setEnabled(true);
+    booster_2_Button->setEnabled(true);
+    booster_3_Button->setEnabled(true);
     isDialog = false;
     ((CCLayer*)this->getParent())->setTouchEnabled(true);
     if (((GameScene*)getParent())->isEndDialog)
@@ -551,6 +586,16 @@ void GameMenuLayer::createSnow()
 {
     if (currentLevel == 106)
         OptionsPtr->setLastGameLevel(30);
+    else if (currentLevel == 107)
+        OptionsPtr->setLastGameLevel(24);
+    else if (currentLevel == 108)
+        OptionsPtr->setLastGameLevel(36);
+    else if (currentLevel == 109)
+        OptionsPtr->setLastGameLevel(48);
+    else if (currentLevel == 110)
+        OptionsPtr->setLastGameLevel(60);
+    else if (currentLevel == 111)
+        OptionsPtr->setLastGameLevel(72);
     else
         OptionsPtr->setLastGameLevel(currentLevel);
     OptionsPtr->save();
@@ -572,6 +617,15 @@ void GameMenuLayer::createSnow()
         particle->setScale(1.0f);
         particle->setTangentialAccel(10.0f);
         particle->setTangentialAccelVar(10.0f);
+        bool tempSnow = CCUserDefault::sharedUserDefault()->getBoolForKey("snow");
+        if (!tempSnow)
+        {
+            particle->setVisible(false);
+        }
+        else
+        {
+            particle->setVisible(true);
+        }
     }
 }
 
@@ -714,9 +768,15 @@ void GameMenuLayer::changeOrientation(void)
         {
             downBack->setScaleY(0.9f);
             downBack->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/3.4f));
+            if (IPHONE_5 || IPHONE_4)
+                exitBack->setScale(1.0f);
+            
+            menuExit->setPositionY(menuExit->getPositionY() + 50);
         }
         else
         {
+            if (IPHONE_5 || IPHONE_4)
+                exitBack->setScale(0.913f);
             downBack->setScaleY(1.0f);
         }
         
@@ -1052,7 +1112,7 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
     {
         ((CCLayer*)getParent())->setTouchEnabled(false);
         menu->setTouchEnabled(false);
-        popupBooster->popupBoosterInApp("Ice Hammer x3", "Remove ice cream by smashing \n it with the hammer", GreenPopup, ChupaPopBoot, this, callfuncN_selector(GameMenuLayer::popupOk1), this, callfuncN_selector(GameMenuLayer::unclockMenu));
+        popupBooster->popupBoosterInApp((char*)CCLocalizedString("ICE_HAMMER", NULL), (char*)CCLocalizedString("ICE_HAMMER_TEXT", NULL), GreenPopup, ChupaPopBoot, this, callfuncN_selector(GameMenuLayer::popupOk1), this, callfuncN_selector(GameMenuLayer::unclockMenu));
     }
     else
     {
@@ -1069,7 +1129,7 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
             boosterPlus = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             char buf[255];
             sprintf(buf, "%d", OptionsPtr->getHammerCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
             ccColor3B color;
             color.r = 0x16;
             color.g = 0x78;
@@ -1090,6 +1150,9 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
 void GameMenuLayer::closeLoading()
 {
     popupBooster->closeLoading();
+    ((GameScene*)getParent())->leftDownMenu->exitPress = false;
+    ((GameScene*)getParent())->leftDownMenu->setVisible(true);
+    menu->setTouchEnabled(true);
 }
 
 void GameMenuLayer::booster_3_Callback(CCObject* pSender)
@@ -1110,7 +1173,11 @@ void GameMenuLayer::addHammer()
     char buf[255];
     sprintf(buf, "%d", OptionsPtr->getHammerCount());
     CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
-    label->setColor(ccWHITE);
+    ccColor3B color;
+    color.r = 0x16;
+    color.g = 0x78;
+    color.b = 0xa6;
+    label->setColor(color);
     
     if (!IPAD)
         label->setScale(0.5f);
@@ -1149,6 +1216,7 @@ void GameMenuLayer::popupOk1(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.hammer");
     popupBooster->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    menu->setTouchEnabled(false);
 }
 
 void GameMenuLayer::popupOk2(CCNode* pSender)
@@ -1165,6 +1233,7 @@ void GameMenuLayer::popupOk2(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.5moves");
     popupBooster->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    menu->setTouchEnabled(false);
     ((GameScene*)getParent())->isEndDialog = false;
     if (exitBack)
     {
@@ -1374,7 +1443,7 @@ void GameMenuLayer::setBringDownCurrent(int current)
     }
     else
     {
-        labelTargetScore->setPosition(ccp(upPanel->getContentSize().width/1.4f + targetTitle->getContentSize().width/1.5f + labelTargetScore->getContentSize().width /2.0f, upPanel->getContentSize().height/2.0f));
+        labelTargetScore->setPosition(ccp(upPanel->getContentSize().width/1.31f + targetTitle->getContentSize().width/1.5f + labelTargetScore->getContentSize().width /2.0f, upPanel->getContentSize().height/2.0f));
     }
 	upPanel->addChild(labelTargetScore);
 }

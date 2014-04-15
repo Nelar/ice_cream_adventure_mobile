@@ -76,6 +76,8 @@ private:
     CCSprite* butUp;
     CCLabelTTF* labelTTF;
     
+    CCAction* callAction = NULL;
+    
     bool isPopup = false;
 };
 

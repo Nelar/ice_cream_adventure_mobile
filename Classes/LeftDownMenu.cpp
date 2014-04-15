@@ -147,11 +147,11 @@ bool LeftDownMenuScene::init()
 	tutorialSprite->setOpacity(0);
 	tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCFadeIn::create(0.5f)));
     
-    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_48);
     tutorialText->setColor(IceCreamBrown);
     tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     tutorialSprite->addChild(tutorialText);
-    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
+    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/2.0f));
     
     tutorialHeader = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
     tutorialHeader->setColor(IceCreamPink);
@@ -205,8 +205,6 @@ LeftDownMenuScene::~LeftDownMenuScene()
     this->stopAllActions();
     this->unscheduleAllSelectors();
     this->removeAllChildrenWithCleanup(true);
-//    CCSpriteFrameCache::sharedSpriteFrameCache()->removeUnusedSpriteFrames();
-    CCTextureCache::sharedTextureCache()->removeUnusedTextures();
 }
 
 
@@ -307,12 +305,12 @@ bool LeftDownMenuScene::isIntersect(CCPoint location)
 
 void LeftDownMenuScene::hide()
 {
-	setting->runAction(CCMoveBy::create(0.5f, ccp(-500, -500.0f)));
+	this->setVisible(false);
 }
 
 bool LeftDownMenuScene::isLock()
 {
-	return isOpen;
+	return (isOpen || isTutorial);
 }
 
 void LeftDownMenuScene::lock()
@@ -357,8 +355,33 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
         labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
         
 		closeTutorialCallback(pSender);
+        return;
 	}
     if (tutorialNum == 2)
+	{
+		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("CLOSE", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+	}
+    if (tutorialNum == 1)
+	{
+		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+        ((CCSprite*)(((CCMenuItemSprite*)pSender)->getSelectedImage()))->setColor(ccGRAY);
+        
+        labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelTTF->setColor(ccWHITE);
+        labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+        ((CCMenuItemSprite*)pSender)->addChild(labelTTF);
+        labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+	}
+    if (tutorialNum == 0)
 	{
 		((CCMenuItemSprite*)pSender)->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
         ((CCMenuItemSprite*)pSender)->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
@@ -381,11 +404,11 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
         
-        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_48);
         tutorialText->setColor(IceCreamBrown);
         tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorialSprite->addChild(tutorialText);
-        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/1.8f));
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/2.0f));
 	}
 	else if (tutorialNum == 1)
 	{
@@ -395,11 +418,11 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
         
-        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_2", NULL), FONT_COMMON, FONT_SIZE_54);
         tutorialText->setColor(IceCreamBrown);
         tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorialSprite->addChild(tutorialText);
-        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.2f));
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/2.0f, tutorialText->getParent()->getContentSize().height/1.25f));
 	}
 	else if (tutorialNum == 2)
 	{
@@ -409,11 +432,11 @@ void LeftDownMenuScene::tutorialCallback(CCObject* pSender)
 		tutorialSprite->setOpacity(0);
 		tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
         
-        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_36);
+        tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_3", NULL), FONT_COMMON, FONT_SIZE_54);
         tutorialText->setColor(IceCreamBrown);
         tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
         tutorialSprite->addChild(tutorialText);
-        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.3f));
+        tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.9f, tutorialText->getParent()->getContentSize().height/1.4f));
 	}
 }
 
@@ -430,10 +453,24 @@ void LeftDownMenuScene::closeTutorialCallback(CCObject* pSender)
 
 void LeftDownMenuScene::tutorialFinished(CCNode* sender)
 {
+    tutorialSprite->removeFromParentAndCleanup(true);
+    tutorialSprite = CCSprite::createWithSpriteFrameName("common/1.png");
+    tutorialSprite->setPosition(ccp(tutorialPopup->getContentSize().width / 2.7f, tutorialPopup->getContentSize().height / 1.27f));
+    tutorialPopup->addChild(tutorialSprite);
+    tutorialSprite->setOpacity(0);
+    tutorialSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
+    
+    tutorialText = CCLabelTTF::create(CCLocalizedString("HELP_1", NULL), FONT_COMMON, FONT_SIZE_48);
+    tutorialText->setColor(IceCreamBrown);
+    tutorialText->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    tutorialSprite->addChild(tutorialText);
+    tutorialText->setPosition(ccp(tutorialText->getParent()->getContentSize().width/1.5f, tutorialText->getParent()->getContentSize().height/2.0f));
+    
 	tutorialPopup->setVisible(false);
 	tutorialMenu->setVisible(false);
 	menu->setEnabled(true);
 	islock = false;
+    tutorialNum = 0;
 }
 
 void LeftDownMenuScene::settingFinished(CCNode* sender)
@@ -479,6 +516,34 @@ void LeftDownMenuScene::menuSettingCallback(CCObject* pSender)
 		isSetting = true;
 		settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(LeftDownMenuScene::settingFinished))));
         isOpen = true;
+	}
+}
+
+bool LeftDownMenuScene::buttonIsSelected()
+{
+    if (setting->isSelected()||
+        sound->isSelected()||
+        music->isSelected()||
+        ask->isSelected()||
+        cogwheel->isSelected()||
+        invite->isSelected())
+        return true;
+    return false;
+}
+
+void LeftDownMenuScene::hideMenu()
+{
+    if (isSetting)
+	{
+        lock();
+		settingBlob->runAction(CCMoveBy::create(0.3f, ccp(-settingBlob->getContentSize().width, -settingBlob->getContentSize().height)));
+		isSetting = false;
+		sound->setVisible(false);
+		music->setVisible(false);
+		ask->setVisible(false);
+		cogwheel->setVisible(false);
+        invite->setVisible(false);
+        isOpen = false;
 	}
 }
 
@@ -528,7 +593,7 @@ void LeftDownMenuScene::helpCallback(CCObject* pSender)
 {
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     isTutorial = true;
-	tutorialMenu->setVisible(true);
+    tutorialMenu->setVisible(true);
 	tutorialPopup->setVisible(true);
 
 	tutorialPopup->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, tutorialPopup->getContentSize().height))));
@@ -542,6 +607,17 @@ void LeftDownMenuScene::helpCallback(CCObject* pSender)
     tutorialNext->setScale(0.7f);
 	tutorialNext->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
+    
+    tutorialNum = 0;
+    tutorialNext->setNormalImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+    tutorialNext->setSelectedImage(CCSprite::createWithSpriteFrameName("common/redButton.png"));
+    ((CCSprite*)((tutorialNext)->getSelectedImage()))->setColor(ccGRAY);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEXT", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    tutorialNext->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
 
 	menuSettingCallback(NULL);
 	menu->setEnabled(false);

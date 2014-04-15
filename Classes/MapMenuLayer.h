@@ -8,12 +8,9 @@
 #include "Options.h"
 #include "cPopupLayer.h"
 #include "cSocialMenu.h"
-#include "MMPInterface.h"
-#include "MMP/Banner.h"
+#include "nMMP.h"
 #include "utils.h"
 
-using namespace Core;
-using namespace MarketingPlatform;
 using namespace std;
 using namespace cocos2d;
 
@@ -96,20 +93,30 @@ public:
     void showUnlock(int numLevel);
     void hideUnlock();
     void stageCallback(CCNode* node);
+    void passCallback(CCNode* node);
     
     void showLastStage(int numLevel);
     void hideLastStage();
+    
+    void newsLastStage();
+    void subscribeLastStage();
+    
     void LastStageCallback(CCNode* node);
+    void reinitCallback(CCNode* node);
     
     void closeLoading();
     
+    void closeMessageboard();
 //    void buyPack
+    
+    int levelNumForPost = 0;
 private:
     
     CCMenu* stageMenu;
     CCSprite* stageSprite;
     CCSprite* stageLogo;
     CCMenuItemSprite* stageButton;
+    CCMenuItemSprite* stageButtonPass;
     CCMenuItemSprite* stageClose;
     CCLabelTTF* stageTitle;
     CCLabelTTF* stageText;
@@ -119,6 +126,7 @@ private:
     CCSprite* lastStageSprite;
     CCSprite* lastStageLogo;
     CCMenuItemSprite* lastStageButton;
+    CCMenuItemSprite* lastStageSubscribe;
     CCMenuItemSprite* lastStageClose;
     CCLabelTTF* lastStageTitle;
     CCLabelTTF* lastStageText;
@@ -192,11 +200,18 @@ private:
     CCMenuItemSprite* notif_1_Button;
     
     SocialLayer* social;
-    Banner* bannerMMP;
     
     CCLabelTTF* labelTTF;
     
-    int levelNumForPost = 0;
+    bool booster1Enabled = false;
+    bool booster2Enabled = false;
+    bool booster3Enabled = false;
+    
+    CCSprite* booster1Check = NULL;
+    CCSprite* booster2Check = NULL;
+    CCSprite* booster3Check = NULL;
+    
+    int unlockStageNum = 0;
 };
 
 #endif

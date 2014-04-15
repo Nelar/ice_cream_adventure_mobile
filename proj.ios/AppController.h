@@ -8,11 +8,13 @@
 
 #define APP_HANDLED_URL @"APP_HANDLED_URL"
 #import <FacebookSDK/FacebookSDK.h>
+#import "AppsFlyerTracker.h"
+#import <AdSupport/AdSupport.h>
 
 @class RootViewController;
 
 
-@interface AppController : UIResponder <UIAccelerometerDelegate, UIAlertViewDelegate, UITextFieldDelegate,UIApplicationDelegate, FBLoginViewDelegate, UIAlertViewDelegate > {
+@interface AppController : UIResponder <UIAccelerometerDelegate, UIAlertViewDelegate, UITextFieldDelegate,UIApplicationDelegate, FBLoginViewDelegate, UIAlertViewDelegate, AppsFlyerTrackerDelegate> {
     UIWindow *window;
     RootViewController    *viewController;
 }
