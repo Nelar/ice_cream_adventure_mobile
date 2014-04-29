@@ -58,6 +58,8 @@
 
 #define CONNECTION_TIME 70.0f
 
+#undef PROD
+
 
 static const cocos2d::ccColor3B IceCreamPink={0xba, 0x29, 0x91};
 static const cocos2d::ccColor3B IceCreamBlue={0x29, 0x29, 0x93};
@@ -70,19 +72,21 @@ enum IceCreamScene
     Map,
     Comix,
     Game,
+    Loading,
     Invalid
 };
 
 class Globals : public cSingleton<Globals>
 {
 public:
-	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false) {};
+	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false), bannerShow(false) {};
 	~Globals(){};
     IceCreamScene iceCreamScene;
     vector<sMoreGames> globalMoreGames;
     bool booster_1;
     bool booster_2;
     bool booster_3;
+    bool bannerShow;
     
     string currency;
     float price;

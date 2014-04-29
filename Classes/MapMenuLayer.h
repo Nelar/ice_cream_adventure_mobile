@@ -112,6 +112,8 @@ public:
     int levelNumForPost = 0;
 private:
     
+    CCMenu* bannerMenu = NULL;
+    
     CCMenu* stageMenu;
     CCSprite* stageSprite;
     CCSprite* stageLogo;
@@ -212,6 +214,16 @@ private:
     CCSprite* booster3Check = NULL;
     
     int unlockStageNum = 0;
+    CCSprite* spriteLoading = NULL;
+    CCLabelTTF* labelLoad = NULL;
+    
+    char landingUrl[255];
+    
+    CCMenuItemSprite* bannerButton = NULL;
+    CCMenuItemSprite* bannerButtonClose = NULL;
+    CCMenuItemSprite* bannerButtonGo = NULL;
+    CCMenuItemSprite* bannerButtonGo2 = NULL;
+    
 };
 
 #endif

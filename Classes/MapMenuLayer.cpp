@@ -3,7 +3,7 @@
 #include "GameScene.h"
 #include "cGlobal.h"
 #include "cComixScene.h"
-#include "MMPInterface.h"
+#include "nMMP.h"
 #include "IAP.h"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
@@ -11,17 +11,14 @@
 #include "cFacebook.h"
 #include <GUI/CCScrollView/CCScrollView.h>
 
-#include "MMPInterface.h"
-#include "MMP/Banner.h"
 #include "utils.h"
 
 #include "SimpleAudioEngine.h"
 #include "CCLocalizedString.h"
+#include "GameMapLayer.h"
 
 using namespace CocosDenshion;
 
-using namespace Core;
-using namespace MarketingPlatform;
 
 using namespace cocos2d;
 using namespace extension;
@@ -309,12 +306,12 @@ bool MapMenuLayer::init()
     stageLogo->setPosition(ccp(stageSprite->getContentSize().width/2.0f, stageSprite->getContentSize().height/1.5f));
     stageSprite->addChild(stageLogo);
     
-    stageTitle = CCLabelTTF::create("Unlock stage", FONT_COMMON, FONT_SIZE_64);
+    stageTitle = CCLabelTTF::create(CCLocalizedString("UNLOCK_STAGE", NULL), FONT_COMMON, FONT_SIZE_64);
     stageTitle->setPosition(ccp(stageSprite->getContentSize().width/2.0f, stageSprite->getContentSize().height/1.1f));
     stageTitle->setColor(IceCreamPink);
     stageSprite->addChild(stageTitle);
      
-    stageText = CCLabelTTF::create("Unlock this stage?", FONT_COMMON, FONT_SIZE_36);
+    stageText = CCLabelTTF::create(CCLocalizedString("UNLOCK_STAGE_TEXT", NULL), FONT_COMMON, FONT_SIZE_64);
     stageText->setPosition(ccp(stageSprite->getContentSize().width/2.0f, stageSprite->getContentSize().height/3.0f));
     stageText->setColor(IceCreamPink);
     stageSprite->addChild(stageText);
@@ -331,20 +328,39 @@ bool MapMenuLayer::init()
      
      
     stageButton = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::stageCallback));
-    stageButton->setPosition(stageSprite->getContentSize().width/2.0f, stageSprite->getContentSize().height/7.0f);
+    stageButton->setPosition(stageSprite->getContentSize().width/3.8f, stageSprite->getContentSize().height/7.0f);
     stageMenu->addChild(stageButton);
     
-    string priceLocale;
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    spriteSelected = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    spriteSelected->setColor(ccGRAY);
+
+    
+    stageButtonPass = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::passCallback));
+    stageButtonPass->setPosition(stageSprite->getContentSize().width/4.0f * 2.8f, stageSprite->getContentSize().height/7.0f);
+    stageMenu->addChild(stageButtonPass);
+
+    
+    string priceLocale = string(CCLocalizedString("NEXT", NULL)) + string("\n(");
     if (IAP::sharedInstance().products.empty())
-        priceLocale = "1$";
+        priceLocale += string("1$");
     else
-        priceLocale = IAP::sharedInstance().products[0]->priceLocale;
+        priceLocale += string(IAP::sharedInstance().products[0]->priceLocale);
+    priceLocale += string(")");
      
-    labelTTF = CCLabelTTF::create(priceLocale.c_str(), FONT_COMMON, FONT_SIZE_64);
+    labelTTF = CCLabelTTF::create(priceLocale.c_str(), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     stageButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("UNLOCK_STAGE_BUTTON", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    stageButtonPass->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+
 
     stageSprite->setPosition(ccp(stageSprite->getPositionX(), stageSprite->getPositionY() - WINSIZE.height));
     stageSprite->setVisible(false);
@@ -365,13 +381,13 @@ bool MapMenuLayer::init()
     lastStageLogo->setPosition(ccp(lastStageSprite->getContentSize().width/2.0f, lastStageSprite->getContentSize().height/1.5f));
     lastStageSprite->addChild(lastStageLogo);
     
-    lastStageTitle = CCLabelTTF::create("Last level", FONT_COMMON, FONT_SIZE_64);
+    lastStageTitle = CCLabelTTF::create(CCLocalizedString("END_LEVEL_TITLE", NULL), FONT_COMMON, FONT_SIZE_64);
     lastStageTitle->setPosition(ccp(lastStageSprite->getContentSize().width/2.0f, lastStageSprite->getContentSize().height/1.1f));
     lastStageTitle->setColor(IceCreamPink);
     lastStageSprite->addChild(lastStageTitle);
     
-    lastStageText = CCLabelTTF::create("Last level", FONT_COMMON, FONT_SIZE_36);
-    lastStageText->setPosition(ccp(lastStageSprite->getContentSize().width/2.0f, lastStageSprite->getContentSize().height/3.0f));
+    lastStageText = CCLabelTTF::create(CCLocalizedString("END_LEVEL_TEXT", NULL), FONT_COMMON, FONT_SIZE_36);
+    lastStageText->setPosition(ccp(lastStageSprite->getContentSize().width/2.0f, lastStageSprite->getContentSize().height/2.8f));
     lastStageText->setColor(IceCreamPink);
     lastStageSprite->addChild(lastStageText);
     
@@ -387,40 +403,180 @@ bool MapMenuLayer::init()
     spriteSelected->setColor(ccGRAY);
     
     
-    lastStageButton = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::hideLastStage));
-    lastStageButton->setPosition(lastStageSprite->getContentSize().width/2.0f, lastStageSprite->getContentSize().height/7.0f);
+    lastStageButton = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::newsLastStage));
+    lastStageButton->setPosition(lastStageSprite->getContentSize().width/3.8f, lastStageSprite->getContentSize().height/7.0f);
     lastStageMenu->addChild(lastStageButton);
     
-    labelTTF = CCLabelTTF::create("OK", FONT_COMMON, FONT_SIZE_64);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("NEWS_BUTTON", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     lastStageButton->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
     
+    spriteNormal = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    spriteSelected = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+    spriteSelected->setColor(ccGRAY);
+    
+    
+    lastStageSubscribe = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::subscribeLastStage));
+    lastStageSubscribe->setPosition(lastStageSprite->getContentSize().width/4.0f*2.8f, lastStageSprite->getContentSize().height/7.0f);
+    lastStageMenu->addChild(lastStageSubscribe);
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SUBSCRIBE", NULL), FONT_COMMON, FONT_SIZE_54);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    lastStageSubscribe->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+
     lastStageSprite->setPosition(ccp(lastStageSprite->getPositionX(), lastStageSprite->getPositionY() - WINSIZE.height));
     lastStageSprite->setVisible(false);
     
     
-/*    bannerMMP =  MMPInterface::Instance()->GetBanner();
-    if (bannerMMP != NULL)
+    if (getNetworkStatus() && MMPPtr && MMPPtr->isBanner)
     {
-        CCSprite* spriteMMP = bannerMMP->GetSprite();
-        if (spriteMMP != NULL)
-        {
-            CCSprite* spriteMMPDown = CCSprite::createWithSpriteFrame(spriteMMP->displayFrame());
-            spriteMMPDown->setColor(ccGRAY);
-            CCMenuItemSprite* banner = CCMenuItemSprite::create(spriteMMP, spriteMMPDown, this, menu_selector(MapMenuLayer::bannerCallback));
-            banner->setPosition(ccp(WINSIZE.width/2.0f - spriteMMP->getContentSize().width/2.0f, WINSIZE.height/2.0f - spriteMMP->getContentSize().height/2.0f));
-
-            CCMenuItemSprite* closeBanner = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/close.png"), CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(MapMenuLayer::closeBanner));
-            closeBanner->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        bannerMenu = CCMenu::create();
+        bannerMenu->setPosition(0.0f, 0.0f);
+        this->addChild(bannerMenu, 1000);
         
-            livesMenu->addChild(banner, 100);
-            livesMenu->addChild(closeBanner, 100);
+        string bannerFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("banner.png");
+        CCSprite* bannerSprite = CCSprite::create(bannerFile.c_str());
+        sprintf(landingUrl, "%s", MMPPtr->trackingUrl.c_str());
+        
+        if (!GlobalsPtr->bannerShow && bannerSprite != NULL)
+        {
+            
+            CCSprite* bannerSpriteGray = CCSprite::create(bannerFile.c_str());
+            //bannerSpriteGray->setColor(ccGRAY);
+            
+            bannerButton = CCMenuItemSprite::create(bannerSprite, bannerSprite, this, menu_selector(MapMenuLayer::bannerCallback));
+            bannerButton->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, CCDirector::sharedDirector()->getWinSize().height/2.0f));
+            bannerButton->setEnabled(false);
+            
+            
+            CCSprite* bannerSpriteClose = CCSprite::createWithSpriteFrameName("common/close.png");
+            CCSprite* bannerSpriteCloseGray = CCSprite::createWithSpriteFrameName("common/close_on.png");
+            bannerSpriteCloseGray->setColor(ccGRAY);
+            
+            bannerButtonClose = CCMenuItemSprite::create(bannerSpriteClose, bannerSpriteCloseGray, this, menu_selector(MapMenuLayer::closeBanner));
+            bannerMenu->addChild(bannerButtonClose, 5100);
+            bannerButtonClose->setAnchorPoint(ccp(1.0f, 1.0f));
+            bannerButtonClose->setScale(0.5f);
+            bannerButtonClose->setOpacity(150);
+            bannerButtonClose->setPosition(bannerButton->getPositionX() + bannerButton->getContentSize().width/2.0f,
+                                           bannerButton->getPositionY() + bannerButton->getContentSize().height/2.0f);
+            
+            bannerButtonGo = CCMenuItemSprite::create(CCSprite::createWithSpriteFrame(bannerSpriteGray->displayFrame()), CCSprite::createWithSpriteFrame(bannerSpriteGray->displayFrame()), this, menu_selector(MapMenuLayer::bannerCallback));
+            bannerButtonGo->setOpacity(0);
+            bannerButtonGo->setScaleY(0.9f);
+            bannerButtonGo->setEnabled(true);
+            bannerMenu->addChild(bannerButtonGo, 5100);
+            bannerButtonGo->setAnchorPoint(ccp(0.0f, 0.0f));
+            bannerButtonGo->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f - bannerButtonGo->getContentSize().width/2.0f,
+                                            CCDirector::sharedDirector()->getWinSize().height/2.0f - bannerButtonGo->getContentSize().height/2.0f));
+            
+            bannerButtonGo2 = CCMenuItemSprite::create(CCSprite::createWithSpriteFrame(bannerSpriteGray->displayFrame()), CCSprite::createWithSpriteFrame(bannerSpriteGray->displayFrame()), this, menu_selector(MapMenuLayer::bannerCallback));
+            bannerButtonGo2->setOpacity(0);
+            bannerButtonGo2->setScaleX(0.9f);
+            bannerButtonGo2->setEnabled(true);
+            bannerMenu->addChild(bannerButtonGo2, 5100);
+            bannerButtonGo2->setAnchorPoint(ccp(0.0f, 0.0f));
+            bannerButtonGo2->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f - bannerButtonGo2->getContentSize().width/2.0f,
+                                             CCDirector::sharedDirector()->getWinSize().height/2.0f - bannerButtonGo2->getContentSize().height/2.0f));
+            
+            bannerMenu->addChild(bannerButton, 5000);
+            
+            isPopup = true;
+            lock = true;
         }
-    }*/
+        else
+        {
+            if (bannerButton)
+            {
+                if (!bannerButton->isVisible())
+                {
+                    bannerButton->setVisible(false);
+                    bannerButton->setEnabled(false);
+                    bannerButtonClose->setVisible(false);
+                    bannerButtonClose->setEnabled(false);
+                    bannerButtonGo->setVisible(false);
+                    bannerButtonGo->setEnabled(false);
+                    bannerButtonGo2->setVisible(false);
+                    bannerButtonGo2->setEnabled(false);
+                }
+            }
+        }
+    }
+    else
+    {
+        if (bannerButton)
+        {
+            if (!bannerButton->isVisible())
+            {
+                bannerButton->setVisible(false);
+                bannerButton->setEnabled(false);
+                bannerButtonClose->setVisible(false);
+                bannerButtonClose->setEnabled(false);
+                bannerButtonGo->setVisible(false);
+                bannerButtonGo->setEnabled(false);
+                bannerButtonGo2->setVisible(false);
+                bannerButtonGo2->setEnabled(false);
+            }
+        }
+    }
+    
+    if (bannerButton)
+    {
+        if (!bannerButton->isVisible())
+        {
+            bannerButton->setVisible(false);
+            bannerButton->setEnabled(false);
+            bannerButtonClose->setVisible(false);
+            bannerButtonClose->setEnabled(false);
+            bannerButtonGo->setVisible(false);
+            bannerButtonGo->setEnabled(false);
+            bannerButtonGo2->setVisible(false);
+            bannerButtonGo2->setEnabled(false);
+        }
+    }
 
     return true;
+}
+
+void MapMenuLayer::bannerCallback(CCObject * obj)
+{
+    bannerButton->setVisible(false);
+    bannerButton->setEnabled(false);
+    bannerButtonClose->setVisible(false);
+    bannerButtonClose->setEnabled(false);
+    bannerButtonGo->setVisible(false);
+    bannerButtonGo->setEnabled(false);
+    bannerButtonGo2->setVisible(false);
+    bannerButtonGo2->setEnabled(false);
+    
+    GlobalsPtr->bannerShow = true;
+    isPopup = false;
+    lock = false;
+    
+    goToLink(landingUrl);
+}
+
+void MapMenuLayer::closeBanner(CCObject * obj)
+{
+    
+    bannerButton->setVisible(false);
+    bannerButton->setEnabled(false);
+    bannerButtonClose->setVisible(false);
+    bannerButtonClose->setEnabled(false);
+    bannerButtonGo->setVisible(false);
+    bannerButtonGo->setEnabled(false);
+    bannerButtonGo2->setVisible(false);
+    bannerButtonGo2->setEnabled(false);
+    
+    isPopup = false;
+    lock = false;
+    
+    GlobalsPtr->bannerShow = true;
 }
 
 void MapMenuLayer::closeLoading()
@@ -455,15 +611,43 @@ void MapMenuLayer::stageCallback(CCNode* node)
     if (node->getTag() == 72)
         IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.unlocklevelpack");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::closeLoading))));
+}
+
+void MapMenuLayer::passCallback(CCNode* node)
+{
+    hideUnlock();
+    
+    int numLevel;
+
+    if (node->getTag() == 24)
+        numLevel = 107;
+    else if (node->getTag() == 36)
+        numLevel = 108;
+    else if (node->getTag() == 48)
+        numLevel = 109;
+    else if (node->getTag() == 60)
+        numLevel = 110;
+    else if (node->getTag() == 72)
+        numLevel = 111;
+    
+    if (OptionsPtr->getLevelData(numLevel).levelType != Score)
+        levelPopup(numLevel, OptionsPtr->getLevelData(numLevel).countStar, OptionsPtr->getLevelData(numLevel).targetScore, OptionsPtr->getLevelData(numLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    else
+        levelPopup(numLevel, OptionsPtr->getLevelData(numLevel).countStar, OptionsPtr->getLevelData(numLevel).targetScore, OptionsPtr->getLevelData(numLevel).levelType, BoosterCrystal, BoosterBomb, BoosterNone);
 }
 
 void MapMenuLayer::showUnlock(int numLevel)
 {
+    if (stageSprite->isVisible())
+        return;
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     lock = true;
     isPopup = true;
     stageButton->setTag(numLevel);
+    stageButtonPass->setTag(numLevel);
     stageSprite->setVisible(true);
+    stageButton->setEnabled(true);
     stageSprite->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, WINSIZE.height))));
 }
 
@@ -472,16 +656,32 @@ void MapMenuLayer::hideUnlock()
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     lock = false;
     isPopup = false;
+    stageButton->setEnabled(false);
     stageSprite->runAction(CCSequence::createWithTwoActions(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -WINSIZE.height))), CCHide::create()));
 }
 
 void MapMenuLayer::showLastStage(int numLevel)
 {
+    if (lastStageSprite->isVisible())
+        return;
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     lock = true;
     isPopup = true;
     lastStageSprite->setVisible(true);
     lastStageSprite->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, WINSIZE.height))));
+}
+
+void MapMenuLayer::newsLastStage()
+{
+    if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
+        FacebookPtr->endGame();
+    hideLastStage();
+}
+
+void MapMenuLayer::subscribeLastStage()
+{
+    goToLink("https://www.facebook.com/pages/Ice-Cream-Adventure/538662456202163");
+    hideLastStage();
 }
 
 void MapMenuLayer::hideLastStage()
@@ -498,15 +698,7 @@ void MapMenuLayer::LastStageCallback(CCNode* node)
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
 }
 
-void MapMenuLayer::closeBanner(CCObject* pSender)
-{
-    
-}
 
-void MapMenuLayer::bannerCallback(CCObject* pSender)
-{
-    goToLink(bannerMMP->GetLandingUrl().c_str());
-}
 
 
 void MapMenuLayer::addSocialLayer()
@@ -518,7 +710,8 @@ void MapMenuLayer::addSocialLayer()
 
 void MapMenuLayer::checkMessage(CCNode* pSender)
 {
-    FacebookPtr->checkMessages();
+    if (OptionsPtr->isFacebookConnection())
+        FacebookPtr->checkMessages();
 }
 
 void MapMenuLayer::showMessageboard()
@@ -534,9 +727,15 @@ void MapMenuLayer::showMessageboard()
             return;
         lock = true;
         isPopup = true;
-        if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
+        if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && OptionsPtr->isFacebookConnection())
             social->showMessageboard();
     }
+}
+
+void MapMenuLayer::closeMessageboard()
+{
+    lock = false;
+    isPopup = false;
 }
 
 void MapMenuLayer::hideLive()
@@ -656,15 +855,66 @@ void MapMenuLayer::changeOrientation()
         panelLivesLayer->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
         
         if (LANDSCAPE)
-            panelLivesLayer->setScale(0.75f);
+        {
+            if (IPHONE_4 || IPHONE_5)
+                panelLivesLayer->setScale(0.72f);
+            else
+                panelLivesLayer->setScale(0.75f);
+        }
         else
             panelLivesLayer->setScale(1.0f);
     }
     
     stageSprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    if (bannerMenu)
+    {
+        bannerButton->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, CCDirector::sharedDirector()->getWinSize().height/2.0f));
+        bannerButtonClose->setPosition(bannerButton->getPositionX() + bannerButton->getContentSize().width/2.0f,
+                                       bannerButton->getPositionY() + bannerButton->getContentSize().height/2.0f);
+        
+        bannerButtonGo->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f - bannerButtonGo->getContentSize().width/2.0f,
+                                        CCDirector::sharedDirector()->getWinSize().height/2.0f - bannerButtonGo->getContentSize().height/2.0f));
+        
+        bannerButtonGo2->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f - bannerButtonGo2->getContentSize().width/2.0f,
+                                         CCDirector::sharedDirector()->getWinSize().height/2.0f - bannerButtonGo2->getContentSize().height/2.0f));
+        
+    }
     
     if (!stageSprite->isVisible())
         stageSprite->setPosition(ccp(stageSprite->getPositionX(), stageSprite->getPositionY() - WINSIZE.height));
+    
+    if (spriteLoading)
+    {
+        spriteLoading->removeFromParentAndCleanup(true);
+        labelLoad->removeFromParentAndCleanup(true);
+        if (IPAD)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadPortrait.png");
+        }
+        else if (IPAD_MINI)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
+        }
+        else if (IPHONE_4||IPHONE_5)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+            spriteLoading->setScale(1.2f);
+        }
+        labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+        this->addChild(labelLoad,1001);
+        spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        this->addChild(spriteLoading, 1000);
+    }
 }
 
 void MapMenuLayer::timeCallback(CCNode* sender)
@@ -729,26 +979,28 @@ void MapMenuLayer::livesCallback(CCObject* pSender)
 
 void MapMenuLayer::fishingEnded(CCNode* sender)
 {
-    if (levelNumForPost == 25 && !OptionsPtr->getJubPost())
+    if (levelNumForPost == 42 && !OptionsPtr->getJubPost() && OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened())
     {
-        popaplayer->popupPost("Post on wall", "Post on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
+        popaplayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot,
                               this, callfuncN_selector(MapMenuLayer::addBonus), this, callfuncN_selector(MapMenuLayer::unclockMenu));
         menu->setEnabled(false);
     }
     
     
-    if (currentLevel == OptionsPtr->getCurrentLevel())
+    if (currentLevel == OptionsPtr->getCurrentLevel() && OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened())
     {
-        if (!(currentLevel%8))
-            popaplayer->popupPost("Post on wall", "Post on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
-                                  this, callfuncN_selector(MapMenuLayer::unlockStage), this, callfuncN_selector(MapMenuLayer::unclockMenu));
+        char buf[255];
+        sprintf(buf, "unlock%d", currentLevel);
+        bool flag = CCUserDefault::sharedUserDefault()->getBoolForKey(buf, false);
+        if (!((currentLevel-1)%12) && !flag)
+            popaplayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot, this, callfuncN_selector(MapMenuLayer::unlockStage), this, callfuncN_selector(MapMenuLayer::unclockMenu));
     }
     lock = true;
 }
 
 void MapMenuLayer::unlockStage(CCNode* pSender)
 {
-    FacebookPtr->unlockStage();
+    FacebookPtr->unlockStage(currentLevel);
 }
 
 void MapMenuLayer::closeEnded(CCNode* sender)
@@ -810,7 +1062,7 @@ void MapMenuLayer::popupLives()
     askFriend->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, panelLivesLayer->getContentSize().height/6.0f));
     heartMenu->addChild(askFriend);
     
-    labelTTF = CCLabelTTF::create(CCLocalizedString("ASK_FRIEND", NULL), FONT_COMMON, FONT_SIZE_40);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("ASK_FRIEND", NULL), FONT_COMMON, FONT_SIZE_54);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     askFriend->addChild(labelTTF);
@@ -828,7 +1080,7 @@ void MapMenuLayer::popupLives()
     moreLives->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, panelLivesLayer->getContentSize().height/6.0f + askFriend->getContentSize().height));
     heartMenu->addChild(moreLives);
     
-    labelTTF = CCLabelTTF::create(CCLocalizedString("MORE_LIVES", NULL), FONT_COMMON, FONT_SIZE_36);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("MORE_LIVES", NULL), FONT_COMMON, FONT_SIZE_54);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     moreLives->addChild(labelTTF);
@@ -872,26 +1124,23 @@ void MapMenuLayer::popupLives()
     livesTimePopap->setPosition(ccp(panelLivesLayer->getContentSize().width / 2.4f, panelLivesLayer->getContentSize().height / 2.0f));
     panelLivesLayer->addChild(livesTimePopap);
     
-    spriteNormal = CCSprite::createWithSpriteFrameName("common/onButton.png");
-	spriteSelected = CCSprite::createWithSpriteFrameName("common/offButton.png");
-    spriteSelected->setColor(ccGRAY);
-    
+    CCSprite* spriteOn = CCSprite::createWithSpriteFrameName("common/onButton.png");
     
     CCLabelTTF* labelOn = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_86);
     labelOn->setColor(ccWHITE);
     labelOn->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
-    spriteNormal->addChild(labelOn);
+    spriteOn->addChild(labelOn);
     labelOn->setPosition(ccp(labelOn->getParent()->getContentSize().width/2.0f, labelOn->getParent()->getContentSize().height/2.0f));
+    
+    CCSprite* spriteOff = CCSprite::createWithSpriteFrameName("common/offButton.png");
     
     CCLabelTTF* labelOff = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_86);
     labelOff->setColor(ccWHITE);
     labelOff->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
-    spriteSelected->addChild(labelOff);
+    spriteOff->addChild(labelOff);
     labelOff->setPosition(ccp(labelOff->getParent()->getContentSize().width/2.0f, labelOff->getParent()->getContentSize().height/2.0f));
-
     
-    
-    notif_1_Button = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(MapMenuLayer::notif_1_Callback));
+    notif_1_Button = CCMenuItemSprite::create(spriteOn, spriteOn, this, menu_selector(MapMenuLayer::notif_1_Callback));
 	notif_1_Button->setPosition(ccp(panelLivesLayer->getContentSize().width/2.0f, panelLivesLayer->getContentSize().height/2.5f));
     notif_1_Button->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
 	heartMenu->addChild(notif_1_Button);
@@ -899,29 +1148,16 @@ void MapMenuLayer::popupLives()
 	notif_1_Button->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.2f), CCFadeIn::create(0.2f)));
     
     
-    spriteNormal = CCSprite::createWithSpriteFrameName("common/onButton.png");
-	spriteSelected = CCSprite::createWithSpriteFrameName("common/offButton.png");
-    spriteSelected->setColor(ccGRAY);
-    
-    
-    labelOn = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_86);
-    labelOn->setColor(ccWHITE);
-    labelOn->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
-    spriteNormal->addChild(labelOn);
-    labelOn->setPosition(ccp(labelOn->getParent()->getContentSize().width/2.0f, labelOn->getParent()->getContentSize().height/2.0f));
-    
-    labelOff = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_86);
-    labelOff->setColor(ccWHITE);
-    labelOff->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
-    spriteSelected->addChild(labelOff);
-    labelOff->setPosition(ccp(labelOff->getParent()->getContentSize().width/2.0f, labelOff->getParent()->getContentSize().height/2.0f));
-
-    
-    
     if (OptionsPtr->isNotification())
-		notif_1_Button->setNormalImage(spriteNormal);
-	else
-		notif_1_Button->setNormalImage(spriteSelected);
+    {
+		notif_1_Button->setNormalImage(spriteOn);
+		notif_1_Button->setSelectedImage(spriteOn);
+    }
+    else
+    {
+        notif_1_Button->setNormalImage(spriteOff);
+		notif_1_Button->setSelectedImage(spriteOff);
+    }
     
     if (OptionsPtr->getLifeCount() > 0)
         notif_1_Button->setVisible(false);
@@ -930,40 +1166,46 @@ void MapMenuLayer::popupLives()
     
     
     if (LANDSCAPE)
-        panelLivesLayer->setScale(0.75f);
+    {
+        if (IPHONE_4 || IPHONE_5)
+            panelLivesLayer->setScale(0.72f);
+        else
+            panelLivesLayer->setScale(0.75f);
+    }
     else
         panelLivesLayer->setScale(1.0f);
 }
 
 void MapMenuLayer::notif_1_Callback(CCObject* pSender)
 {
-    CCSprite* spriteNormal = CCSprite::createWithSpriteFrameName("common/onButton.png");
-	CCSprite* spriteSelected = CCSprite::createWithSpriteFrameName("common/offButton.png");
-    spriteSelected->setColor(ccGRAY);
-    
+    CCSprite* spriteOn = CCSprite::createWithSpriteFrameName("common/onButton.png");
     
     CCLabelTTF* labelOn = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_86);
     labelOn->setColor(ccWHITE);
     labelOn->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
-    spriteNormal->addChild(labelOn);
+    spriteOn->addChild(labelOn);
     labelOn->setPosition(ccp(labelOn->getParent()->getContentSize().width/2.0f, labelOn->getParent()->getContentSize().height/2.0f));
+    
+    CCSprite* spriteOff = CCSprite::createWithSpriteFrameName("common/offButton.png");
     
     CCLabelTTF* labelOff = CCLabelTTF::create(CCLocalizedString("OFF", NULL), FONT_COMMON, FONT_SIZE_86);
     labelOff->setColor(ccWHITE);
     labelOff->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
-    spriteSelected->addChild(labelOff);
+    spriteOff->addChild(labelOff);
     labelOff->setPosition(ccp(labelOff->getParent()->getContentSize().width/2.0f, labelOff->getParent()->getContentSize().height/2.0f));
     
 	if (OptionsPtr->isNotification())
 	{
         OptionsPtr->setNotification(false);
-		notif_1_Button->setNormalImage(spriteSelected);
+		notif_1_Button->setNormalImage(spriteOff);
+        notif_1_Button->setNormalImage(spriteOff);
         removeAllNotification();
 	}
 	else
 	{
         OptionsPtr->setNotification(true);
-		notif_1_Button->setNormalImage(spriteSelected);
+        notif_1_Button->setNormalImage(spriteOn);
+        notif_1_Button->setNormalImage(spriteOn);
 	}
     OptionsPtr->save();
 }
@@ -990,7 +1232,7 @@ void MapMenuLayer::askFriendCallback(CCObject* pSender)
         if (lock)
             return;
         lock = true;
-        if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+        if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
         {
             if (FacebookPtr->friendsScores.size() > 0)
             {
@@ -998,11 +1240,17 @@ void MapMenuLayer::askFriendCallback(CCObject* pSender)
                 isPopup = true;
             }
             else
+            {
                 FacebookPtr->inviteFriends();
+                lock = false;
+                isPopup = false;
+            }
         }
         else
         {
             FacebookPtr->loginWithInvite();
+            lock = false;
+            isPopup = false;
         }
     }
 }
@@ -1054,7 +1302,48 @@ void MapMenuLayer::updateFacebook()
 
 void MapMenuLayer::updateFacebookCallback(CCNode* pSender)
 {
-    social->showScoreboard(currentLevel);
+    CCSprite* sprite;
+    if (IPAD)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("loadingiPadLandscape.png");
+        else
+            sprite = CCSprite::create("loadingiPadPortrait.png");
+    }
+    else if (IPAD_MINI)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("loadingiPadMiniLandscape.png");
+        else
+            sprite = CCSprite::create("loadingiPadMiniPortrait.png");
+    }
+    else if (IPHONE_4||IPHONE_5)
+    {
+        if (LANDSCAPE)
+            sprite = CCSprite::create("loadingIphoneLanscape.png");
+        else
+            sprite = CCSprite::create("loadingIphonePortrait.png");
+        sprite->setScale(1.2f);
+    }
+    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+    this->addChild(labelLoad,1001);
+    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(sprite, 1000);
+    sprite->setVisible(false);
+    sprite->setOpacity(0);
+    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+    
+    labelLoad->setVisible(false);
+    labelLoad->setOpacity(0);
+    labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+    
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME*2.0f), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::reinitCallback))));
+}
+
+void MapMenuLayer::reinitCallback(CCNode* node)
+{
+    CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(levelNumForPost, true));
 }
 
 void MapMenuLayer::addBonus(CCNode* pSender)
@@ -1281,6 +1570,11 @@ void MapMenuLayer::levelPopup(int levelNum, int starCount, int targetScore, eLev
     close->setScale(0.7f);
 	close->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
+    if (typeLevel == Score)
+        booster_3->setVisible(false);
+    else
+        booster_3->setVisible(true);
+    
     social->showScoreboard(currentLevel);
 }
 
@@ -1290,11 +1584,29 @@ void MapMenuLayer::updateBoosters()
     char buf[255];
     
     if (boosterPlus_1)
-        boosterPlus_1->removeAllChildrenWithCleanup(true);
+    {
+        for (int i = 0; i > boosterPlus_1->getChildrenCount(); i++)
+        {
+            if (((CCSprite*)boosterPlus_1->getChildren()->objectAtIndex(i)) != booster1Check)
+                ((CCNode*)boosterPlus_1->getChildren()->objectAtIndex(i))->removeFromParentAndCleanup(true);
+        }
+    }
     if (boosterPlus_2)
-        boosterPlus_2->removeAllChildrenWithCleanup(true);
+    {
+        for (int i = 0; i > boosterPlus_2->getChildrenCount(); i++)
+        {
+            if (((CCSprite*)boosterPlus_2->getChildren()->objectAtIndex(i)) != booster2Check)
+                ((CCNode*)boosterPlus_2->getChildren()->objectAtIndex(i))->removeFromParentAndCleanup(true);
+        }
+    }
     if (boosterPlus_3)
-        boosterPlus_3->removeAllChildrenWithCleanup(true);
+    {
+        for (int i = 0; i > boosterPlus_3->getChildrenCount(); i++)
+        {
+            if (((CCSprite*)boosterPlus_3->getChildren()->objectAtIndex(i)) != booster3Check)
+                ((CCNode*)boosterPlus_3->getChildren()->objectAtIndex(i))->removeFromParentAndCleanup(true);
+        }
+    }
 
     if (firstBooster == BoosterCrystal)
 	{
@@ -1309,7 +1621,7 @@ void MapMenuLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_1->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             label->setColor(ccWHITE);
 
             boosterPlus_1->addChild(label);
@@ -1319,108 +1631,10 @@ void MapMenuLayer::updateBoosters()
         {
             boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
         }
-	}
-	else if (firstBooster == BoosterBomb)
-	{
-        booster_1->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
-        booster->setScale(0.8f);
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_1->addChild(booster);
-        
-        if (OptionsPtr->getBombCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_1->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-            boosterPlus_1->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (firstBooster == BoosterFish)
-	{
-        booster_1->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_1->addChild(booster);
-        
-        if (OptionsPtr->getFishCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_1->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-
-            boosterPlus_1->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-    else if (firstBooster == BoosterDonut)
-	{
-        booster_1->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_1->addChild(booster);
-        
-        if (OptionsPtr->getDonutCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_1->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-
-            boosterPlus_1->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_1->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else
-	{
-		booster_1->setVisible(false);
 	}
     
-	if (secondBooster == BoosterCrystal)
-	{
-        booster_2->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_2->addChild(booster);
-        
-        if (OptionsPtr->getCrystalCOunt() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("gameMap/boosterBack.png");
-            boosterPlus_2->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
 
-            boosterPlus_2->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (secondBooster == BoosterBomb)
+	if (secondBooster == BoosterBomb)
 	{
         booster_2->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
@@ -1433,9 +1647,8 @@ void MapMenuLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_2->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             label->setColor(ccWHITE);
-
             boosterPlus_2->addChild(label);
             label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
         }
@@ -1443,105 +1656,9 @@ void MapMenuLayer::updateBoosters()
         {
             boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
         }
-	}
-	else if (secondBooster == BoosterFish)
-	{
-        booster_2->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_2->addChild(booster);
-        
-        if (OptionsPtr->getFishCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_2->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-            boosterPlus_2->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-    else if (secondBooster == BoosterDonut)
-	{
-        booster_2->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_2->addChild(booster);
-        
-        if (OptionsPtr->getDonutCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_2->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-            
-            boosterPlus_2->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_2->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else
-	{
-		booster_2->setVisible(false);
 	}
     
-	if (thirdBooster == BoosterCrystal)
-	{
-        booster_3->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/crystal.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_3->addChild(booster);
-        
-        if (OptionsPtr->getCrystalCOunt() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_3->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getCrystalCOunt());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-            boosterPlus_3->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (thirdBooster == BoosterBomb)
-	{
-        booster_3->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/bomb.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_3->addChild(booster);
-        
-        if (OptionsPtr->getBombCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_3->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getBombCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-            boosterPlus_3->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else if (thirdBooster == BoosterFish)
+    if (thirdBooster == BoosterFish)
 	{
         booster_3->setVisible(true);
 		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
@@ -1554,7 +1671,7 @@ void MapMenuLayer::updateBoosters()
             CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             boosterPlus_3->setDisplayFrame(temp->displayFrame());
             sprintf(buf, "%d", OptionsPtr->getFishCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             label->setColor(ccWHITE);
 
             boosterPlus_3->addChild(label);
@@ -1564,33 +1681,6 @@ void MapMenuLayer::updateBoosters()
         {
             boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
         }
-	}
-    else if (thirdBooster == BoosterDonut)
-	{
-        booster_3->setVisible(true);
-		CCSprite* booster = CCSprite::createWithSpriteFrameName("common/fish.png");
-		booster->setPosition(ccp(booster_1->getContentSize().width/2.0f, booster_1->getContentSize().height/2.0f));
-		booster_3->addChild(booster);
-        
-        if (OptionsPtr->getDonutCount() >0)
-        {
-            CCSprite* temp = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
-            boosterPlus_3->setDisplayFrame(temp->displayFrame());
-            sprintf(buf, "%d", OptionsPtr->getDonutCount());
-            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_36);
-            label->setColor(ccWHITE);
-
-            boosterPlus_3->addChild(label);
-            label->setPosition(ccp(boosterPlus_1->getContentSize().width/2.0f, boosterPlus_1->getContentSize().height/2.0f));
-        }
-        else
-        {
-            boosterPlus_3->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("common/plus.png"));
-        }
-	}
-	else
-	{
-		booster_3->setVisible(false);
 	}
 
     
@@ -1680,37 +1770,37 @@ void MapMenuLayer::playCallback(CCObject* pSender)
         //        facebookPanel->runAction(CCMoveBy::create(0.3f, ccp(-WINSIZE.width, 0.0f)));
     }
     
-    CCSprite* sprite;
+    
     if (IPAD)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadPortrait.png");
     }
     else if (IPAD_MINI)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadMiniLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadMiniPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
     }
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingIphoneLanscape.png");
+            spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
-            sprite = CCSprite::create("loadingIphonePortrait.png");
-        sprite->setScale(1.2f);
+            spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+        spriteLoading->setScale(1.2f);
     }
-    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_48);
+    labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
     this->addChild(labelLoad,1001);
-    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
-    this->addChild(sprite, 1000);
-    sprite->setVisible(false);
-    sprite->setOpacity(0);
-    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+    spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(spriteLoading, 1000);
+    spriteLoading->setVisible(false);
+    spriteLoading->setOpacity(0);
+    spriteLoading->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
     
     labelLoad->setVisible(false);
     labelLoad->setOpacity(0);
@@ -1754,10 +1844,33 @@ void MapMenuLayer::playAfterLoad(CCNode* pSender)
 
 void MapMenuLayer::booster_1_Callback(CCObject* pSender)
 {
+    
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     booster_1->stopAllActions();
     booster_1->setScale(0.7f);
 	booster_1->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    if (OptionsPtr->getCrystalCOunt() > 0)
+    {
+        if (GlobalsPtr->booster_1)
+        {
+            if (booster1Check)
+            {
+                booster1Check->removeFromParentAndCleanup(true);
+                booster1Check = NULL;
+            }
+            GlobalsPtr->booster_1 = false;
+        }
+        else
+        {
+            booster1Check = CCSprite::create("okSend.png");
+            boosterPlus_1->addChild(booster1Check,100);
+            booster1Check->setPosition(ccp(boosterPlus_1->getContentSize().width/2.1f, boosterPlus_1->getContentSize().height/1.9f));
+            booster1Check->setScale(0.71f);
+            GlobalsPtr->booster_1 = true;
+        }
+        return;
+    }
     
     menu->setEnabled(false);
     if (firstBooster == BoosterCrystal)
@@ -1785,6 +1898,28 @@ void MapMenuLayer::booster_2_Callback(CCObject* pSender)
     booster_2->setScale(0.7f);
 	booster_2->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
+    if (OptionsPtr->getBombCount() > 0)
+    {
+        if (GlobalsPtr->booster_2)
+        {
+            if (booster2Check)
+            {
+                booster2Check->removeFromParentAndCleanup(true);
+                booster2Check = NULL;
+            }
+            GlobalsPtr->booster_2 = false;
+        }
+        else
+        {
+            booster2Check = CCSprite::create("okSend.png");
+            boosterPlus_2->addChild(booster2Check,100);
+            booster2Check->setPosition(ccp(boosterPlus_2->getContentSize().width/2.1f, boosterPlus_2->getContentSize().height/1.9f));
+            booster2Check->setScale(0.71f);
+            GlobalsPtr->booster_2 = true;
+        }
+        return;
+    }
+    
     menu->setEnabled(false);
     if (secondBooster == BoosterCrystal)
     {
@@ -1810,6 +1945,28 @@ void MapMenuLayer::booster_3_Callback(CCObject* pSender)
     booster_3->stopAllActions();
     booster_3->setScale(0.7f);
 	booster_3->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
+    
+    if (OptionsPtr->getFishCount() > 0)
+    {
+        if (GlobalsPtr->booster_3)
+        {
+            if (booster3Check)
+            {
+                booster3Check->removeFromParentAndCleanup(true);
+                booster3Check = NULL;
+            }
+            GlobalsPtr->booster_3 = false;
+        }
+        else
+        {
+            booster3Check = CCSprite::create("okSend.png");
+            boosterPlus_3->addChild(booster3Check,100);
+            booster3Check->setPosition(ccp(boosterPlus_3->getContentSize().width/2.1f, boosterPlus_3->getContentSize().height/1.9f));
+            booster3Check->setScale(0.71f);
+            GlobalsPtr->booster_3 = true;
+        }
+        return;
+    }
     
     menu->setEnabled(false);
     if (thirdBooster == BoosterCrystal)
@@ -1840,6 +1997,7 @@ void MapMenuLayer::popupOk1(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.superelements");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::closeLoading))));
     menu->setEnabled(false);
 }
 
@@ -1853,6 +2011,7 @@ void MapMenuLayer::popupOk2(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.stripedandbomb");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::closeLoading))));
     menu->setEnabled(false);
 }
 
@@ -1866,6 +2025,7 @@ void MapMenuLayer::popupOk3(CCNode* pSender)
     }
     IAP::sharedInstance().buyProduct("com.destiny.icecreamadventure.penguins");
     popaplayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME), CCCallFuncN::create(this, callfuncN_selector(MapMenuLayer::closeLoading))));
     menu->setEnabled(false);
 }
 

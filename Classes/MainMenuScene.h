@@ -34,6 +34,7 @@ public:
 
 	void menuPlayCallback(CCObject* pSender);
 	void menuFacebookCallback(CCObject* pSender);
+    void menuGameCenterCallback(CCObject* pSender);
 	void menuSettingCallback(CCObject* pSender);
 	void soundCallback(CCObject* pSender);
 	void musicCallback(CCObject* pSender);
@@ -78,6 +79,7 @@ public:
     void addBonus(CCNode* pSender);
     
     void facebookButtonHide();
+    void gameCenterButtonHide();
     
     void facebookCheck(CCNode* pSender);
     
@@ -105,6 +107,7 @@ private:
 
 	CCMenuItemSprite* play;
 	CCMenuItemSprite* facebook;
+    CCMenuItemSprite* gameCenter;
 	CCMenuItemSprite* setting;
 	CCMenuItemSprite* sound;
 	CCMenuItemSprite* music;
@@ -173,6 +176,9 @@ private:
     float popupScale;
     SocialLayer* social;
     MoreGamesLayer* moreGamesLayer;
+    
+    CCSprite* spriteLoading = NULL;
+    CCLabelTTF* labelLoad = NULL;
 };
 
 #endif

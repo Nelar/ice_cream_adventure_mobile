@@ -9,8 +9,7 @@
 // 1
 #import "IAPHelper.h"
 #import <StoreKit/StoreKit.h>
-
-
+//#include "CCLocalizedString.h"
 // 2
 @interface IAPHelper () <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
@@ -25,7 +24,6 @@
     
     NSSet * _productIdentifiers;
     NSMutableSet * _purchasedProductIdentifiers;
-    
 }
 
 -(void)dealloc
@@ -86,22 +84,20 @@
     _productsRequest = nil;
     
   
-    NSArray * skProducts = response.products;
-    /*
+    NSArray* skProducts = response.products;
+
     for (SKProduct * skProduct in skProducts) {
         NSLog(@"Found product: %@ %@ %0.2f",
               skProduct.productIdentifier,
               skProduct.localizedTitle,
               skProduct.price.floatValue);
     }
-     */
-    
-    if(_completionHandler)
+     
+    if(_completionHandler && skProducts != nil)
     {
         _completionHandler(YES, skProducts);
         _completionHandler = nil;
     }
-    
 }
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
@@ -119,7 +115,7 @@
 #pragma mark SKPaymentTransactionOBserver
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
-{
+{    
     for (SKPaymentTransaction * transaction in transactions) {
         switch (transaction.transactionState)
         {
@@ -134,6 +130,7 @@
             default:
                 break;
         }
+        
     };
 }
 
@@ -159,6 +156,15 @@
     {
         [self cancelTransactionForValidation:transaction];
     }
+    else
+    {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithUTF8String:"iTunes connection error, \n please check your connection \n and try again!"]
+                                                       delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+        
+        [self cancelTransactionForValidation:transaction];
+    }
     
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 }
@@ -171,8 +177,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:IAPHelperProductPurchasedNotification object:transaction userInfo:transaction];
 }
 
-- (void)provideTransactionForValidation:(SKPaymentTransaction *)transaction {
-    
+- (void)provideTransactionForValidation:(SKPaymentTransaction *)transaction {    
     [[NSNotificationCenter defaultCenter] postNotificationName:IAPHelperProductPurchasedNotification object:transaction userInfo:nil];
 }
 

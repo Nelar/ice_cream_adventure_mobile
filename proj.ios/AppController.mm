@@ -20,6 +20,7 @@
 #import <Tapjoy/Tapjoy.h>
 #import "AppsFlyerTracker.h"
 #import <AdSupport/AdSupport.h>
+#import <GameKit/GameKit.h>
 
 using namespace CocosDenshion;
 
@@ -137,7 +138,7 @@ static AppDelegate s_sharedApplication;
     
     [AppsFlyerTracker sharedTracker].appsFlyerDevKey = @"YJq3qzRGdkR6ZQZHmkozQn";
     [AppsFlyerTracker sharedTracker].appleAppID = @"705058125";
-    
+        
     return YES;
 }
 

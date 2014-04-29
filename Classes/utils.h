@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <string>
+#include "Options.h"
 
 const char* version();
 const char* iOSversion();
@@ -32,6 +33,12 @@ std::string push_enabled();
 std::string getIsFirstTimeRunning();
 
 void appsFlyerTrackEvent(const char* event, const char* value);
+
+void getLevelDataFromGC();
+void submitLevelDataToGC();
+void loginGC();
+bool isLoginGC();
+
 
 
 #endif /* defined(__IceCream__utils__) */

@@ -17,6 +17,7 @@
 
 #include "MD5.h"
 #include "base64.h"
+#include "nMMP.h"
 
 using namespace cocos2d;
 using namespace std;
@@ -43,8 +44,6 @@ LoadingScene::~LoadingScene()
     this->stopAllActions();
     this->unscheduleAllSelectors();
     this->removeAllChildrenWithCleanup(true);
-    CCSpriteFrameCache::sharedSpriteFrameCache()->removeSpriteFramesFromFile("mainMenu.plist");
-    CCTextureCache::sharedTextureCache()->removeTextureForKey("mainMenu.pvr.ccz");
 }
 
 
@@ -54,8 +53,16 @@ bool LoadingScene::init()
 	if (!CCLayer::init())
 		return false;
     
+    GlobalsPtr->iceCreamScene = Loading;
+    action = NULL;
+    
+    cocos2d::extension::CCHttpClient::getInstance()->setTimeoutForConnect(5);
+    cocos2d::extension::CCHttpClient::getInstance()->setTimeoutForRead(5);
+    
     Options* options = new Options();
 	OptionsPtr->load();
+    
+    MMP* mmp = new MMP();
     
     if (IPAD)
     {
@@ -74,14 +81,18 @@ bool LoadingScene::init()
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            background = CCSprite::create("loadingIphoneLandscape.png");
+            background = CCSprite::create("loadingIphoneLanscape.png");
         else
             background = CCSprite::create("loadingIphonePortrait.png");
     }
     background->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     
+    labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+    this->addChild(labelLoad, 1001);
     
     this->addChild(background);
+        
     
     if (getNetworkStatus())
     {
@@ -90,22 +101,38 @@ bool LoadingScene::init()
         {
             mmpTrackingInit();
         }
+        MMPPtr->startSession();
         if (OptionsPtr->isFacebookConnection())
         {
             FacebookPtr->login();
         }
+        MMPPtr->mmpBanner();
         moreGamesRequest();
+        action = this->runAction(CCSequence::create(CCDelayTime::create(25.0f), CCCallFuncN::create(this, callfuncN_selector(LoadingScene::moreGamesLoadSavedData)), NULL));
     }
     else
     {
         moreGamesLoadSavedData();
     }
     
+    OptionsPtr->launchCount++;
+    OptionsPtr->save();
+    
+    if (OptionsPtr->launchCount == 4)
+        appsFlyerTrackEvent("loyal_user", "");
+    
 	return true;
 }
 
 void LoadingScene::trackingServerResponse(CCHttpClient * client, CCHttpResponse * response)
 {
+    if (!response->isSucceed())
+    {
+        CCLOG("Server TRACKING responce ERROR: %d", response->getErrorBuffer());
+        if (getNetworkStatus())
+            cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
+        return;
+    }
     std::vector<char> *buffer = response->getResponseData();
     std::string str = std::string(buffer->begin(), buffer->end());
     if (str == "OK") {
@@ -218,15 +245,16 @@ void LoadingScene::moreGamesRequest()
             langName = "en";
             break;
     }
-    
-    string requestStr = "https://id.ddestiny.ru/mobile/api/games/get/?lang=" + langName + string("&country=") + string(getCountry());
+    string requestStr = "https://id.ddestiny.ru/mobile/api/games/get/?lang=" + langName + string("&country=") + string(getCountry()) +
+    string("&app_id=705058125") + string("&platform=ios");
     
     CCHttpRequest * request = new CCHttpRequest();
     request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
     request->setUrl(requestStr.c_str());
     request->setResponseCallback(this, httpresponse_selector(LoadingScene::moreGamesServerResponse));
+    CCLOG("HTTPClient Timeout %d", cocos2d::extension::CCHttpClient::getInstance()->getTimeoutForConnect());
+    CCLOG("HTTPClient Timeout %d", cocos2d::extension::CCHttpClient::getInstance()->getTimeoutForRead());
     cocos2d::extension::CCHttpClient::getInstance()->send(request);
-    
     request->release();
 }
 
@@ -238,6 +266,8 @@ void LoadingScene::linkCallback(CCObject * sender)
 
 void LoadingScene::moreGamesLoadSavedData()
 {
+    if (action)
+        this->stopAction(action);
     int countMoreGames = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey("countMoreGames", 0);
     if (countMoreGames == 0)
     {
@@ -283,9 +313,17 @@ void LoadingScene::moreGamesLoadedCallback(CCNode *sender)
 
 void LoadingScene::iconsServerResponse(CCHttpClient * client, CCHttpResponse * response)
 {
+    if (!response->isSucceed())
+    {
+        CCLOG("Server ICON responce ERROR: %d", response->getErrorBuffer());
+        if (action)
+            this->stopAction(action);
+        moreGamesLoadedCallback(NULL);
+        return;
+    }
     string writeFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("icon") + response->getHttpRequest()->getTag() + string(".png");
     std::ofstream outfile(writeFile, std::ios::out | std::ios::binary);
-    std::ostream_iterator<char> oi(outfile, '\0');
+    std::ostream_iterator<char> oi(outfile, "\0");
     
     std::vector<char> *buffer = response->getResponseData();
     std::copy(buffer->begin(), buffer->end(), oi);
@@ -313,13 +351,25 @@ void LoadingScene::iconsServerResponse(CCHttpClient * client, CCHttpResponse * r
 
 void LoadingScene::moreGamesServerResponse(CCHttpClient * client, CCHttpResponse * response)
 {
+    if (!response->isSucceed())
+    {
+        CCLOG("Server MORE GAMES responce ERROR: %d", response->getErrorBuffer());
+        if (action)
+            this->stopAction(action);
+        moreGamesLoadedCallback(NULL);
+        return;
+    }
     std::vector<char> *buffer = response->getResponseData();
     std::string str = std::string(buffer->begin(), buffer->end());
     
-    rapidjson::Document d;
+    if (action)
+        this->stopAction(action);
+    
+    rapidjson::Document d;    
     d.Parse<0>(str.c_str());
     string status =  d["status"].GetString();
-    if (status == "ok")
+    bool error = !d["error"].IsNull();
+    if (status == "ok" && !error)
     {
         rapidjson::Value response(rapidjson::kArrayType);
         response = d["response"];
@@ -348,17 +398,68 @@ void LoadingScene::moreGamesServerResponse(CCHttpClient * client, CCHttpResponse
             cocos2d::extension::CCHttpClient::getInstance()->send(request);
             request->release();
         }
+        if (sizeMoreGames == 0)
+        {
+            moreGamesLoadedCallback(NULL);
+        }
+    }
+    else
+    {
+        moreGamesLoadedCallback(NULL);
     }
 }
 
 void LoadingScene::loadingFinished(CCNode* sender)
 {
     CCLog("Loading more games %d", GlobalsPtr->globalMoreGames.size());
-    CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
+    
+    bool flagLoad = false;
+    flagLoad = CCUserDefault::sharedUserDefault()->getBoolForKey("gameCenterLogin", false);
+    
+    if (flagLoad)
+    {
+        if (getNetworkStatus())
+            loginGC();
+        else
+            CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
+    }
+    else
+    {
+        CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
+    }
 }
 
 void LoadingScene::changeOrientation()
 {
+    background->removeFromParentAndCleanup(true);
+    labelLoad->removeFromParentAndCleanup(true);
+    if (IPAD)
+    {
+        if (LANDSCAPE)
+            background = CCSprite::create("loadingiPadLandscape.png");
+        else
+            background = CCSprite::create("loadingiPadPortrait.png");
+    }
+    else if (IPAD_MINI)
+    {
+        if (LANDSCAPE)
+            background = CCSprite::create("loadingiPadMiniLandscape.png");
+        else
+            background = CCSprite::create("loadingiPadMiniPortrait.png");
+    }
+    else if (IPHONE_4||IPHONE_5)
+    {
+        if (LANDSCAPE)
+            background = CCSprite::create("loadingIphoneLanscape.png");
+        else
+            background = CCSprite::create("loadingIphonePortrait.png");
+    }
+    background->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     
+    labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+    this->addChild(labelLoad, 1001);
+    
+    this->addChild(background);
 }
 

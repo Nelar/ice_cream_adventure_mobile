@@ -349,6 +349,40 @@ void EndGameLayer::changeOrientation()
             social->setScale(0.91f);
         }
     }
+    
+    if (spriteLoading)
+    {
+        spriteLoading->removeFromParentAndCleanup(true);
+        labelLoad->removeFromParentAndCleanup(true);
+        if (IPAD)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadPortrait.png");
+        }
+        else if (IPAD_MINI)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
+        }
+        else if (IPHONE_4||IPHONE_5)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+            this->setScale(1.0f);
+        }
+        
+        labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+        this->addChild(labelLoad,1001);
+        spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        this->addChild(spriteLoading, 1000);
+    }
 }
 
 void EndGameLayer::closeEnded(CCNode* sender)
@@ -662,7 +696,7 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
         {
             if (currentLevel == 6)
             {
-                FacebookPtr->completeTutorial(" ");
+             //   FacebookPtr->completeTutorial(" ");
             }
         }
         
@@ -900,6 +934,8 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
 	close->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
     social->showScoreboard(currentLevel);
+    
+    getLevelDataFromGC();
 }
 
 void EndGameLayer::explosionCallback(CCNode* sender)
@@ -1189,38 +1225,37 @@ void EndGameLayer::closeCallback(CCObject* pSender)
 	lock = false;
     menu->setEnabled(false);
     
-    CCSprite* sprite;
     if (IPAD)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadPortrait.png");
     }
     else if (IPAD_MINI)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadMiniLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadMiniPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
     }
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingIphoneLanscape.png");
+            spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
-            sprite = CCSprite::create("loadingIphonePortrait.png");
-        sprite->setScale(1.2f);
+            spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+        this->setScale(1.0f);
     }
     
-    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
     this->addChild(labelLoad, 1001);
-    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
-    this->addChild(sprite, 1000);
-    sprite->setVisible(false);
-    sprite->setOpacity(0);
-    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+    spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(spriteLoading, 1000);
+    spriteLoading->setVisible(false);
+    spriteLoading->setOpacity(0);
+    spriteLoading->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
     labelLoad->setVisible(false);
     labelLoad->setOpacity(0);
     labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
@@ -1327,39 +1362,38 @@ void EndGameLayer::nextCallback(CCObject* pSender)
     }
     
     social->hideScoreBoard();
-    
-    CCSprite* sprite;
+        
     if (IPAD)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadPortrait.png");
     }
     else if (IPAD_MINI)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadMiniLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadMiniPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
     }
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingIphoneLanscape.png");
+            spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
-            sprite = CCSprite::create("loadingIphonePortrait.png");
-        sprite->setScale(1.2f);
+            spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+        this->setScale(1.0f);
     }
     
-    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
     this->addChild(labelLoad,10001);
-    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
-    this->addChild(sprite, 1000);
-    sprite->setVisible(false);
-    sprite->setOpacity(0);
-    sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+    spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(spriteLoading, 1000);
+    spriteLoading->setVisible(false);
+    spriteLoading->setOpacity(0);
+    spriteLoading->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
     labelLoad->setVisible(false);
     labelLoad->setOpacity(0);
     labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
@@ -1435,38 +1469,37 @@ void EndGameLayer::retryEnd(CCNode* pSender)
     menu->setEnabled(true);
     if (OptionsPtr->getLifeCount() == 0)
     {
-        CCSprite* sprite;
         if (IPAD)
         {
             if (LANDSCAPE)
-                sprite = CCSprite::create("loadingiPadLandscape.png");
+                spriteLoading = CCSprite::create("loadingiPadLandscape.png");
             else
-                sprite = CCSprite::create("loadingiPadPortrait.png");
+                spriteLoading = CCSprite::create("loadingiPadPortrait.png");
         }
         else if (IPAD_MINI)
         {
             if (LANDSCAPE)
-                sprite = CCSprite::create("loadingiPadMiniLandscape.png");
+                spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
             else
-                sprite = CCSprite::create("loadingiPadMiniPortrait.png");
+                spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
         }
         else if (IPHONE_4||IPHONE_5)
         {
             if (LANDSCAPE)
-                sprite = CCSprite::create("loadingIphoneLanscape.png");
+                spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
             else
-                sprite = CCSprite::create("loadingIphonePortrait.png");
-            sprite->setScale(1.2f);
+                spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+            this->setScale(1.0f);
         }
         
-        CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
         labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
         this->addChild(labelLoad,1001);
-        sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
-        this->addChild(sprite, 1000);
-        sprite->setVisible(false);
-        sprite->setOpacity(0);
-        sprite->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+        spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        this->addChild(spriteLoading, 1000);
+        spriteLoading->setVisible(false);
+        spriteLoading->setOpacity(0);
+        spriteLoading->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
         labelLoad->setVisible(false);
         labelLoad->setOpacity(0);
         labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));

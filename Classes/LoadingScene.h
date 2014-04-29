@@ -41,6 +41,7 @@ private:
     CCSprite* background;
     int sizeMoreGames;
     CCAction* action = NULL;
+    CCLabelTTF* labelLoad;
 };
 
 #endif

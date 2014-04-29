@@ -162,6 +162,8 @@ public:
     
 private:
     
+    void lightingBomb(CCPoint begin, CCPoint end, float scale, float delay);
+    
     bool endConditionCheck();
     
 
@@ -289,7 +291,7 @@ private:
     vector<CCPoint> crystals;
     int crystalIdx;
     
-    void lighting(CCPoint begin, CCPoint end);
+    void lighting(CCPoint begin, CCPoint end, float delay = 0.0f);
     
     bool isEnd;
     
@@ -380,6 +382,7 @@ private:
     bool isNotElementFish = false;
     
     bool isFishNeedRun = false;
+    bool crystalCrystal = false;
 };
 
 #endif

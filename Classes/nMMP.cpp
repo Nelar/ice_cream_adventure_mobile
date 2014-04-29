@@ -17,6 +17,12 @@
 #include "utils.h"
 #include "cGlobal.h"
 
+#include <fstream>
+#include <iostream>
+#include <iterator>
+
+using namespace std;
+
 using namespace std;
 
 
@@ -26,8 +32,9 @@ void MMP::mmpAnalytics(string json)
     ICA PROD: app_id=10, app_secret=cbe2fc96b756a8adc510c05322be0eb3
     ICA DEV: app_id=4, app_secret=6a3b93ddba2b32140f4be6569928d65d
      */
-    string appKey = "10";
-    string appSecret = "cbe2fc96b756a8adc510c05322be0eb3";
+    string appKey = "4";
+    string appSecret = "6a3b93ddba2b32140f4be6569928d65d";
+    
     string appID = "com.destinygroup.icecreamadventure";
     string appVersion = string(version());
     string idfaKey = string(idfa());
@@ -89,6 +96,147 @@ void MMP::mmpAnalytics(string json)
     cocos2d::extension::CCHttpClient::getInstance()->send(request);
     request->release();
 }
+
+void MMP::mmpBanner()
+{
+    /*
+     - QP (iOS): app_id=5
+     */
+    string appKey = "5";
+    string appID = "com.destinygroup.4picsnewepisode";
+    string appVersion = string(version());
+    string idfaKey = string(idfa());
+    string idfvKey = string(idfv());
+    string deviceName = string(device());
+    string viOS = string(iOSversion());
+    string osLat = string(limitAdTracking());
+    string net = string(networkStatus());
+    string currCarrier = string(carrier());
+    
+    ccLanguageType curLanguage = CCApplication::sharedApplication()->getCurrentLanguage();
+    string langName;
+    switch (curLanguage) {
+        case kLanguageEnglish:
+            langName = "en";
+            break;
+        case kLanguageRussian:
+            langName = "ru";
+            break;
+        case kLanguageFrench:
+            langName = "fr";
+            break;
+        case kLanguageItalian:
+            langName = "it";
+            break;
+        case kLanguageGerman:
+            langName = "de";
+            break;
+        case kLanguageSpanish:
+            langName = "es";
+            break;
+        case kLanguagePortuguese:
+            langName = "pt";
+            break;
+        default:
+            langName = "en";
+            break;
+    }
+    char buf[255];
+    string resolution;
+    if (LANDSCAPE)
+    {
+        sprintf(buf, "%d", (int)WINSIZE.width);
+        resolution += "\"" + string(buf) + "x";
+        sprintf(buf, "%d", (int)WINSIZE.height);
+        resolution += std::string(buf) + "\"";
+    }
+    else
+    {
+        sprintf(buf, "%d", (int)WINSIZE.height);
+        resolution += "\"" + std::string(buf) + "x";
+        sprintf(buf, "%d", (int)WINSIZE.width);
+        resolution += std::string(buf) + "\"";
+    }
+
+    
+    
+    string requestStr = "http://ads.destiny.li/api/v1/banners/?app_id=" + appKey +
+    string("&d_eid_type1=idfa") +
+    string("&d_eid1=") + idfaKey +
+    string("&d_eid_type2=idfv") +
+    string("&d_eid2=") + idfvKey +
+    string("&d_model=") + deviceName +
+    string("&d_screen=") + resolution +
+    string("&os_name=iOS") +
+    string("&os_v=") + viOS +
+    string("&os_lang=") + langName +
+    string("&os_lat=") + osLat +
+    string("&net=") + net;
+    
+    CCHttpRequest * request = new CCHttpRequest();
+    request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
+    request->setUrl(requestStr.c_str());
+    request->setResponseCallback(this, httpresponse_selector(MMP::bannerServerResponse));
+    cocos2d::extension::CCHttpClient::getInstance()->send(request);
+    request->release();
+}
+
+void MMP::bannerServerResponse(CCHttpClient * client, CCHttpResponse * response)
+{
+    std::vector<char> *buffer = response->getResponseData();
+    std::string str = std::string(buffer->begin(), buffer->end());
+    rapidjson::Document d;
+    d.Parse<0>(str.c_str());
+    
+    if (d["status"].IsNull())
+        return;
+    string code = d["status"].GetString();
+    CCLOG("BANNER RESPONCE %s", code.c_str());
+    if(code == "ok")
+    {
+        imageUrl = d["image_url"].GetString();
+        trackingUrl = d["tracking_url"].GetString();
+        storeUrl = d["store_url"].GetString();
+        
+        CCHttpRequest * request = new CCHttpRequest();
+        request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
+        request->setUrl(imageUrl.c_str());
+        request->setResponseCallback(this, httpresponse_selector(MMP::imageServerResponse));
+        cocos2d::extension::CCHttpClient::getInstance()->send(request);
+        request->release();
+    }
+    
+    return;
+}
+
+void MMP::imageServerResponse(CCHttpClient * client, CCHttpResponse * response)
+{
+    string writeFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("banner.png");
+    std::ofstream outfile(writeFile, std::ios::out | std::ios::binary);
+    std::ostream_iterator<char> oi(outfile, "\0");
+    
+    std::vector<char> *buffer = response->getResponseData();
+    std::copy(buffer->begin(), buffer->end(), oi);
+    
+    CCImage* image = new CCImage();
+    image->initWithImageData(response->getResponseData()->data(), response->getResponseData()->size(), CCImage::kFmtPng);
+    image->saveToFile(writeFile.c_str(), false);
+//    setNotBackUp(writeFile.c_str());
+    
+    if( outfile.good() )
+    {
+//        setNotBackUp(writeFile.c_str());
+        CCLOG( "BANNER MMP GOOD");
+        isBanner = true;
+    }
+    else
+    {
+        CCLOG( "BANNER MMP BAD");
+    }
+    outfile.close();
+    delete image;
+}
+
 
 string MMP::meta()
 {
@@ -490,7 +638,9 @@ void MMP::analyticsServerResponse(CCHttpClient * client, CCHttpResponse * respon
 {
     if (!response->isSucceed())
     {
-        CCLOG("Server responce ERROR: %d", response->getErrorBuffer());
+        CCLOG("Server ANALYTICS responce ERROR: %d", response->getErrorBuffer());
+        if (getNetworkStatus())
+            cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
         return;
     }
     std::vector<char> *buffer = response->getResponseData();
@@ -508,6 +658,8 @@ void MMP::trackingServerResponse(CCHttpClient * client, CCHttpResponse * respons
     if (!response->isSucceed())
     {
         CCLOG("Server responce ERROR: %d", response->getErrorBuffer());
+        if (getNetworkStatus())
+            cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
         return;
     }
     std::vector<char> *buffer = response->getResponseData();

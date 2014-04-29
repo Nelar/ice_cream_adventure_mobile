@@ -12,12 +12,10 @@
 #include "support/CCPointExtension.h"
 #include "draw_nodes/CCDrawingPrimitives.h"
 #include "GameMapLayer.h"
-#include "MMPInterface.h"
+#include "nMMP.h"
 
 using namespace CocosDenshion;
 using namespace cocos2d;
-using namespace Core;
-using namespace MarketingPlatform;
 
 #define TUTORIAL_DELAY 0.5f
 
@@ -146,8 +144,8 @@ void GameScene::loadLevel(const char* levelName)
     
     
     char buf[255];
-    sprintf(buf, "%0*d", 3, menu->getCurrentLevel());
-    Core::MMPInterface::Instance()->LevelStarted(string(buf));
+    sprintf(buf, "%d", menu->getCurrentLevel());
+    MMPPtr->levelStarted(menu->getCurrentLevel(), string(buf));
     if (menu->getCurrentLevel() >= 8)
     {
         for (int j = 0; j < columnCount; j++)
@@ -460,7 +458,7 @@ void GameScene::loadLevel(const char* levelName)
             fieldLayer->setScale(0.95f);
     }
     
-    if (OptionsPtr->getBombCount() > 0)
+    if (GlobalsPtr->booster_2)
     {
         int idxBoost = rand() % gameObjects.size();
         while (gameObjects[idxBoost]->type != Simple || gameField[gameObjects[idxBoost]->x][gameObjects[idxBoost]->y] == CageCell || gameField[gameObjects[idxBoost]->x][gameObjects[idxBoost]->y] == CageIceCell)
@@ -469,29 +467,24 @@ void GameScene::loadLevel(const char* levelName)
             gameObjects[idxBoost]->changeType(Bomb);
         else
             gameObjects[idxBoost]->changeType(Horizontal);
-        
-        OptionsPtr->setBombCount(OptionsPtr->getBombCount() - 1);
     }
     
-    if (OptionsPtr->getCrystalCOunt() > 0)
+    if (GlobalsPtr->booster_1)
     {
         int idxBoost = rand() % gameObjects.size();
         while (gameObjects[idxBoost]->type != Simple || gameField[gameObjects[idxBoost]->x][gameObjects[idxBoost]->y] == CageCell || gameField[gameObjects[idxBoost]->x][gameObjects[idxBoost]->y] == CageIceCell)
             idxBoost = rand() % gameObjects.size();
         gameObjects[idxBoost]->changeType(Crystal);
-        OptionsPtr->setCrystalCount(OptionsPtr->getCrystalCOunt() - 1);
     }
     
-    if (OptionsPtr->getFishCount() > 0 && menu->type != Score)
+    if (GlobalsPtr->booster_3 && menu->type != Score)
     {
         int idxBoost = rand() % gameObjects.size();
         while (gameObjects[idxBoost]->type != Simple || gameField[gameObjects[idxBoost]->x][gameObjects[idxBoost]->y] == CageCell || gameField[gameObjects[idxBoost]->x][gameObjects[idxBoost]->y] == CageIceCell)
             idxBoost = rand() % gameObjects.size();
         gameObjects[idxBoost]->changeType(Fish);
-        OptionsPtr->setFishCount(OptionsPtr->getFishCount() - 1);
     }
     OptionsPtr->save();
-    Core::MMPInterface::Instance()->SendSession();
 }
 
 GameScene::~GameScene()
@@ -513,6 +506,9 @@ bool GameScene::init(int levNum)
     
     //CCDirector::sharedDirector()->setAnimationInterval(1.0f / 30.0f);
     GlobalsPtr->iceCreamScene = Game;
+    
+    if (LANDSCAPE)
+        isTestLandscape = true;
     
     isChocolateDestroyed = false;
 	columnCount = 0;
@@ -543,8 +539,11 @@ bool GameScene::init(int levNum)
     iceCells.clear();
     superIceCells.clear();
     
+    if (!IPAD)
+        batchTexture = CCTextureCache::sharedTextureCache()->addImage("common.png");
+    else
+        batchTexture = CCTextureCache::sharedTextureCache()->addPVRImage("common.pvr.ccz");
     
-    batchTexture = CCTextureCache::sharedTextureCache()->addPVRImage("common.pvr.ccz");
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common.plist", batchTexture);
     
     CCTextureCache::reloadAllTextures();
@@ -552,6 +551,15 @@ bool GameScene::init(int levNum)
     batchTexture->setAntiAliasTexParameters();
 
 	SimpleAudioEngine::sharedEngine()->playBackgroundMusic("sound/level_1_loop.mp3", true);
+    
+    if (IPHONE_5 || IPHONE_4)
+    {
+        if (!LANDSCAPE)
+        {
+            this->setScale(1.095f);
+        }
+    }
+    
 
 	crystalChangeType = Vertical;
 
@@ -617,6 +625,20 @@ bool GameScene::init(int levNum)
     menu->createSnow();
     
     portalsRender();
+    
+    if (IPHONE_5 || IPHONE_4)
+    {
+        if (!LANDSCAPE)
+        {
+            backDown->setScaleX(backDown->getScaleX()*0.913f);
+            backDown->setScaleY(backDown->getScaleY()*0.913f);
+            if (false)
+                leftDownMenu->setPosition(ccp(leftDownMenu->getPositionX() - 25, leftDownMenu->getPositionY() + 20));
+            leftDownMenu->setScale(0.913f);
+            menu->setScale(0.913f);
+            endGameMenu->setScale(0.913f);
+        }
+    }
 
     
     return true;
@@ -729,12 +751,25 @@ void GameScene::changeOrientation(void)
     
     for (int i = 0; i < fishes.size(); i++)
     {
-        if (LANDSCAPE)
-            fishes[i]->setPosition(ccp(fishes[i]->getPositionX() + CELL_WIDTH*4.0f,
-                                        fishes[i]->getPositionY() - CELL_HEIGHT*2.0f));
+        if (IPHONE_4 || IPHONE_5)
+        {
+            if (LANDSCAPE)
+                fishes[i]->setPosition(ccp(fishes[i]->getPositionX() + CELL_WIDTH*6.0f,
+                                           fishes[i]->getPositionY() - CELL_HEIGHT*4.0f));
+            else
+                fishes[i]->setPosition(ccp(fishes[i]->getPositionX() - CELL_WIDTH*6.0f,
+                                           fishes[i]->getPositionY() + CELL_HEIGHT*4.0f));
+
+        }
         else
-            fishes[i]->setPosition(ccp(fishes[i]->getPositionX() - CELL_WIDTH*4.0f,
-                                       fishes[i]->getPositionY() + CELL_HEIGHT*2.0f));
+        {
+            if (LANDSCAPE)
+                fishes[i]->setPosition(ccp(fishes[i]->getPositionX() + CELL_WIDTH*4.0f,
+                                           fishes[i]->getPositionY() - CELL_HEIGHT*2.0f));
+            else
+                fishes[i]->setPosition(ccp(fishes[i]->getPositionX() - CELL_WIDTH*4.0f,
+                                           fishes[i]->getPositionY() + CELL_HEIGHT*2.0f));
+        }
     }
     
     if (tutorialNumber > 0)
@@ -800,14 +835,36 @@ void GameScene::changeOrientation(void)
             setTutorial_6_1();
         }
     }
+    
+    if (IPHONE_5 || IPHONE_4)
+    {
+        if (LANDSCAPE)
+        {
+            this->setScale(1.0f);
+            if (isTestLandscape)
+                leftDownMenu->setPosition(ccp(leftDownMenu->getPositionX() + 25, leftDownMenu->getPositionY() - 20));
+            leftDownMenu->setScale(1.0f);
+            menu->setScale(1.0f);
+        }
+        else
+        {
+            this->setScale(1.095f);
+            backDown->setScaleX(backDown->getScaleX()*0.913f);
+            backDown->setScaleY(backDown->getScaleY()*0.913f);
+            if (isTestLandscape)
+                leftDownMenu->setPosition(ccp(leftDownMenu->getPositionX() - 25, leftDownMenu->getPositionY() + 20));
+            leftDownMenu->setScale(0.913f);
+            menu->setScale(0.913f);
+        }
+    }
 }
 
 void GameScene::setTutorial_1()
 {
     tutorialNumber = 1;
     isTutorial = true;
-    tutorialCell.push_back(ccp(0, 2));
-    tutorialCell.push_back(ccp(1, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(0, 2), 0));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(1, 2), 1));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(WINSIZE);
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -834,7 +891,7 @@ void GameScene::setTutorial_1()
     stencil->addChild(cell4);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -873,7 +930,7 @@ void GameScene::setTutorial_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_2", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_1", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -914,14 +971,31 @@ void GameScene::setTutorial_1()
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
         down->setPosition(ccp(down->getPositionX() + CELL_WIDTH*2.0f, down->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    char buf[255];
+    sprintf(buf, "%d", this->menu->getCurrentLevel());
+    MMPPtr->tutorialStepStarted(this->menu->getCurrentLevel(), string(buf));
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_2()
 {
     tutorialNumber = 2;
     isTutorial = true;
-    tutorialCell.push_back(ccp(3, 3));
-    tutorialCell.push_back(ccp(3, 4));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(3, 3), 3));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(3, 4), 2));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -948,7 +1022,7 @@ void GameScene::setTutorial_2()
     stencil->addChild(cell4);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -982,7 +1056,7 @@ void GameScene::setTutorial_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_1", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_2", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1023,13 +1097,27 @@ void GameScene::setTutorial_2()
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
         down->setPosition(ccp(down->getPositionX() + CELL_WIDTH*2.0f, down->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_2_1()
 {
     tutorialNumber = 3;
     isTutorial = true;
-    tutorialCell.push_back(ccp(2, 3));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(2, 3), 2));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1060,7 +1148,7 @@ void GameScene::setTutorial_2_1()
     stencil->addChild(cell5);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1096,7 +1184,7 @@ void GameScene::setTutorial_2_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_3", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_3", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1129,13 +1217,30 @@ void GameScene::setTutorial_2_1()
         cell5->setPosition(ccp(cell5->getPositionX() + CELL_WIDTH*2.0f, cell5->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    char buf[255];
+    sprintf(buf, "%d", this->menu->getCurrentLevel());
+    MMPPtr->tutorialStepStarted(this->menu->getCurrentLevel(), string(buf));
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_2_2()
 {
     tutorialNumber = 4;
     isTutorial = true;
-    tutorialCell.push_back(ccp(4, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(4, 2), 0));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1163,7 +1268,7 @@ void GameScene::setTutorial_2_2()
     stencil->addChild(cell4);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1199,7 +1304,7 @@ void GameScene::setTutorial_2_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_4", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_4", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1231,6 +1336,20 @@ void GameScene::setTutorial_2_2()
         cell4->setPosition(ccp(cell4->getPositionX() + CELL_WIDTH*2.0f, cell4->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_3_1()
@@ -1238,7 +1357,7 @@ void GameScene::setTutorial_3_1()
     return;
     tutorialNumber = 5;
     isTutorial = true;
-    tutorialCell.push_back(ccp(2, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(2, 2), 0));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1274,7 +1393,7 @@ void GameScene::setTutorial_3_1()
     stencil->addChild(cell6);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1310,7 +1429,7 @@ void GameScene::setTutorial_3_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_5", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_5", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1343,6 +1462,23 @@ void GameScene::setTutorial_3_1()
         cell6->setPosition(ccp(cell6->getPositionX() + CELL_WIDTH*2.0f, cell6->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    char buf[255];
+    sprintf(buf, "%d", this->menu->getCurrentLevel());
+    MMPPtr->tutorialStepStarted(this->menu->getCurrentLevel(), string(buf));
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_3_2()
@@ -1350,7 +1486,7 @@ void GameScene::setTutorial_3_2()
     return;
     tutorialNumber = 6;
     isTutorial = true;
-    tutorialCell.push_back(ccp(3, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(3, 2), 0));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1378,7 +1514,7 @@ void GameScene::setTutorial_3_2()
     stencil->addChild(cell4);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1414,7 +1550,7 @@ void GameScene::setTutorial_3_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_6", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_6", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1446,14 +1582,28 @@ void GameScene::setTutorial_3_2()
         cell4->setPosition(ccp(cell4->getPositionX() + CELL_WIDTH*2.0f, cell4->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_4_1()
 {
     tutorialNumber = 7;
     isTutorial = true;
-    tutorialCell.push_back(ccp(3, 2));
-    tutorialCell.push_back(ccp(4, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(3, 2), 0));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(4, 2), 1));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1472,7 +1622,7 @@ void GameScene::setTutorial_4_1()
     stencil->addChild(cell2);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1508,7 +1658,7 @@ void GameScene::setTutorial_4_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_7", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_7", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1538,13 +1688,30 @@ void GameScene::setTutorial_4_1()
         cell2->setPosition(ccp(cell2->getPositionX() + CELL_WIDTH*2.0f, cell2->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    char buf[255];
+    sprintf(buf, "%d", this->menu->getCurrentLevel());
+    MMPPtr->tutorialStepStarted(this->menu->getCurrentLevel(), string(buf));
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_5_1()
 {
     tutorialNumber = 8;
     isTutorial = true;
-    tutorialCell.push_back(ccp(3, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(3, 2), 0));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1565,9 +1732,6 @@ void GameScene::setTutorial_5_1()
     cell5->setScaleY(1.1f);
     cell6->setScaleY(1.1f);
     
-    
-    
-    
     cell1->setPosition(gameFieldSprites[3][2]->getPosition());
     cell2->setPosition(gameFieldSprites[4][1]->getPosition());
     cell3->setPosition(gameFieldSprites[4][2]->getPosition());
@@ -1582,7 +1746,7 @@ void GameScene::setTutorial_5_1()
     stencil->addChild(cell6);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1618,7 +1782,7 @@ void GameScene::setTutorial_5_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_8", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_8", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1652,13 +1816,30 @@ void GameScene::setTutorial_5_1()
         cell6->setPosition(ccp(cell6->getPositionX() + CELL_WIDTH*2.0f, cell6->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    char buf[255];
+    sprintf(buf, "%d", this->menu->getCurrentLevel());
+    MMPPtr->tutorialStepStarted(this->menu->getCurrentLevel(), string(buf));
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_5_2()
 {
     tutorialNumber = 9;
     isTutorial = true;
-    tutorialCell.push_back(ccp(4, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(4, 2), 0));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1678,7 +1859,7 @@ void GameScene::setTutorial_5_2()
     stencil->addChild(cell2);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1714,7 +1895,7 @@ void GameScene::setTutorial_5_2()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_9", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_9", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1744,6 +1925,20 @@ void GameScene::setTutorial_5_2()
         cell2->setPosition(ccp(cell2->getPositionX() + CELL_WIDTH*2.0f, cell2->getPositionY() - CELL_HEIGHT/2.0f));
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::setTutorial_4_2()
@@ -1755,8 +1950,8 @@ void GameScene::setTutorial_6_1()
 {
     tutorialNumber = 10;
     isTutorial = true;
-    tutorialCell.push_back(ccp(0, 2));
-    tutorialCell.push_back(ccp(1, 2));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(0, 2), 0));
+    tutorialCell.push_back(pair<CCPoint, int>(ccp(1, 2), 1));
     tutorialLayer = CCLayer::create();
     tutorialLayer->setContentSize(CCSize(CCDirector::sharedDirector()->getWinSize().width, CCDirector::sharedDirector()->getWinSize().height));
     CCClippingNode* darkLayer = CCClippingNode::create();
@@ -1783,7 +1978,7 @@ void GameScene::setTutorial_6_1()
     stencil->addChild(cell4);
     darkLayer->setStencil(stencil);
     CCSprite* content = CCSprite::createWithSpriteFrameName("game/cell.png");
-    content->setScale(30.0f);
+    content->setScale(80.0f);
     content->setColor(ccBLACK);
     content->setOpacity(0);
     darkLayer->addChild(content);
@@ -1819,7 +2014,7 @@ void GameScene::setTutorial_6_1()
         fontSize = 50;
     else
         fontSize = 25;
-    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_10", NULL), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* label = CCLabelTTF::create(CCLocalizedString("TUTORIAL_10", NULL), FONT_COMMON, FONT_SIZE_48);
     label->setPosition(ccp(tutorialPopup->getContentSize().width/1.6f, tutorialPopup->getContentSize().height/2.0f));
     tutorialPopup->addChild(label);
     ccColor3B color;
@@ -1861,6 +2056,23 @@ void GameScene::setTutorial_6_1()
         up->setPosition(ccp(up->getPositionX() + CELL_WIDTH*2.0f, up->getPositionY() - CELL_HEIGHT/2.0f));
         down->setPosition(ccp(down->getPositionX() + CELL_WIDTH*2.0f, down->getPositionY() - CELL_HEIGHT/2.0f));
     }
+    char buf[255];
+    sprintf(buf, "%d", this->menu->getCurrentLevel());
+    MMPPtr->tutorialStepStarted(this->menu->getCurrentLevel(), string(buf));
+    
+    if (IPHONE_4 || IPHONE_5)
+    {
+        if (LANDSCAPE)
+        {
+            tutorialLayer->setScale(1.0f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX(), darkLayer->getPositionY() + 10));
+        }
+        else
+        {
+            tutorialLayer->setScale(0.913f);
+            darkLayer->setPosition(ccp(darkLayer->getPositionX() - 10, darkLayer->getPositionY() + 10));
+        }
+    }
 }
 
 void GameScene::closeLoading()
@@ -1869,7 +2081,7 @@ void GameScene::closeLoading()
     {
         if (endGameMenu->isVisible())
             endGameMenu->closeLoading();
-        else
+        else 
             menu->closeLoading();
     }
     else
@@ -1878,8 +2090,6 @@ void GameScene::closeLoading()
 
 void GameScene::skipCallback(CCObject* pSender)
 {
-    Core::MMPInterface::Instance()->TutorialSkipped();
-    
     isTutorial = false;
     isSecondTutorial = true;
     tutorialCell.clear();
@@ -1997,25 +2207,25 @@ bool GameScene::findMatch()
 		for (int j = 0; j < columnCount; j++)
 		{
             if (findGameObject(i, j) >= 0 && gameObjects[findGameObject(i, j)]->type != Cookie)
-			if (isSimpleCell(gameField[i][j]) && gameField[i][j] != CageCell && gameField[i][j] != CageIceCell)
+			if (isSimpleCell(gameField[i][j]))
 			{
-                if (gameObjects[findGameObject(i, j)]->type != Simple && gameObjects[findGameObject(i, j)]->type != Cookie)
+                if (gameObjects[findGameObject(i, j)]->type != Simple && gameObjects[findGameObject(i, j)]->type != Cookie && gameObjects[findGameObject(i, j)]->type != Fish)
                 {
-                    if (findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j)]->type != Simple && gameObjects[findGameObject(i - 1, j)]->type != Cookie && gameField[i - 1][j] != CageCell && gameField[i - 1][j] != CageIceCell)
+                    if (findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j)]->type != Simple && gameObjects[findGameObject(i - 1, j)]->type != Cookie && gameObjects[findGameObject(i - 1, j)]->type != Fish && gameField[i - 1][j] != CageCell && gameField[i - 1][j] != CageIceCell)
                     {
                         currentMatch.push_back(findGameObject(i - 1, j));
 						currentMatch.push_back(findGameObject(i, j));
 						findFlag = true;
                         break;
                     }
-                    if (findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j)]->type != Simple && gameObjects[findGameObject(i + 1, j)]->type != Cookie && gameField[i + 1][j] != CageCell && gameField[i + 1][j] != CageIceCell)
+                    if (findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j)]->type != Simple && gameObjects[findGameObject(i + 1, j)]->type != Cookie && gameObjects[findGameObject(i + 1, j)]->type != Fish && gameField[i + 1][j] != CageCell && gameField[i + 1][j] != CageIceCell)
                     {
                         currentMatch.push_back(findGameObject(i + 1, j));
 						currentMatch.push_back(findGameObject(i, j));
 						findFlag = true;
                         break;
                     }
-                    if (findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i, j - 1)]->type != Simple && gameObjects[findGameObject(i , j - 1)]->type != Cookie && gameField[i][j - 1] != CageCell && gameField[i][j - 1] != CageIceCell)
+                    if (findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i, j - 1)]->type != Simple && gameObjects[findGameObject(i , j - 1)]->type != Cookie && gameObjects[findGameObject(i , j - 1)]->type != Fish && gameField[i][j - 1] != CageCell && gameField[i][j - 1] != CageIceCell)
                     {
                         currentMatch.push_back(findGameObject(i, j - 1));
 						currentMatch.push_back(findGameObject(i, j));
@@ -2023,7 +2233,7 @@ bool GameScene::findMatch()
                         break;
                     }
                     
-                    if (findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i, j + 1)]->type != Simple && gameObjects[findGameObject(i , j + 1)]->type != Cookie && gameField[i][j + 1] != CageCell && gameField[i][j + 1] != CageIceCell)
+                    if (findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i, j + 1)]->type != Simple && gameObjects[findGameObject(i , j + 1)]->type != Cookie && gameObjects[findGameObject(i , j + 1)]->type != Fish && gameField[i][j + 1] != CageCell && gameField[i][j + 1] != CageIceCell)
                     {
                         currentMatch.push_back(findGameObject(i, j + 1));
 						currentMatch.push_back(findGameObject(i, j));
@@ -2031,7 +2241,7 @@ bool GameScene::findMatch()
                         break;
                     }
                 }
-				if (findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j)]->color == gameObjects[findGameObject(i, j)]->color && gameField[i - 2][j] != CageCell && gameField[i - 2][j] != CageIceCell)
+				if (findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i - 1, j + 1) >= 0 && findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2059,7 +2269,7 @@ bool GameScene::findMatch()
 					}
 				}
 
-				if (findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j)]->color == gameObjects[findGameObject(i, j)]->color  && gameField[i + 2][j] != CageCell && gameField[i + 2][j] != CageIceCell)
+				if (findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i + 1, j + 1) >= 0 && findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2087,7 +2297,7 @@ bool GameScene::findMatch()
 					}
 				}
 
-				if (findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i, j + 2)]->color == gameObjects[findGameObject(i, j)]->color  && gameField[i][j + 2] != CageCell && gameField[i][j + 2] != CageIceCell)
+				if (findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i, j + 2)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i + 1, j + 1) >= 0 && findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i + 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2115,7 +2325,7 @@ bool GameScene::findMatch()
 					}
 				}
 
-				if (findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i, j - 2)]->color == gameObjects[findGameObject(i, j)]->color  && gameField[i][j - 2] != CageCell && gameField[i][j - 2] != CageIceCell)
+				if (findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i, j - 2)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i + 1, j - 1) >= 0 && findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i + 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2144,7 +2354,7 @@ bool GameScene::findMatch()
 				}
 
 
-				if (findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j)]->color == gameObjects[findGameObject(i, j)]->color  && gameField[i - 1][j] != CageCell && gameField[i - 1][j] != CageIceCell)
+				if (findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i - 2, j - 1) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2184,7 +2394,7 @@ bool GameScene::findMatch()
 					}					
 				}				
 
-				if (findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j)]->color == gameObjects[findGameObject(i, j)]->color && gameField[i + 1][j] != CageCell && gameField[i + 1][j] != CageIceCell)
+				if (findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j)]->color == gameObjects[findGameObject(i, j)]->color)
 				{					
 					if (findGameObject(i + 2, j - 1) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2224,7 +2434,7 @@ bool GameScene::findMatch()
 					}	
 				}	
 
-				if (findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i, j - 1)]->color == gameObjects[findGameObject(i, j)]->color  && gameField[i][j - 1] != CageCell && gameField[i][j - 1] != CageIceCell)
+				if (findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i - 1, j - 2) >= 0 && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i - 1, j - 2)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2264,7 +2474,7 @@ bool GameScene::findMatch()
 					}					
 				}
 
-				if (findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameField[i][j + 1] != CageCell && gameField[i][j + 1] != CageIceCell)
+				if (findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
 				{
 					if (findGameObject(i - 1, j + 2) >= 0  && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i - 1, j + 2)]->color == gameObjects[findGameObject(i, j)]->color)
 					{
@@ -2314,14 +2524,6 @@ bool GameScene::findMatch()
         {
             gameObjects[currentMatch[i]]->sprite->runAction(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, ELEMENT_SCALE+(ELEMENT_SCALE/10.0f)),
                                                                                              CCScaleTo::create(0.5f, ELEMENT_SCALE)));
-/*            ccBlendFunc bright;
-            ccBlendFunc restore;
-            restore = gameObjects[currentMatch[i]]->sprite->getBlendFunc();
-            bright.src = GL_SRC_ALPHA;
-            bright.src = GL_ONE;
-            gameObjects[currentMatch[i]]->sprite->setBlendFunc(bright);
-            gameObjects[currentMatch[i]]->sprite->runAction(CCSequence::createWithTwoActions(CCTintTo::create(0.5f, 215, 215, 215),
-                                                                                             CCTintTo::create(0.5f, 255, 255, 255)));*/
         }
         
         currentMatch.clear();
@@ -2744,15 +2946,7 @@ void GameScene::afterDeletingForCrystalStripe(sGameObject* currObj)
         
         if (gameObjects[allDeletedChain[i]]->type == Fish)
         {
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.0f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.3f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.6f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.9f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 1.2f);
-            sweetCount = 5;
-            menu->isBannerLock = true;
-            lock = true;
-            this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
+            isFishNeedRun = true;
         }
         if (gameObjects[allDeletedChain[i]]->type == Simple)
         {
@@ -3160,10 +3354,13 @@ void GameScene::afterDeleting()
     bool isMegaBomb2 = false;
     int countSpecial = 0;
 
+    if (!crystalCrystal)
     for (int i = 0; i < allDeletedChain.size(); i++)
     {
         gameObjects[allDeletedChain[i]]->delayDestroy = 0.0f;
     }
+    
+    crystalCrystal = false;
     
     for (int i = 0; i < allDeletedChain.size(); i++)
     {
@@ -3177,15 +3374,7 @@ void GameScene::afterDeleting()
             continue;
         if (gameObjects[allDeletedChain[i]]->type == Fish)
         {
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.3f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.6f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.9f);
-            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 1.2f);
-            menu->isBannerLock = true;
-            sweetCount = 5;
-            lock = true;
-            this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
-            isRunFish = true;
+            isFishNeedRun = true;
         }
         if (gameObjects[allDeletedChain[i]]->type == Simple)
         {
@@ -3540,12 +3729,12 @@ void GameScene::afterDeleting()
             if (gameObjects[allDeletedChain[i]]->isMegaBombHorizontal)
             {
                 isMegaBomb2 = true;
-                timeDestroying = 1.0f;
+                timeDestroying = 0.1f;
                 notRefill = gameObjects[allDeletedChain[i]]->y;
 
                 for (int n = 0; n < columnCount; n++)
                 {
-                    float delayDestroy = 0.3f + abs(n - gameObjects[allDeletedChain[i]]->y)*0.15f;
+                    float delayDestroy = 0.1f + abs(n - gameObjects[allDeletedChain[i]]->y)*0.15f;
 
                     int left = findGameObject(gameObjects[allDeletedChain[i]]->x - 1, n);
                     int center =  findGameObject(gameObjects[allDeletedChain[i]]->x, n);
@@ -3651,11 +3840,11 @@ void GameScene::afterDeleting()
             else if (gameObjects[allDeletedChain[i]]->isMegaBombVertical)
             {
                 isMegaBomb2 = true;
-                timeDestroying = 1.0f;
+                timeDestroying = 0.1f;
                 notRefill = -2;
                 for (int n = 0; n < rowCount; n++)
                 {
-                    float delayDestroy = 0.3f + abs(n - gameObjects[allDeletedChain[i]]->x)*0.15f;
+                    float delayDestroy = 0.1f + abs(n - gameObjects[allDeletedChain[i]]->x)*0.15f;
                     int left = findGameObject(n, gameObjects[allDeletedChain[i]]->y - 1);
                     int center =  findGameObject(n, gameObjects[allDeletedChain[i]]->y);
                     int right = findGameObject(n, gameObjects[allDeletedChain[i]]->y + 1);
@@ -4343,6 +4532,33 @@ void GameScene::winCallback(CCNode* sender)
     lock = true;
     fieldLayer->setVisible(false);
     menu->setVisible(false);
+    if (IPHONE_5 || IPHONE_4)
+    {
+        if (LANDSCAPE)
+        {
+            this->setScale(1.0f);
+            if (WINSIZE.width == 1136)
+            {
+                backDown->setScaleX(1.12f);
+                backDown->setScaleY(1.0f);
+            }
+            else
+                backDown->setScale(1.1f);
+        }
+        else
+        {
+            this->setScale(1.0f);
+            if (WINSIZE.height == 1136)
+            {
+                backDown->setScaleY(1.12f);
+                backDown->setScaleX(1.0f);
+            }
+            else
+                backDown->setScale(1.1f);
+
+        }
+        
+    }
     endGameMenu->popupWin(menu->getCountStar(), menu->currentScore, menu->currentLevel);
 }
 
@@ -4352,6 +4568,32 @@ void GameScene::loseCallback(CCNode* sender)
     lock = true;
     fieldLayer->setVisible(false);
     menu->setVisible(false);
+    if (IPHONE_5 || IPHONE_4)
+    {
+        if (LANDSCAPE)
+        {
+            this->setScale(1.0f);
+            if (WINSIZE.width == 1136)
+            {
+                backDown->setScaleX(1.12f);
+                backDown->setScaleY(1.0f);
+            }
+            else
+                backDown->setScale(1.1f);
+        }
+        else
+        {
+            this->setScale(1.0f);
+            if (WINSIZE.height == 1136)
+            {
+                backDown->setScaleY(1.12f);
+                backDown->setScaleX(1.0f);
+            }
+            else
+                backDown->setScale(1.1f);
+        }
+        
+    }
     endGameMenu->popupLose(menu->currentScore, menu->type, menu->currentLevel);
 }
 
@@ -4424,24 +4666,29 @@ void GameScene::sugarCrash(CCNode* sender)
 
 void GameScene::addMovesInApp()
 {
+    leftDownMenu->exitPress = false;
+    leftDownMenu->setVisible(true);
     menu->addMovesInApp();
+    isFinalAction = false;
 }
 
 void GameScene::addHammer()
 {
+    menu->setTouchEnabled(true);
     menu->addHammer();
 }
 
 void GameScene::cancelPayment()
 {
-    menu->inappPopupCancel(NULL);
+    if (!endGameMenu->isVisible())
+        menu->inappPopupCancel(NULL);
 }
 
 void GameScene::win(CCNode* sender)
 {
     char buf[255];
-    sprintf(buf, "%0*d", 3, menu->getCurrentLevel());
-    Core::MMPInterface::Instance()->LevelCompleted(string(buf));
+    sprintf(buf, "%d",menu->getCurrentLevel());
+    MMPPtr->levelCompleted(menu->getCurrentLevel(), string(buf));
     
     SimpleAudioEngine::sharedEngine()->playEffect("sound/level_completed.mp3");
 	lock = true;
@@ -4485,7 +4732,11 @@ void GameScene::cleaningTrash(CCNode* sender)
 	for (int i = 0; i < forDeadObjects.size(); i++)
 	{
         if (forDeadObjects[i]->sprite)
-            forDeadObjects[i]->sprite->removeFromParentAndCleanup(true);
+            if (forDeadObjects[i]->sprite->getParent())
+            {
+                forDeadObjects[i]->sprite->removeFromParentAndCleanup(true);
+                forDeadObjects[i]->sprite = NULL;
+            }
 	}
 	forDeadObjects.clear();
 }
@@ -5224,10 +5475,21 @@ void GameScene::refillObject(CCNode* sender)
                                 break;
                     
 					gameObj->sprite->setPosition(ccp(gameObj->sprite->getPositionX(), gameObj->sprite->getPositionY() + CELL_HEIGHT*(currentEmptyCell + noneCellCount)));
-                    if (LANDSCAPE)
-                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY()));
+                    
+                    if (IPHONE_5 || IPHONE_4)
+                    {
+                        if (LANDSCAPE)
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY()));
+                        else
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT));
+                    }
                     else
-                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT/2.0f));
+                    {
+                        if (LANDSCAPE)
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY()));
+                        else
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT/2.0f));
+                    }
                     
                     if (gameType == Time  && !(rand()%25))
                     {
@@ -5404,7 +5666,7 @@ void GameScene::refillPortals(CCNode* sender)
                             colorTelObject = Red;
                         sGameObject* gameObj = new sGameObject(Simple, colorTelObject, portals[k].x + countObjectRefill, portals[k].y, xZero, yZero);
                         
-                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT/2.0f));
+                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT));
                         
                         if (gameObjects[findGameObject(i, j)]->type != Simple)
                             gameObj->changeType(gameObjects[findGameObject(i, j)]->type);
@@ -5598,8 +5860,12 @@ void GameScene::refillFinished(CCNode* sender)
 	refillObject();
 	if (checkField())
 	{
-		afterDeleting();
+        afterDeleting();
 	}
+    else if (checkFieldLast())
+    {
+        afterDeleting();
+    }
 	else
 	{
 		timeAfterAction = 0.0f;
@@ -5726,11 +5992,20 @@ void GameScene::refillObjectForCrystalStripe(CCNode* sender)
                             break;
                     
 					gameObj->sprite->setPosition(ccp(gameObj->sprite->getPositionX(), gameObj->sprite->getPositionY() + CELL_HEIGHT*(countEmptyCell + noneCellCount)));
-                    if (LANDSCAPE)
-                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY()));
+                    if (IPHONE_5 || IPHONE_4)
+                    {
+                        if (LANDSCAPE)
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT/2.0f));
+                        else
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT));
+                    }
                     else
-                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT/2.0f));
-                    
+                    {
+                        if (LANDSCAPE)
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY()));
+                        else
+                            gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT/2.0f));
+                    }
                     if (countEmptyCell + noneCellCount == 1)
 						deltaMove = 0.25f;
                     else if (countEmptyCell + noneCellCount == 2)
@@ -6032,7 +6307,7 @@ void GameScene::nextStripe(CCObject* sender)
         currNext = -1;
     
     if (currNext >= 0)
-        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncO::create(this, callfuncO_selector(GameScene::nextStripe), nextDead[currNext])));
+        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCCallFuncO::create(this, callfuncO_selector(GameScene::nextStripe), nextDead[currNext])));
     else
         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncO::create(this, callfuncO_selector(GameScene::afterStripeCrystal), NULL)));
 }
@@ -6052,7 +6327,7 @@ void GameScene::destroyFinished(CCNode* sender)
     if (isCrystalStripe && !nextDead.empty())
     {
         float timeNext = 0.0f;
-        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncO::create(this, callfuncO_selector(GameScene::nextStripe), nextDead[nextCrystalStripe])));
+        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.0f), CCCallFuncO::create(this, callfuncO_selector(GameScene::nextStripe), nextDead[nextCrystalStripe])));
         return;
     }
     if (!nextDead.empty())
@@ -6070,18 +6345,24 @@ void GameScene::destroyFinished(CCNode* sender)
                 if (flag)
                 {
                     addToDeleting(findGameObject(nextDead[i]->x, nextDead[i]->y));
+                    int colorsCount[Colorurless];
+                    for (int n = 0; n < gameObjects.size(); n++)
+                        colorsCount[gameObjects[n]->color]++;
                     
+                    eColorGameObject maxIdx = (eColorGameObject)0;
+                    for (int n = 0; n < Colorurless; n++)
+                        if (colorsCount[n] > colorsCount[maxIdx])
+                            maxIdx = (eColorGameObject)n;
+                        
                     if (nextDead[i]->type == Crystal)
                     {
                         for (int n = 0; n < rowCount; n++)
                         {
                             for (int j = 0; j < columnCount; j++)
                             {
-                                if (isSimpleCell(gameField[n][j]))
-                                {
                                     if (findGameObject(n, j) >= 0)
                                     {
-                                        if (gameObjects[findGameObject(n, j)]->color == Red)
+                                        if (gameObjects[findGameObject(n, j)]->color == maxIdx)
                                         {
                                             addToDeleting(findGameObject(n, j));
                                             CCPoint o1 = nextDead[i]->sprite->getPosition();
@@ -6089,7 +6370,6 @@ void GameScene::destroyFinished(CCNode* sender)
                                             lighting(o1, o2);
                                         }
                                     }
-                                }
                             }
                         }
                     }
@@ -6104,10 +6384,43 @@ void GameScene::destroyFinished(CCNode* sender)
 
 	if (checkField())
 	{
-		afterDeleting();
+        if (isFishNeedRun)
+        {
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.3f);
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.6f);
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.9f);
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 1.2f);
+            menu->isBannerLock = true;
+            sweetCount = 5;
+            lock = true;
+            this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
+            isRunFish = true;
+            isFishNeedRun = false;
+            return;
+        }
+        else
+            afterDeleting();
 	}
-	else
+	else if (checkFieldLast())
+    {
+        afterDeleting();
+    }
+    else
 	{
+        if (isFishNeedRun)
+        {
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.3f);
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.6f);
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.9f);
+            runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 1.2f);
+            menu->isBannerLock = true;
+            sweetCount = 5;
+            lock = true;
+            this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
+            isRunFish = true;
+            isFishNeedRun = false;
+            return;
+        }
         timesLock = false;
         countReinitField = false;
         cleaningTrash(NULL);
@@ -6203,14 +6516,17 @@ bool GameScene::endConditionCheck()
             
             for (int i = 0; i < gameObjects.size(); i++)
                 if (gameObjects[i]->type == Vertical || gameObjects[i]->type == Horizontal || gameObjects[i]->type == Bomb || gameObjects[i]->type == Crystal || gameObjects[i]->type == Fish)
+                {
                     isSugarCrash = false;
+                }
             
-            if (!isSugarCrash)
+            if (!isSugarCrash && winCondition)
             {
                 sugarCrash(NULL);
             }
-            else if (!countMoves)
+            else if (!countMoves && !isNotElementFish)
             {
+                //isNotElementFish = true;
                 if (!isRunFish)
                 {
                     isRunFish = true;
@@ -6220,15 +6536,31 @@ bool GameScene::endConditionCheck()
                     if (movesFish > 0)
                     {
                         SimpleAudioEngine::sharedEngine()->playEffect("sound/penguins_loop.mp3");
+                        int countObjectCur = 0;
+                        float stepCount = 0;
+                        for (int n = 0; n < columnCount; n++)
+                        {
+                            for (int k = 0; k < rowCount; k++)
+                            {
+                                if (findGameObject(k, n) >= 0)
+                                    countObjectCur++;
+                            }
+                        }
+                        stepCount = (float)countObjectCur/(float)movesFish;
+                        float stepCountCurr = 0;
+                        vector<int> fgObject;
                         for (int n = 0; n < columnCount; n++)
                         {
                             for (int k = 0; k < rowCount; k++)
                             {
                                 if (findGameObject(k, n) >= 0)
                                 {
-                                    if (rand()%2)
+                                    stepCountCurr+=1.0f;
+                                    if (stepCountCurr >= stepCount)
                                     {
+                                        stepCountCurr -= stepCount;
                                         runFish(gameObjects[findGameObject(k, n)], 4.5f, time);
+                                        fgObject.push_back(findGameObject(k, n));
                                         time += 0.3f;
                                         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time), CCCallFuncN::create(this, callfuncN_selector(GameScene::decrementMovesEnded))));
                                         count++;
@@ -6238,6 +6570,33 @@ bool GameScene::endConditionCheck()
                                             this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time + 4.5f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
                                             return true;
                                         }
+                                    }
+                                }
+                            }
+                        }
+                        if (movesFish > 0)
+                        {
+                            for (;;)
+                            {
+                                int idxFish = rand()%(gameObjects.size());
+                                bool flag = true;
+                                
+                                for (int o = 0; o < fgObject.size(); o++)
+                                    if (fgObject[o] == idxFish)
+                                        flag = false;
+                                
+                                if (flag)
+                                {
+                                    runFish(gameObjects[idxFish], 4.5f, time);
+                                    fgObject.push_back(idxFish);
+                                    time += 0.3f;
+                                    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time), CCCallFuncN::create(this, callfuncN_selector(GameScene::decrementMovesEnded))));
+                                    count++;
+                                    movesFish--;
+                                    if ((count > gameObjects.size() - 1) || movesFish <= 0)
+                                    {
+                                        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time + 4.5f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
+                                        return true;
                                     }
                                 }
                             }
@@ -6296,6 +6655,11 @@ bool GameScene::endConditionCheck()
     }
 }
 
+void GameScene::afterGetScores()
+{
+    endGameMenu->afterGetScores();
+}
+
 void GameScene::updateMenu(CCNode* sender)
 {
     if (leftDownMenu->isLock())
@@ -6319,7 +6683,11 @@ void GameScene::updateMenu(CCNode* sender)
             }
             else
             {
-                CCDirector::sharedDirector()->replaceScene(GameMapLayer::scene(-1));
+                endGameMenu->setVisible(true);
+                endGameMenu->closeAfterLoading(NULL);
+                GlobalsPtr->booster_1 = false;
+                GlobalsPtr->booster_2 = false;
+                GlobalsPtr->booster_3 = false;
             }
         }
     }
@@ -6328,16 +6696,22 @@ void GameScene::updateMenu(CCNode* sender)
         timesLeftDownLock = false;
         leftDownMenu->setLock(false);
         dark->runAction(CCFadeTo::create(0.5f, 0));
-        menu->booster_1_Button->setEnabled(true);
-        menu->booster_2_Button->setEnabled(true);
-        menu->booster_3_Button->setEnabled(true);
-        menu->snow->setEnabled(true);
+        if (!menu->isDialog)
+        {
+            menu->booster_1_Button->setEnabled(true);
+            menu->booster_2_Button->setEnabled(true);
+            menu->booster_3_Button->setEnabled(true);
+            menu->snow->setEnabled(true);
+        }
     }
     this->runAction(CCSequence::create(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(GameScene::updateMenu)), NULL));
 }
 
 void GameScene::popupExitWithDelay(CCNode* sender)
 {
+    menu->booster_1_Button->setEnabled(false);
+    menu->booster_2_Button->setEnabled(false);
+    menu->booster_3_Button->setEnabled(false);
     menu->popupExit(iceTarget, iceCount);
 }
 
@@ -6354,6 +6728,8 @@ void GameScene::fishingEnded(CCNode* sender)
     afterDeleting();
     menu->isBannerLock = false;
     isFish = false;
+    if(isNotElementFish)
+        menu->setCountMoves(0);
 }
 
 bool GameScene::checkFieldFirst()
@@ -6533,6 +6909,22 @@ bool GameScene::checkFieldFirst()
 	return !allDeletedChain.empty();
 }
 
+bool GameScene::checkFieldLast()
+{
+    lock = true;
+	vector<int> checkedElements;
+    vector<int> superCreations;
+    bool flagBreak = false;
+    
+
+    for (int i = 0; i < gameObjects.size(); i++)
+    {
+        checkElement(i);
+    }
+    
+	return !allDeletedChain.empty();
+}
+
 bool GameScene::checkField()
 {
 	lock = true;
@@ -6598,7 +6990,7 @@ bool GameScene::checkField()
                 int countCookie = 0;
                 for (int n = 0; n < gameObjects.size(); n++)
                 {
-                    if (gameObjects[n]->type == Cookie)
+                    if (gameObjects[n]->type == Cookie && gameObjects[i] != gameObjects[n])
                         countCookie++;
                 }
 				if (menu->getBringDownCurrent() + countCookie < menu->getBringDownTarget())
@@ -6730,10 +7122,11 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
         location.x = location.x - CELL_WIDTH*2.0f;
         location.y = location.y + CELL_HEIGHT/2.0f;
     }
-
-    beginPosition = location;
     
+    location = this->convertToNodeSpace(location);
+    beginPosition = location;
 
+    
 	for (int i  = 0; i < gameObjects.size(); i++)
 	{
 		if (gameObjects[i]->isLock)
@@ -6746,7 +7139,7 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
                 bool flag = false;
                 for (int j = 0; j < tutorialCell.size(); j++)
                 {
-                    if (gameObjects[i] == gameObjects[findGameObject(tutorialCell[j].x, tutorialCell[j].y)])
+                    if (gameObjects[i] == gameObjects[findGameObject(tutorialCell[j].first.x, tutorialCell[j].first.y)])
                     {
                         flag = true;
                     }
@@ -6758,10 +7151,30 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
             if (gameField[gameObjects[i]->x][gameObjects[i]->y] == CageCell || gameField[gameObjects[i]->x][gameObjects[i]->y] == CageIceCell)
                 return;
             
-            if (menu->isClear)
+            if (menu->isClear && gameObjects[i]->type != Cookie)
             {
                 menu->isClear = false;
                 gameObjects[i]->isScore = true;
+                if (gameObjects[i]->type == Crystal)
+                {
+                    for (int ix = 0; ix < rowCount; ix++)
+                    {
+                        for (int j = 0; j < columnCount; j++)
+                        {
+                            if (isSimpleCell(gameField[ix][j]))
+                                if (findGameObject(ix, j) >= 0)
+                                    if (gameObjects[findGameObject(ix, j)]->color == (eColorGameObject)(rand()%6))
+                                    {
+                                        gameObjects[findGameObject(ix, j)]->isScore = true;
+                                        addToDeleting(findGameObject(ix, j));
+                                        lighting(gameObjects[i]->sprite->getPosition(),
+                                                 gameObjects[findGameObject(ix, j)]->sprite->getPosition());
+                                        lighting(gameObjects[i]->sprite->getPosition(),
+                                                 gameObjects[findGameObject(ix, j)]->sprite->getPosition());
+                                    }
+                        }
+                    }
+                }
                 addToDeleting(i);
                 afterDeleting();
                 return;
@@ -6813,6 +7226,24 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
                                         if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
                                             return;
                                         
+                                        if (isTutorial)
+                                        {
+                                            for (int l = 0; l < tutorialCell.size(); l++)
+                                            {
+                                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 2)
+                                                        return;
+                                                }
+                                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 3)
+                                                        return;
+                                                }
+
+                                            }
+                                        }
+                                        
                                         gameObjects[firstObject]->moveLeft();
                                         gameObjects[secondObject]->moveRight();
                                         moveFlag = true;
@@ -6836,6 +7267,24 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
                                         
                                         if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
                                             return;
+                                        
+                                        if (isTutorial)
+                                        {
+                                            for (int l = 0; l < tutorialCell.size(); l++)
+                                            {
+                                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 3)
+                                                        return;
+                                                }
+                                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 2)
+                                                        return;
+                                                }
+                                                
+                                            }
+                                        }
                                         
                                         gameObjects[firstObject]->moveRight();
                                         gameObjects[secondObject]->moveLeft();
@@ -6867,6 +7316,24 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
                                         if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
                                             return;
                                         
+                                        if (isTutorial)
+                                        {
+                                            for (int l = 0; l < tutorialCell.size(); l++)
+                                            {
+                                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 0)
+                                                        return;
+                                                }
+                                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 1)
+                                                        return;
+                                                }
+                                                
+                                            }
+                                        }
+                                        
                                         gameObjects[firstObject]->moveDown();
                                         gameObjects[secondObject]->moveUp();
                                         moveFlag = true;
@@ -6891,6 +7358,24 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
                                         if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
                                             return;
                                         
+                                        if (isTutorial)
+                                        {
+                                            for (int l = 0; l< tutorialCell.size(); l++)
+                                            {
+                                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 1)
+                                                        return;
+                                                }
+                                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                                {
+                                                    if (tutorialCell[l].second != 0)
+                                                        return;
+                                                }
+                                                
+                                            }
+                                        }
+                                        
                                         gameObjects[firstObject]->moveUp();
                                         gameObjects[secondObject]->moveDown();
                                         moveFlag = true;
@@ -6908,7 +7393,9 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
                             isTutorial = false;
                             tutorialCell.clear();
                             tutorialLayer->removeFromParentAndCleanup(true);
-                            Core::MMPInterface::Instance()->TutorialCompleted();
+                            char buf[255];
+                            sprintf(buf, "%d", menu->getCurrentLevel());
+                            MMPPtr->tutorialStepCompleted(menu->getCurrentLevel(), string(buf));
                         }
                         lock = true;
                         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(MOVE_DELTA*1.5f), CCCallFuncN::create( this, 
@@ -6963,6 +7450,9 @@ void GameScene::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
         location.y = location.y + CELL_HEIGHT/2.0f;
     }
     
+    location = this->convertToNodeSpace(location);
+
+    
     if (!(abs(location.x - beginPosition.x) > CELL_HEIGHT/3.0f ||
           abs(location.y - beginPosition.y) > CELL_HEIGHT/3.0f))
         return;
@@ -6990,6 +7480,24 @@ void GameScene::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
 						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
 							return;
                         
+                        if (isTutorial)
+                        {
+                            for (int l = 0; l < tutorialCell.size(); l++)
+                            {
+                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 2)
+                                        return;
+                                }
+                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 3)
+                                        return;
+                                }
+                                
+                            }
+                        }
+                        
 						gameObjects[firstObject]->moveLeft();
 						gameObjects[secondObject]->moveRight();
 						moveFlag = true;
@@ -7013,6 +7521,24 @@ void GameScene::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
                         
 						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
 							return;
+                        
+                        if (isTutorial)
+                        {
+                            for (int l = 0; l < tutorialCell.size(); l++)
+                            {
+                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 3)
+                                        return;
+                                }
+                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 2)
+                                        return;
+                                }
+                                
+                            }
+                        }
                         
 						gameObjects[firstObject]->moveRight();
 						gameObjects[secondObject]->moveLeft();
@@ -7044,6 +7570,24 @@ void GameScene::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
 						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
 							return;
                         
+                        if (isTutorial)
+                        {
+                            for (int l = 0; l < tutorialCell.size(); l++)
+                            {
+                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 0)
+                                        return;
+                                }
+                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 1)
+                                        return;
+                                }
+                                
+                            }
+                        }
+                        
 						gameObjects[firstObject]->moveDown();
 						gameObjects[secondObject]->moveUp();
 						moveFlag = true;
@@ -7067,6 +7611,24 @@ void GameScene::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
                         
 						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
 							return;
+                        
+                        if (isTutorial)
+                        {
+                            for (int l = 0; l < tutorialCell.size(); l++)
+                            {
+                                if (gameObjects[firstObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 1)
+                                        return;
+                                }
+                                if (gameObjects[secondObject] == gameObjects[findGameObject(tutorialCell[l].first.x, tutorialCell[l].first.y)])
+                                {
+                                    if (tutorialCell[l].second != 0)
+                                        return;
+                                }
+                                
+                            }
+                        }
                         
 						gameObjects[firstObject]->moveUp();
 						gameObjects[secondObject]->moveDown();
@@ -7124,6 +7686,8 @@ void GameScene::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
 
 	CCTouch* touch = (CCTouch*)( pTouches->anyObject());
 	CCPoint location = touch->getLocation();
+    
+    location = this->convertToNodeSpace(location);
     
     if (LANDSCAPE)
     {
@@ -7257,9 +7821,42 @@ void GameScene::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
 	}
 }
 
-void GameScene::lighting(CCPoint begin, CCPoint end)
+/*void sGameObject::lighting(CCPoint begin, CCPoint end, float bScale, float delay)
+{
+    CCNode* grandParent = NULL;
+    grandParent = ((CCNode*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+    
+    CCParticleSystem* meteorRight = CCParticleMeteor::create();
+    meteorRight->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/fire.png"));
+    meteorRight->setPosition(begin);
+    meteorRight->setScale(1.0f);
+    meteorRight->setGravity(ccp(0.0f, -100.0f));
+    meteorRight->setLife(1.0f);
+    grandParent->addChild(meteorRight, 100);
+    meteorRight->runAction(CCSequence::create(CCDelayTime::create(delay + ((float)(rand()%20))/100.0f), CCMoveTo::create(0.2f, end), CCDelayTime::create(0.1f), CCScaleTo::create(0.2f, 0.01f), CCHide::create(), NULL));
+}*/
+
+void GameScene::lighting(CCPoint begin, CCPoint end, float delay)
 {
     if (LANDSCAPE)
+    {
+        begin.x += CELL_WIDTH*2.0f;
+        begin.y -= CELL_HEIGHT/2.0f;
+        end.x += CELL_WIDTH*2.0f;
+        end.y -= CELL_HEIGHT/2.0f;
+    }
+    CCNode* grandParent = this;
+    
+
+    CCParticleSystem* meteorRight = CCParticleMeteor::create();
+    meteorRight->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/fire.png"));
+    meteorRight->setPosition(begin);
+    meteorRight->setScale(1.3f);
+    meteorRight->setGravity(ccp(0.0f, -100.0f));
+    meteorRight->setLife(2.0f);
+    grandParent->addChild(meteorRight, 100);
+    meteorRight->runAction(CCSequence::create(CCDelayTime::create(delay),CCMoveTo::create(0.4f, end), CCDelayTime::create(0.1f), CCScaleTo::create(0.2f, 0.01f), CCHide::create(), NULL));
+    /*if (LANDSCAPE)
     {
         begin.x += CELL_WIDTH*2.0f;
         begin.y -= CELL_HEIGHT/2.0f;
@@ -7296,9 +7893,30 @@ void GameScene::lighting(CCPoint begin, CCPoint end)
     
     light->setScaleX(0.01f);
     light->setOpacity(255);
-    light->runAction(CCSequence::create(/*CCSpawn::createWithTwoActions(*/CCScaleTo::create(0.2f, scaleX*2.0f, 0.8f),/* CCMoveTo::create(0.2f, end)),*/
-                                        CCDelayTime::create(0.2f), CCHide::create(), NULL));
-    this->addChild(light,10);
+    //light->runAction(CCSequence::create(/*CCSpawn::createWithTwoActions(*//*CCScaleTo::create(0.2f, scaleX*2.0f, 0.8f),*//* CCMoveTo::create(0.2f, end)),*/
+    //                                   CCDelayTime::create(0.2f), CCHide::create(), NULL));
+    //this->addChild(light,10);
+}
+
+void GameScene::lightingBomb(CCPoint begin, CCPoint end, float bScale, float delay)
+{
+    if (LANDSCAPE)
+    {
+        begin.x += CELL_WIDTH*2.0f;
+        begin.y -= CELL_HEIGHT/2.0f;
+        end.x += CELL_WIDTH*2.0f;
+        end.y -= CELL_HEIGHT/2.0f;
+    }
+    CCNode* grandParent = this;
+    
+    CCParticleSystem* meteorRight = CCParticleMeteor::create();
+    meteorRight->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/fire.png"));
+    meteorRight->setPosition(begin);
+    meteorRight->setScale(bScale);
+    meteorRight->setGravity(ccp(0.0f, -100.0f));
+    meteorRight->setLife(1.0f);
+    grandParent->addChild(meteorRight, 100);
+    meteorRight->runAction(CCSequence::create(CCDelayTime::create(delay + ((float)(rand()%20))/100.0f), CCMoveTo::create(0.2f, end), CCDelayTime::create(0.1f), CCScaleTo::create(0.2f, 0.01f), CCHide::create(), NULL));
 }
 
 
@@ -7364,14 +7982,155 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
         
         if ((gameObjects[first]->type == Bomb && gameObjects[second]->type == Bomb))
 		{
+            gameObjects[first]->changeType(Simple);
+            gameObjects[second]->changeType(Simple);
             addToDeleting(first);
             addToDeleting(second);
+            
+            sGameObject* bombObj = gameObjects[first];
+            int xObj = bombObj->x;
+            int yObj = bombObj->y;
+            float bombScale = 2.5f;
+            float delay = 0.01f;
+            
+            if (findGameObject(xObj-2, yObj+2) >= 0)
+                addToDeleting(findGameObject(xObj-2, yObj+2));
+            if (findGameObject(xObj-2, yObj+1) >= 0)
+                addToDeleting(findGameObject(xObj-2, yObj+1));
+            if (findGameObject(xObj-2, yObj) >= 0)
+                addToDeleting(findGameObject(xObj-2, yObj));
+            if (findGameObject(xObj-2, yObj-1) >= 0)
+                addToDeleting(findGameObject(xObj-2, yObj-1));
+            if (findGameObject(xObj-2, yObj-2) >= 0)
+                addToDeleting(findGameObject(xObj-2, yObj-2));
+            
+            if (findGameObject(xObj-1, yObj+2) >= 0)
+                addToDeleting(findGameObject(xObj-1, yObj+2));
+            if (findGameObject(xObj-1, yObj+1) >= 0)
+                addToDeleting(findGameObject(xObj-1, yObj+1));
+            if (findGameObject(xObj-1, yObj) >= 0)
+                addToDeleting(findGameObject(xObj-2, yObj));
+            if (findGameObject(xObj-1, yObj-1) >= 0)
+                addToDeleting(findGameObject(xObj-1, yObj-1));
+            if (findGameObject(xObj-1, yObj-2) >= 0)
+                addToDeleting(findGameObject(xObj-1, yObj-2));
+            
+            if (findGameObject(xObj, yObj+2) >= 0)
+                addToDeleting(findGameObject(xObj, yObj+2));
+            if (findGameObject(xObj, yObj+1) >= 0)
+                addToDeleting(findGameObject(xObj, yObj+1));
+            if (findGameObject(xObj, yObj) >= 0)
+                addToDeleting(findGameObject(xObj, yObj));
+            if (findGameObject(xObj, yObj-1) >= 0)
+                addToDeleting(findGameObject(xObj, yObj-1));
+            if (findGameObject(xObj, yObj-2) >= 0)
+                addToDeleting(findGameObject(xObj, yObj-2));
+            
+            if (findGameObject(xObj+2, yObj+2) >= 0)
+                addToDeleting(findGameObject(xObj+2, yObj+2));
+            if (findGameObject(xObj+2, yObj+1) >= 0)
+                addToDeleting(findGameObject(xObj+2, yObj+1));
+            if (findGameObject(xObj+2, yObj) >= 0)
+                addToDeleting(findGameObject(xObj+2, yObj));
+            if (findGameObject(xObj+2, yObj-1) >= 0)
+                addToDeleting(findGameObject(xObj+2, yObj-1));
+            if (findGameObject(xObj+2, yObj-2) >= 0)
+                addToDeleting(findGameObject(xObj+2, yObj-2));
+            
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x + CELL_WIDTH*2.0f, bombObj->sprite->getPosition().y), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x + 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y + (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x + 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y - (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x - CELL_WIDTH*2.0f, bombObj->sprite->getPosition().y), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x - 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y + (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x - 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y - (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x, bombObj->sprite->getPosition().y + CELL_HEIGHT*2.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x + (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y + 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x - (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y + 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x, bombObj->sprite->getPosition().y - CELL_HEIGHT*2.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x + (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y - 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                     ccp(bombObj->sprite->getPosition().x - (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y - 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x + CELL_WIDTH*2.0f, bombObj->sprite->getPosition().y), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x + 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y + (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x + 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y - (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x - CELL_WIDTH*2.0f, bombObj->sprite->getPosition().y), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x - 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y + (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x - 3.0f*(CELL_WIDTH*2.0f)/4.0f, bombObj->sprite->getPosition().y - (CELL_HEIGHT*2.0f)/2.2f), bombScale, delay);
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x, bombObj->sprite->getPosition().y + CELL_HEIGHT*2.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x + (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y + 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x - (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y + 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            
+            
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x, bombObj->sprite->getPosition().y - CELL_HEIGHT*2.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x + (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y - 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
+            lightingBomb(bombObj->sprite->getPosition(),
+                         ccp(bombObj->sprite->getPosition().x - (CELL_WIDTH*2.0f)/2.2f, bombObj->sprite->getPosition().y - 3.0f*(CELL_HEIGHT*2.0f)/4.0f), bombScale, delay);
 		}
         
 		if ((gameObjects[first]->type == Crystal && gameObjects[second]->type == Crystal))
-		{	
-			for (int i = 0; i < gameObjects.size(); i++)			
-				addToDeleting(i);
+		{
+            float delayCrystal = 0.0f;
+			for (int i = 0; i < rowCount; i++)
+			{
+				for (int j = 0; j < columnCount; j++)
+				{
+					if (isSimpleCell(gameField[i][j]))
+                    {
+						if (findGameObject(i, j) >= 0)
+                        {
+                            gameObjects[findGameObject(i, j)]->isScore = true;
+                            gameObjects[findGameObject(i, j)]->delayDestroy = delayCrystal + 0.3f;
+                            gameObjects[findGameObject(i, j)]->delayStripe = delayCrystal + 0.3f;
+                            addToDeleting(findGameObject(i, j));
+                            lighting(gameObjects[first]->sprite->getPosition(),
+                                     gameObjects[findGameObject(i, j)]->sprite->getPosition(),
+                                     delayCrystal);
+                            lighting(gameObjects[first]->sprite->getPosition(),
+                                     gameObjects[findGameObject(i, j)]->sprite->getPosition(),
+                                     delayCrystal);
+                            delayCrystal+=0.03f;
+                        }
+                    }
+                }
+			}
+            addToDeleting(first);
+			addToDeleting(second);
+            crystalCrystal = true;
 		}
 
 
@@ -7385,7 +8144,10 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
 						if (findGameObject(i, j) >= 0)
 							if (gameObjects[findGameObject(i, j)]->color == gameObjects[second]->color)
 							{
+                                gameObjects[findGameObject(i, j)]->isScore = true;
 								addToDeleting(findGameObject(i, j));
+                                lighting(gameObjects[first]->sprite->getPosition(),
+                                         gameObjects[findGameObject(i, j)]->sprite->getPosition());
                                 lighting(gameObjects[first]->sprite->getPosition(),
                                          gameObjects[findGameObject(i, j)]->sprite->getPosition());
 							}
@@ -7403,9 +8165,13 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
 						if (findGameObject(i, j) >= 0)
 							if (gameObjects[findGameObject(i, j)]->color == gameObjects[first]->color)
 							{
+                                gameObjects[findGameObject(i, j)]->isScore = true;
 								addToDeleting(findGameObject(i, j));
                                 lighting(gameObjects[second]->sprite->getPosition(),
                                          gameObjects[findGameObject(i, j)]->sprite->getPosition());
+                                lighting(gameObjects[second]->sprite->getPosition(),
+                                         gameObjects[findGameObject(i, j)]->sprite->getPosition());
+
 							}
 			addToDeleting(first);
 			addToDeleting(second);
@@ -7426,6 +8192,8 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
                                     gameObjects[findGameObject(i, j)]->changeType(Vertical);
                                 //addToDeleting(findGameObject(i, j));
                                 nextDead.push_back(gameObjects[findGameObject(i, j)]);
+                                lighting(gameObjects[second]->sprite->getPosition(),
+                                         gameObjects[findGameObject(i, j)]->sprite->getPosition());
                                 lighting(gameObjects[second]->sprite->getPosition(),
                                          gameObjects[findGameObject(i, j)]->sprite->getPosition());
 							}
@@ -7452,7 +8220,10 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
                                 nextDead.push_back(gameObjects[findGameObject(i, j)]);
                                 lighting(gameObjects[first]->sprite->getPosition(),
                                          gameObjects[findGameObject(i, j)]->sprite->getPosition());
-							}
+
+                                lighting(gameObjects[first]->sprite->getPosition(),
+                                         gameObjects[findGameObject(i, j)]->sprite->getPosition());
+}
             addToDeleting(first);
 //            afterDeleting();
             isCrystalStripe = true;
@@ -7474,6 +8245,8 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
 								
                                 //addToDeleting(findGameObject(i, j));
                                 nextDead.push_back(gameObjects[findGameObject(i, j)]);
+                                lighting(gameObjects[second]->sprite->getPosition(),
+                                         gameObjects[findGameObject(i, j)]->sprite->getPosition());
                                 lighting(gameObjects[second]->sprite->getPosition(),
                                          gameObjects[findGameObject(i, j)]->sprite->getPosition());
 							}
@@ -7500,6 +8273,9 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
                                 nextDead.push_back(gameObjects[findGameObject(i, j)]);
                                 lighting(gameObjects[first]->sprite->getPosition(),
                                          gameObjects[findGameObject(i, j)]->sprite->getPosition());
+                                lighting(gameObjects[first]->sprite->getPosition(),
+                                         gameObjects[findGameObject(i, j)]->sprite->getPosition());
+
 							}
             addToDeleting(first);
 //            afterDeleting();
@@ -7522,11 +8298,17 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
                                     addToDeleting(findGameObject(i, j));
                                     lighting(gameObjects[first]->sprite->getPosition(),
                                              gameObjects[findGameObject(i, j)]->sprite->getPosition());
+                                    lighting(gameObjects[first]->sprite->getPosition(),
+                                             gameObjects[findGameObject(i, j)]->sprite->getPosition());
+
                                 }
                             }
 				}
 			}
             
+            gameObjects[first]->sprite->stopAllActions();
+            gameObjects[first]->sprite->setScaleX(ELEMENT_SCALE);
+            gameObjects[first]->sprite->setScaleY(ELEMENT_SCALE);
             gameObjects[first]->changeType(Crystal);
             nextDead.push_back(gameObjects[first]);
 		}
@@ -7552,6 +8334,9 @@ bool GameScene::checkIntersectTwoElements(int first, int second)
 				}
 			}
             
+            gameObjects[second]->sprite->stopAllActions();
+            gameObjects[second]->sprite->setScaleX(ELEMENT_SCALE);
+            gameObjects[second]->sprite->setScaleY(ELEMENT_SCALE);
             gameObjects[second]->changeType(Crystal);
             nextDead.push_back(gameObjects[second]);
         }
@@ -7749,7 +8534,7 @@ void GameScene::renderField()
                 if (gameField[i][j] == NoneCell || gameField[i][j] == LockCell)
                     continue;
                 
-                CCSprite* cell = CCSprite::create("game/cell_iphone.png");
+                CCSprite* cell = CCSprite::create("game/cell_landscape.png");
                 CCPoint temp = ccp(j*CELL_WIDTH + xZero,
                                    yZero - i*CELL_HEIGHT);
                 
@@ -7764,7 +8549,6 @@ void GameScene::renderField()
                 
                 bool isVer = true;
                 bool isGor = true;
-                
                 
                 if ( i == rowCount-1 && gameType == BringDown)
                 {
@@ -7799,7 +8583,7 @@ void GameScene::renderField()
                 if (isNoneCell(i - 1, j))
                 {
                     isGor = false;
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
                     stencil->setRotation(90.0f);
                     stencil->setFlipX(true);
                     stencil->setAnchorPoint(ccp(1.0f, 0.0f));
@@ -7809,7 +8593,7 @@ void GameScene::renderField()
                 }
                 if (isNoneCell(i + 1, j))
                 {
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
                     stencil->setRotation(90.0f);
                     stencil->setAnchorPoint(ccp(0.0f, 0.0f));
                     stencil->setPosition(ccp(0.0f, 0.0f));
@@ -7819,7 +8603,7 @@ void GameScene::renderField()
                 if (isNoneCell(i, j - 1))
                 {
                     isVer = false;
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
                     stencil->setScaleY(1.1f);
                     stencil->setFlipX(true);
                     stencil->setAnchorPoint(ccp(1.0f, 0.0f));
@@ -7829,7 +8613,7 @@ void GameScene::renderField()
                 }
                 if (isNoneCell(i, j + 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
                     stencil->setScaleY(1.1f);
                     stencil->setAnchorPoint(ccp(0.0f, 0.0f));
                     stencil->setPosition(ccp(CELL_WIDTH, 0.0f));
@@ -7839,7 +8623,7 @@ void GameScene::renderField()
                 
                 if (isNoneCell(i - 1, j - 1) && isNoneCell(i - 1, j) && isNoneCell(i, j - 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/outside_landscape.png");
                     stencil->setAnchorPoint(ccp(1.0f, 0.0f));
                     if (IPHONE_4 || IPHONE_5)
                         stencil->setPosition(ccp(0.0f, cell->getContentSize().height-2));
@@ -7851,7 +8635,7 @@ void GameScene::renderField()
                 
                 if (isNoneCell(i - 1, j + 1) && isNoneCell(i - 1, j) && isNoneCell(i, j + 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/outside_landscape.png");
                     stencil->setFlipX(true);
                     stencil->setAnchorPoint(ccp(0.0f, 0.0f));
                     stencil->setPosition(ccp(CELL_WIDTH, CELL_HEIGHT));
@@ -7861,7 +8645,7 @@ void GameScene::renderField()
                 
                 if (isNoneCell(i, j - 1) && isNoneCell(i + 1, j - 1) && isNoneCell(i + 1, j))
                 {
-                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/outside_landscape.png");
                     stencil->setFlipY(true);
                     stencil->setAnchorPoint(ccp(1.0f, 1.0f));
                     stencil->setPosition(ccp(0.0f, 0.0f));
@@ -7870,7 +8654,7 @@ void GameScene::renderField()
                 }
                 if (isNoneCell(i, j + 1) && isNoneCell(i + 1, j + 1) && isNoneCell(i + 1, j))
                 {
-                    CCSprite* stencil = CCSprite::create("game/outside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/outside_landscape.png");
                     stencil->setFlipY(true);
                     stencil->setFlipX(true);
                     stencil->setAnchorPoint(ccp(0.0f, 1.0f));
@@ -7881,8 +8665,8 @@ void GameScene::renderField()
                 
                 if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j + 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
-                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
+                    CCSprite* content = CCSprite::create("game/inside_landscape.png");
                     content->setFlipX(true);
                     content->setAnchorPoint(ccp(1.0f, 1.0f));
                     content->setPosition(ccp(cell->getContentSize().width - stencil->getContentSize().width, -stencil->getContentSize().width));
@@ -7891,8 +8675,8 @@ void GameScene::renderField()
                 }
                 if (isNoneCell(i + 1, j) && !isNoneCell(i + 1, j - 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
-                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
+                    CCSprite* content = CCSprite::create("game/inside_landscape.png");
                     content->setAnchorPoint(ccp(0.0f, 1.0f));
                     content->setPosition(ccp(stencil->getContentSize().width, -stencil->getContentSize().width));
                     content->setVisible(true);
@@ -7900,8 +8684,8 @@ void GameScene::renderField()
                 }
                 if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j - 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
-                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
+                    CCSprite* content = CCSprite::create("game/inside_landscape.png");
                     content->setFlipY(true);
                     content->setAnchorPoint(ccp(0.0f, 0.0f));
                     if (IPHONE_4 || IPHONE_5)
@@ -7913,8 +8697,8 @@ void GameScene::renderField()
                 }
                 if (isNoneCell(i - 1, j) && !isNoneCell(i - 1, j + 1))
                 {
-                    CCSprite* stencil = CCSprite::create("game/edge_iphone.png");
-                    CCSprite* content = CCSprite::create("game/inside_iphone.png");
+                    CCSprite* stencil = CCSprite::create("game/edge_landscape.png");
+                    CCSprite* content = CCSprite::create("game/inside_landscape.png");
                     content->setFlipY(true);
                     content->setFlipX(true);
                     content->setAnchorPoint(ccp(1.0f, 0.0f));
@@ -7936,10 +8720,10 @@ void GameScene::renderField()
                 cell->setOpacity(0);
                 for (int n = 0; n < cell->getChildrenCount(); n++)
                     ((CCSprite*)cell->getChildren()->objectAtIndex(n))->setOpacity(0);
-                
+ 
                 gameFieldSprites[i][j] = cell;
                 
-                CCSprite* gor = CCSprite::create("game/gorizontal_iphone.png");
+                CCSprite* gor = CCSprite::create("game/gorizontal_landscape.png");
                 gor->setAnchorPoint(ccp(0.0f, 0.0f));
                 gor->setPosition(ccp(0.0f, cell->getContentSize().height));
                 cell->addChild(gor, 1);
@@ -7950,7 +8734,7 @@ void GameScene::renderField()
                 if (!isGor)
                     gor->setVisible(false);
                 
-                CCSprite* ver = CCSprite::create("game/vertical_iphone.png");
+                CCSprite* ver = CCSprite::create("game/vertical_landscape.png");
                 ver->setAnchorPoint(ccp(0.0f, 0.0f));
                 ver->setPosition(ccp(0.0f, 0.0f));
                 cell->addChild(ver, 1);

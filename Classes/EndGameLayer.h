@@ -155,6 +155,9 @@ private:
     CCSprite* booster3Check = NULL;
     
     AfterLoadingType afterLoadingType;
+    
+    CCSprite* spriteLoading = NULL;
+    CCLabelTTF* labelLoad = NULL;
 };
 
 #endif

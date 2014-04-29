@@ -64,6 +64,8 @@ public:
     
     void closeMessageBoard();
     
+
+    
 private:
 
     int nextLevelForSender = 0;
@@ -122,6 +124,8 @@ private:
     
     bool levelLock;
     bool isBuyLive = false;
+    
+
 };
 
 #endif

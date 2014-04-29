@@ -21,6 +21,8 @@
 #import "AppsFlyerTracker.h"
 #import <AdSupport/AdSupport.h>
 #include "cGlobal.h"
+#include "GameScene.h"
+#include "GameMapLayer.h"
 
 //
 //Cocos2d object to catch responses
@@ -33,12 +35,19 @@ public:
 
 void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * response)
 {
+    if(!response->isSucceed())
+    {
+        cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
+        return;
+    }
     std::vector<char> *buffer = response->getResponseData();
     std::string str = std::string(buffer->begin(), buffer->end());
     if(response->getResponseData() == NULL)
         return;
     
-    if(str.find("COMPLETED"))
+    int strFind = str.find("COMPLETED");
+    CCLog("%s", str.c_str());
+    if(strFind >= 0)
     {
         string productIdentifier = response->getHttpRequest()->getTag();
         if(IAP::sharedInstance().provideContentForProductIdentifier)
@@ -51,6 +60,23 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     {
         string productIdentifier = response->getHttpRequest()->getTag();
         MMPPtr->purchaseMade(productIdentifier.c_str(), GlobalsPtr->currency, GlobalsPtr->price, false);
+        if (GlobalsPtr->iceCreamScene == Game)
+        {
+            GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+            layer->closeLoading();
+        }
+        else if (GlobalsPtr->iceCreamScene == Map)
+        {
+            GameMapLayer* layer = ((GameMapLayer*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+            layer->closeLoading();
+        }
+        
+        if (GlobalsPtr->iceCreamScene == Game)
+        {
+            GameScene* layer = ((GameScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+            layer->cancelPayment();
+        }
+
     }
 }
 
@@ -115,11 +141,11 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     string project   = "com.destinygroup.icecreamadventure";
     string password  = "tPRVWTFA0tCmD9pAh0h7WFXi3cDXBd3s";
     
-    //    string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + do_test + ";" + password;
-    string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + password;
+    string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + do_test + ";" + password;
+    //string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + password;
     string md5signature = md5(signature);
-    //    string requestData = "project=" + project + "&test=" + do_test + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
-    string requestData = "project=" + project + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
+    string requestData = "project=" + project + "&test=" + do_test + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
+    //string requestData = "project=" + project + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
     
     IAP::sharedInstance().validateReciept(url, requestData, productIdentifier);
     

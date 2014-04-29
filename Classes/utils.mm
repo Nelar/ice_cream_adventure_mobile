@@ -25,12 +25,17 @@
 
 #import "AppsFlyerTracker.h"
 #import <AdSupport/AdSupport.h>
+#import <GameKit/GameKit.h>
+#include "cocos2d.h"
+#include <MainMenuScene.h>
 
+
+using namespace cocos2d;
 using namespace std;
 
 void appsFlyerTrackEvent(const char* event, const char* value)
 {
-    [[AppsFlyerTracker sharedTracker] trackEvent:[NSString stringWithUTF8String:event] withValue:[NSString stringWithUTF8String:value]];
+    //[[AppsFlyerTracker sharedTracker] trackEvent:[NSString stringWithUTF8String:event] withValue:[NSString stringWithUTF8String:value]];
 }
     
 const char* device()
@@ -197,4 +202,159 @@ std::string getIsFirstTimeRunning()
         [[NSUserDefaults standardUserDefaults] synchronize];
         return "true";
     }
+}
+
+bool isLoginGC()
+{
+    return [GKLocalPlayer localPlayer].isAuthenticated;
+}
+
+void loginGC()
+{
+    [[GKLocalPlayer localPlayer] authenticateWithCompletionHandler:^(NSError *error){
+        if (error ==nil) {
+            NSLog(@"GameCenter Success");
+            CCUserDefault::sharedUserDefault()->setBoolForKey("gameCenterLogin", true);
+            CCUserDefault::sharedUserDefault()->flush();
+            for (int i = 0; i < 84; i++)
+            {
+                char buf[255];
+                sprintf(buf, "level_%d", i+1);
+                GKLeaderboard *board = [[[GKLeaderboard alloc] initWithPlayerIDs:[NSArray arrayWithObject:[GKLocalPlayer localPlayer].playerID]] autorelease];
+                board.category = [NSString stringWithUTF8String:buf];
+//                board.identifier = [NSString stringWithUTF8String:buf];
+                board.timeScope   = GKLeaderboardTimeScopeAllTime;
+                board.playerScope = GKLeaderboardPlayerScopeFriendsOnly;
+                board.range       = NSMakeRange(1, 1);
+                [board loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
+                    if(error != nil){
+                        NSLog(@"Score not loaded");
+                        if (GlobalsPtr->iceCreamScene == Loading)
+                            CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
+                        else if (GlobalsPtr->iceCreamScene == Menu)
+                        {
+                            MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                            layer->closeLoading();
+                        }
+                    } else {
+                        NSLog(@"Score loaded");
+                        char buf[255];
+                        sprintf(buf, "level_%d", i+1);
+                        
+                        if (board.localPlayerScore.value < OptionsPtr->getLevelData(i).countScore)
+                        {
+                            GKScore *myScoreValue = [[[GKScore alloc] initWithCategory:[NSString stringWithUTF8String:buf]] autorelease];
+                            myScoreValue.value = OptionsPtr->getLevelData(i).countScore;
+                            myScoreValue.context = OptionsPtr->getLevelData(i).countStar;
+                            CCLOG("%s score %d star %d", buf, OptionsPtr->getLevelData(i).countScore, OptionsPtr->getLevelData(i).countStar);
+                            [myScoreValue reportScoreWithCompletionHandler:^(NSError *error){
+                                if(error != nil){
+                                    NSLog(@"Score Submission Failed");
+                                } else {
+                                    NSLog(@"Score Submitted");
+                                }
+                            }];
+                        }
+                        else
+                        {
+                            CCLOG("%s score %llu star %llu", buf, board.localPlayerScore.value, board.localPlayerScore.context);
+                            OptionsPtr->setLevelData(i, board.localPlayerScore.context, board.localPlayerScore.value, OptionsPtr->getLevelData(i).levelType);
+                            if (OptionsPtr->getLevelData(i).countScore > 0)
+                                if (OptionsPtr->getCurrentLevel() < i +2)
+                                    OptionsPtr->restoreCurrentLevel(i + 2);
+                        }
+                        
+                        if (i == 83)
+                        {
+                            OptionsPtr->save();
+                            if (GlobalsPtr->iceCreamScene == Loading)
+                                CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
+                            else if (GlobalsPtr->iceCreamScene == Menu)
+                            {
+                                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                                layer->gameCenterButtonHide();
+                                layer->closeLoading();
+                            }
+                        }
+                    }
+                }];
+                
+            }
+            OptionsPtr->save();
+
+        } else {
+            NSLog(@"GameCenter Fail %@", [error localizedDescription]);
+            if (GlobalsPtr->iceCreamScene == Loading)
+            {
+                CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
+            }
+            else if (GlobalsPtr->iceCreamScene == Menu)
+            {
+                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->closeLoading();
+            }
+                
+        }
+        
+    }];
+}
+
+void getLevelDataFromGC()
+{
+    if (!getNetworkStatus())
+        return;
+    
+    if (!isLoginGC())
+        return;
+    for (int i = 0; i < 84; i++)
+    {
+        char buf[255];
+        sprintf(buf, "level_%d", i+1);
+        GKLeaderboard *board = [[[GKLeaderboard alloc] initWithPlayerIDs:[NSArray arrayWithObject:[GKLocalPlayer localPlayer].playerID]] autorelease];
+        board.category = [NSString stringWithUTF8String:buf];
+//        board.identifier = [NSString stringWithUTF8String:buf];
+        board.timeScope   = GKLeaderboardTimeScopeAllTime;
+        board.playerScope = GKLeaderboardPlayerScopeFriendsOnly;
+        board.range       = NSMakeRange(1, 1);
+        [board loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
+            if(error != nil){
+                NSLog(@"Score not loaded");
+            } else {
+                NSLog(@"Score loaded");
+                char buf[255];
+                sprintf(buf, "level_%d", i+1);
+
+                if (board.localPlayerScore.value < OptionsPtr->getLevelData(i).countScore)
+                {
+                    GKScore *myScoreValue = [[[GKScore alloc] initWithCategory:[NSString stringWithUTF8String:buf]] autorelease];
+                    myScoreValue.value = OptionsPtr->getLevelData(i).countScore;
+                    myScoreValue.context = OptionsPtr->getLevelData(i).countStar;
+                    CCLOG("%s score %d star %d", buf, OptionsPtr->getLevelData(i).countScore, OptionsPtr->getLevelData(i).countStar);
+                    [myScoreValue reportScoreWithCompletionHandler:^(NSError *error){
+                        if(error != nil){
+                            NSLog(@"Score Submission Failed");
+                        } else {
+                            NSLog(@"Score Submitted");
+                        }
+                    }];
+                }
+                else
+                {
+                    CCLOG("%s score %llu star %llu", buf, board.localPlayerScore.value, board.localPlayerScore.context);
+                    OptionsPtr->setLevelData(i, board.localPlayerScore.context, board.localPlayerScore.value, OptionsPtr->getLevelData(i).levelType);
+                    if (OptionsPtr->getLevelData(i).countScore > 0)
+                        if (OptionsPtr->getCurrentLevel() < i +2)
+                            OptionsPtr->restoreCurrentLevel(i + 2);
+                }
+                
+                if (i == 83)
+                    OptionsPtr->save();
+            }
+        }];
+    }
+    OptionsPtr->save();
+}
+
+void submitLevelDataToGC()
+{
 }

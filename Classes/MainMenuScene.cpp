@@ -50,6 +50,16 @@ void MainMenuScene::facebookButtonHide()
     faceConnect->setEnabled(false);
 }
 
+void MainMenuScene::gameCenterButtonHide()
+{
+    if (gameCenter == NULL)
+        return;
+    gameCenter->setVisible(false);
+    gameCenter->setVisible(false);
+    gameCenter->setCascadeOpacityEnabled(true);
+    gameCenter->setEnabled(false);
+}
+
 bool MainMenuScene::init()
 {
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
@@ -158,7 +168,7 @@ bool MainMenuScene::init()
     playSpriteSelected->setColor(ccGRAY);
 	playSpriteSelected->setPosition(ccp(playSpriteSelected->getContentSize().width/20.0f, playSpriteSelected->getContentSize().height/20.0f));
 	play = CCMenuItemSprite::create(playSpriteNormal, playSpriteSelected, this, menu_selector(MainMenuScene::menuPlayCallback));
-	play->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height / 1.4f - CCDirector::sharedDirector()->getWinSize().height/2.0f - logo->getContentSize().height/2.0f - play->getContentSize().height/5.0f));
+	play->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height / 1.4f - CCDirector::sharedDirector()->getWinSize().height/2.0f - logo->getContentSize().height/2.0f/* - play->getContentSize().height/2.0f*/));
 	play->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("PLAY", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -174,13 +184,33 @@ bool MainMenuScene::init()
     facebookSpriteSelected->setColor(ccGRAY);
 	facebookSpriteSelected->setPosition(ccp(facebookSpriteSelected->getContentSize().width/20.0f, facebookSpriteSelected->getContentSize().height/20.0f));
 	facebook = CCMenuItemSprite::create(facebookSpriteNormal, facebookSpriteSelected, this, menu_selector(MainMenuScene::menuFacebookCallback));
-	facebook->setPosition(ccp(play->getPositionX(), play->getPositionY() - facebook->getContentSize().height*1.3f));	
+	facebook->setPosition(ccp(play->getPositionX(), play->getPositionY() - facebook->getContentSize().height*1.1f));
 	facebook->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f))));
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_64);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebook->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.65f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    CCSprite* gameCenterSpriteNormal = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+	CCSprite* gameCenterSpriteSelected = CCSprite::createWithSpriteFrameName("common/greenButton.png");
+	gameCenterSpriteSelected->setScale(0.9f);
+	gameCenterSpriteSelected->setAnchorPoint(ccp(0.5f, 0.5f));
+    gameCenterSpriteSelected->setColor(ccGRAY);
+	gameCenterSpriteSelected->setPosition(ccp(gameCenterSpriteSelected->getContentSize().width/20.0f, gameCenterSpriteSelected->getContentSize().height/20.0f));
+	gameCenter = CCMenuItemSprite::create(gameCenterSpriteNormal, gameCenterSpriteSelected, this, menu_selector(MainMenuScene::menuGameCenterCallback));
+	gameCenter->setPosition(ccp(play->getPositionX(), play->getPositionY() - gameCenter->getContentSize().height*1.9f));
+    CCSprite* gcIcon = CCSprite::create("gameCenter.png");
+    gcIcon->setScale(0.5f);
+    gcIcon->setPosition(ccp(gameCenter->getContentSize().width/4.0f, gameCenter->getContentSize().height/2.0f));
+    gameCenter->addChild(gcIcon);
+	gameCenter->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 0.9f, 0.8f), CCScaleTo::create(0.5f, 0.85f, 0.85f))));
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(ccWHITE);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    gameCenter->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.65f, labelTTF->getParent()->getContentSize().height/2.0f));
 
 	CCSprite* settingSpriteNormal = CCSprite::create("gameMap/setting.png");
@@ -276,7 +306,7 @@ bool MainMenuScene::init()
 	heapIce->setPosition(ccp(heapIce->getContentSize().width/2.0f, heapIce->getContentSize().height/2.0f));
 	this->addChild(heapIce,1);
 
-	menu = CCMenu::create(play, facebook, setting, sound, music, ask, cogwheel, invite, moreGames, NULL);
+	menu = CCMenu::create(play, facebook, gameCenter, setting, sound, music, ask, cogwheel, invite, moreGames, NULL);
 	this->addChild(menu, 10);
 
 	popup = CCSprite::createWithSpriteFrameName("common/panel.png");
@@ -574,6 +604,16 @@ bool MainMenuScene::init()
         faceConnect->setCascadeOpacityEnabled(true);
         faceConnect->setEnabled(false);
     }
+    bool flagLoad = false;
+    flagLoad = CCUserDefault::sharedUserDefault()->getBoolForKey("gameCenterLogin", false);
+    if (flagLoad)
+    {
+        gameCenter->setVisible(false);
+        gameCenter->setVisible(false);
+        gameCenter->setVisible(false);
+        gameCenter->setCascadeOpacityEnabled(true);
+        gameCenter->setEnabled(false);
+    }
     
     MMPPtr->sessionLoaded();
     
@@ -665,9 +705,12 @@ void MainMenuScene::changeOrientation()
     
     settingBlob->setPosition(ccp(settingBlob->getContentSize().width / 2.0f, settingBlob->getContentSize().height / 2.0f));
     
-	play->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height / 1.4f - CCDirector::sharedDirector()->getWinSize().height/2.0f - logo->getContentSize().height/2.0f - play->getContentSize().height/5.0f));
+	play->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height / 1.4f - CCDirector::sharedDirector()->getWinSize().height/2.0f - logo->getContentSize().height/2.0f));
     
-	facebook->setPosition(ccp(play->getPositionX(), play->getPositionY() - facebook->getContentSize().height*1.3f));
+	facebook->setPosition(ccp(play->getPositionX(), play->getPositionY() - facebook->getContentSize().height*1.1f));
+    
+    gameCenter->setPosition(ccp(play->getPositionX(), play->getPositionY() - gameCenter->getContentSize().height*1.9f));
+    
 	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 3.0f,
                              -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 3.0f));
     
@@ -830,6 +873,40 @@ void MainMenuScene::changeOrientation()
         tutorialPopup->setPosition(ccp(tutorialPopup->getPositionX(), tutorialPopup->getPositionY()));
         tutorialMenu->setPosition(ccp(tutorialMenu->getPositionX(), tutorialMenu->getPositionY()));
     }
+    
+    if (spriteLoading)
+    {
+        spriteLoading->removeFromParentAndCleanup(true);
+        labelLoad->removeFromParentAndCleanup(true);
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+        if (IPAD)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadPortrait.png");
+        }
+        else if (IPAD_MINI)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
+        }
+        else if (IPHONE_4||IPHONE_5)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+        }
+        labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+        this->addChild(labelLoad, 1001);
+        spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        this->addChild(spriteLoading, 1000);
+    }
+    
     return;
 }
 
@@ -1468,9 +1545,9 @@ void MainMenuScene::addBonus(CCNode* pSender)
 
 void MainMenuScene::resetPopupOk(CCNode* pSender)
 {
-    OptionsPtr->setCurrentLevel(1);
+    OptionsPtr->restoreCurrentLevel(85);
     OptionsPtr->save();
-    if (getNetworkStatus() && FacebookPtr->sessionIsOpened())
+/*    if (getNetworkStatus() && FacebookPtr->sessionIsOpened())
     {
         FacebookPtr->logout();
         facebook->setVisible(true);
@@ -1478,7 +1555,7 @@ void MainMenuScene::resetPopupOk(CCNode* pSender)
         faceConnect->setEnabled(true);
         OptionsPtr->setFacebookConnection(false);
         OptionsPtr->save();
-    }
+    }*/
 }
 
 void MainMenuScene::unclockMenu(CCNode* pSender)
@@ -1694,6 +1771,24 @@ void MainMenuScene::closeSettingCallback(CCObject* pSender)
 	}
 }
 
+void MainMenuScene::menuGameCenterCallback(CCObject* pSender)
+{
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    
+    SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    
+    popupLayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME/3.0f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeLoading))));
+    play->setEnabled(false);
+    moreGames->setEnabled(false);
+    menu->setEnabled(false);
+    loginGC();
+}
+
 void MainMenuScene::menuFacebookCallback(CCObject* pSender)
 {
     if (!getNetworkStatus())
@@ -1731,36 +1826,35 @@ void MainMenuScene::closeLoading()
 
 void MainMenuScene::menuPlayCallback(CCObject* pSender)
 {
-    SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
-    CCSprite* sprite;
+    SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");    
     if (IPAD)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadPortrait.png");
     }
     else if (IPAD_MINI)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingiPadMiniLandscape.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
         else
-            sprite = CCSprite::create("loadingiPadMiniPortrait.png");
+            spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
     }
     else if (IPHONE_4||IPHONE_5)
     {
         if (LANDSCAPE)
-            sprite = CCSprite::create("loadingIphoneLanscape.png");
+            spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
-            sprite = CCSprite::create("loadingIphonePortrait.png");
+            spriteLoading = CCSprite::create("loadingIphonePortrait.png");
     }
-    CCLabelTTF* labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
     labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
     this->addChild(labelLoad, 1001);
-    sprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
-    this->addChild(sprite, 1000);
-    sprite->setOpacity(0);
-    sprite->runAction(CCFadeIn::create(0.3f));
+    spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    this->addChild(spriteLoading, 1000);
+    spriteLoading->setOpacity(0);
+    spriteLoading->runAction(CCFadeIn::create(0.3f));
     labelLoad->setOpacity(0);
     labelLoad->runAction(CCFadeIn::create(0.3f));
     

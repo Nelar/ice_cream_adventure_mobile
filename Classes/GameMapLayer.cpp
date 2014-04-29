@@ -3,8 +3,6 @@
 #include "MainMenuScene.h"
 #include "cGlobal.h"
 #include <cmath>
-#include "MMPInterface.h"
-#include "MMP/Banner.h"
 #include "cFacebook.h"
 #include "cSocialMenu.h"
 #include "cMapScrollLayer.h"
@@ -12,8 +10,6 @@
 using namespace cocos2d;
 using namespace CocosDenshion;
 using namespace cocos2d;
-using namespace Core;
-using namespace MarketingPlatform;
 
 #include "SimpleAudioEngine.h"
 using namespace CocosDenshion;
@@ -23,11 +19,9 @@ GameMapLayer::~GameMapLayer()
     this->stopAllActions();
     this->unscheduleAllSelectors();
     this->removeAllChildrenWithCleanup(true);
-    CCSpriteFrameCache::sharedSpriteFrameCache()->removeSpriteFramesFromFile("gameMap.plist");
-    CCTextureCache::sharedTextureCache()->removeTextureForKey("gameMap.pvr.ccz");
 }
 
-CCScene* GameMapLayer::scene(int nextLevel)
+CCScene* GameMapLayer::scene(int nextLevel, bool reinit)
 {
 	CCScene * scene = NULL;
 	do
@@ -35,7 +29,7 @@ CCScene* GameMapLayer::scene(int nextLevel)
 		scene = CCScene::create();
 		CC_BREAK_IF(! scene);
 
-		GameMapLayer *layer = GameMapLayer::create(nextLevel);
+		GameMapLayer *layer = GameMapLayer::create(nextLevel, reinit);
 		CC_BREAK_IF(! layer);
 
 		scene->addChild(layer);
@@ -44,10 +38,10 @@ CCScene* GameMapLayer::scene(int nextLevel)
 	return scene;
 }
 
-GameMapLayer* GameMapLayer::create(int nextLevel)
+GameMapLayer* GameMapLayer::create(int nextLevel, bool reinit)
 {
 	GameMapLayer *pRet = new GameMapLayer(); 
-	if (pRet && pRet->init(nextLevel))
+	if (pRet && pRet->init(nextLevel, reinit))
 	{ 
 		pRet->autorelease();
 		return pRet;
@@ -80,13 +74,15 @@ void GameMapLayer::updateFacebook()
     menu->updateFacebook();
 }
 
-bool GameMapLayer::init(int nextLevel)
+bool GameMapLayer::init(int nextLevel, bool reinit)
 {
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
 	if (!CCLayer::init())
 		return false;
     
-    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    
+    
+    if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && !reinit && (OptionsPtr->getLifeCount() < 5))
         FacebookPtr->checkNotification();
     
     vector<sRequestData> requests = OptionsPtr->appRequests;
@@ -95,6 +91,7 @@ bool GameMapLayer::init(int nextLevel)
     
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("gameMap.plist", CCTextureCache::sharedTextureCache()->addPVRImage("gameMap.pvr.ccz"));
     CCTextureCache::reloadAllTextures();
+    
     
     if (LANDSCAPE)
     {
@@ -111,18 +108,35 @@ bool GameMapLayer::init(int nextLevel)
             popupScale = 1.0f;
     }
     
-    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         vector<int> temp = FacebookPtr->myScores;
         int lastLevel = 1;
+        
         for (int i = 84; i > 0; i--)
         {
             if (FacebookPtr->myScores[i] > 0)
             {
-                lastLevel = i;
+                lastLevel = i + 1;
                 break;
             }
         }
+        
+        for (int i = 0; i < 85; i++)
+        {
+            if (FacebookPtr->myScores[i + 1] > 0)
+            {
+                if (OptionsPtr->getLevelData(i).countScore < FacebookPtr->myScores[i + 1])
+                {
+                    OptionsPtr->setLevelData(i, OptionsPtr->getLevelData(i).countStar, FacebookPtr->myScores[i+1], OptionsPtr->getLevelData(i).levelType);
+                }
+                else if (i < lastLevel)
+                {
+                    FacebookPtr->setPointsInLevel(OptionsPtr->getLevelData(i).countScore, i + 1);
+                }
+            }
+        }
+        
         if (OptionsPtr->getCurrentLevel() < lastLevel)
         {
             OptionsPtr->restoreCurrentLevel(lastLevel);
@@ -142,22 +156,79 @@ bool GameMapLayer::init(int nextLevel)
     popupLayer = PopupLayer::create();
     this->addChild(popupLayer, 100);
     
+    
     menu->addSocialLayer();
 
 	leftDownMenu = LeftDownMenuScene::create();
 	leftDownMenu->setBackScene(MainMenu);
 	this->addChild(leftDownMenu, 10);
     
-    if (OptionsPtr->getFirstGame() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    if (nextLevel == 108)
+    {
+        nextLevel = 25;
+        if (OptionsPtr->getLevelData(24).lock == false)
+        {
+            popupLayer->popup((char*)CCLocalizedString("UNLOCK_END", NULL), (char*)CCLocalizedString("UNLOCK_END_TEXT", NULL), "OK", GreenPopup, this, callfuncN_selector(GameMapLayer::unclockMenu), this, callfuncN_selector(GameMapLayer::unclockMenu));
+            leftDownMenu->setLock(true);
+            leftDownMenu->setVisible(false);
+            menu->setLock(true);
+        }
+    }
+    if (nextLevel == 109)
+    {
+        nextLevel = 37;
+        if (OptionsPtr->getLevelData(36).lock == false)
+        {
+            popupLayer->popup((char*)CCLocalizedString("UNLOCK_END", NULL), (char*)CCLocalizedString("UNLOCK_END_TEXT", NULL), "OK", GreenPopup, this, callfuncN_selector(GameMapLayer::unclockMenu), this, callfuncN_selector(GameMapLayer::unclockMenu));
+            leftDownMenu->setLock(true);
+            leftDownMenu->setVisible(false);
+            menu->setLock(true);
+        }
+    }
+    if (nextLevel == 110)
+    {
+        nextLevel = 49;
+        if (OptionsPtr->getLevelData(48).lock == false)
+        {
+            popupLayer->popup((char*)CCLocalizedString("UNLOCK_END", NULL), (char*)CCLocalizedString("UNLOCK_END_TEXT", NULL), "OK", GreenPopup, this, callfuncN_selector(GameMapLayer::unclockMenu), this, callfuncN_selector(GameMapLayer::unclockMenu));
+            leftDownMenu->setLock(true);
+            leftDownMenu->setVisible(false);
+            menu->setLock(true);
+        }
+    }
+    if (nextLevel == 111)
+    {
+        nextLevel = 61;
+        if (OptionsPtr->getLevelData(60).lock == false)
+        {
+            popupLayer->popup((char*)CCLocalizedString("UNLOCK_END", NULL), (char*)CCLocalizedString("UNLOCK_END_TEXT", NULL), "OK", GreenPopup, this, callfuncN_selector(GameMapLayer::unclockMenu), this, callfuncN_selector(GameMapLayer::unclockMenu));
+            leftDownMenu->setLock(true);
+            leftDownMenu->setVisible(false);
+            menu->setLock(true);
+        }
+    }
+    if (nextLevel == 112)
+    {
+        nextLevel = 73;
+        if (OptionsPtr->getLevelData(72).lock == false)
+        {
+            popupLayer->popup((char*)CCLocalizedString("UNLOCK_END", NULL), (char*)CCLocalizedString("UNLOCK_END_TEXT", NULL), "OK", GreenPopup, this, callfuncN_selector(GameMapLayer::unclockMenu), this, callfuncN_selector(GameMapLayer::unclockMenu));
+            leftDownMenu->setLock(true);
+            leftDownMenu->setVisible(false);
+            menu->setLock(true);
+        }
+    }
+    
+    /*if (OptionsPtr->getFirstGame() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         OptionsPtr->setFirstGame();
-        popupLayer->popupPost("Post on wall", "Post message on wall and get a bonus", "Post", GreenPopup, BombPopBoot,
+        popupLayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot,
                               this, callfuncN_selector(GameMapLayer::addPostBonus), this, callfuncN_selector(GameMapLayer::unclockMenu));
         leftDownMenu->setLock(true);
         leftDownMenu->setVisible(false);
         menu->setLock(true);
         OptionsPtr->save();
-    }
+    }*/
 
 	ccColor4B yellowColor;
 	yellowColor.r = 0xe6;
@@ -533,19 +604,27 @@ bool GameMapLayer::init(int nextLevel)
 		sprintf(buf, "%d", i + 1);
 		CCLabelTTF* labelNormal = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_140);
 		CCLabelTTF* labelSelect = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_140);
+        CCSprite* labelDisable = CCSprite::create("zamok.png");
 		labelNormal->setPosition(ccp(normal->getContentSize().width/2.0f, normal->getContentSize().height/2.0f));
 		labelSelect->setPosition(ccp(select->getContentSize().width/2.0f, select->getContentSize().height/2.0f));
+        labelDisable->setPosition(ccp(disable->getContentSize().width/2.0f, disable->getContentSize().height/2.0f));
+      //  labelDisable->setColor(ccGRAY);
 		labelSelect->setColor(ccGRAY);
 
 
 		normal->addChild(labelNormal);
 		select->addChild(labelSelect);
+        disable->addChild(labelDisable);
 
 		CCMenuItemSprite* level = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::levelCallback));		
 		level->setPosition(path[i].x - CCDirector::sharedDirector()->getWinSize().width/2.0f,
 			path[i].y - CCDirector::sharedDirector()->getWinSize().height/2.0f);
 		levels->addChild(level);
 		level->setTag(i);
+        ((CCNodeRGBA*)level->getNormalImage())->setCascadeColorEnabled(false);
+        ((CCNodeRGBA*)level->getSelectedImage())->setCascadeColorEnabled(false);
+        ((CCNodeRGBA*)level->getDisabledImage())->setCascadeColorEnabled(false);
+
         
         if (!((i+1)%12) || !((i)%12))
         {
@@ -594,7 +673,7 @@ bool GameMapLayer::init(int nextLevel)
 			star_3->setPosition(ccp(star_3->getPositionX() + 80*multiplier + level->getContentSize().width/2.0f, star_3->getPositionY() - 10*multiplier));
 		}
         
-        if (getNetworkStatus() && FacebookPtr->sessionIsOpened())
+        if (OptionsPtr->isFacebookConnection() && getNetworkStatus() && FacebookPtr->sessionIsOpened())
         if ((i + 1) == OptionsPtr->getCurrentLevel())
 		{
             CCSprite* circleFlik = CCSprite::createWithSpriteFrameName("gameMap/circleFlik.png");
@@ -605,6 +684,7 @@ bool GameMapLayer::init(int nextLevel)
             string str = FacebookPtr->getAvatar();
             CCSprite* avatar = CCSprite::create(str.c_str());
             level->addChild(avatar, 100);
+            avatar->setColor(ccWHITE);
             float avatarWidth = 128.0f*multiplier;
             avatar->setScaleX(avatarWidth/avatar->getContentSize().width);
             avatar->setScaleY(avatarWidth/avatar->getContentSize().height);
@@ -616,39 +696,30 @@ bool GameMapLayer::init(int nextLevel)
             avatar->addChild(border);
         }
         
-        for (int k = 0; k < FacebookPtr->friendsScores.size(); k++)
-        {
-            int friendCurrentLevel = -1;
-            for (int j = FacebookPtr->friendsScores[k].scores.size() - 1; j >=0; j--)
-            {
-                if (FacebookPtr->friendsScores[k].scores[j] != 0)
-                {
-                    friendCurrentLevel = j;
-                    break;
-                }
-            }
-            if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
-            if ((i + 1) == friendCurrentLevel)
-            {
-                string avatarFileName = FacebookPtr->getWorkDirectory() + "/" + FacebookPtr->friendsScores[k].uid + ".png";
-                CCSprite* avatar = CCSprite::create(avatarFileName.c_str());
-                level->addChild(avatar, 100);
-                float avatarWidth = 128.0f*multiplier;
-                avatar->setScaleX(avatarWidth/avatar->getContentSize().width);
-                avatar->setScaleY(avatarWidth/avatar->getContentSize().height);
-                avatar->setPosition(ccp(level->getContentSize().width/2.0f, level->getContentSize().height/2.0f - avatar->getContentSize().height*1.5f*avatar->getScaleY()));
-                
-                CCSprite* border = CCSprite::create("avatarBorder.png");
-                border->setScaleX(((avatarWidth + 15)/border->getContentSize().width)/avatar->getScaleX());
-                border->setScaleY(((avatarWidth + 15)/border->getContentSize().height)/avatar->getScaleY());
-                border->setPosition(ccp(avatar->getContentSize().width/2.0f, avatar->getContentSize().height/2.0f));
-                avatar->addChild(border);
-            }
-        }
-
 		if ((i + 1) > OptionsPtr->getCurrentLevel())
 		{
-            int numLev = (i/7) + 1;
+			level->setEnabled(false);
+		}
+        
+        int currStage = 0;
+        if (OptionsPtr->getCurrentLevel() < 13)
+            currStage = 13;
+        else if (OptionsPtr->getCurrentLevel() < 25)
+            currStage = 25;
+        else if (OptionsPtr->getCurrentLevel() < 37)
+            currStage = 37;
+        else if (OptionsPtr->getCurrentLevel() < 49)
+            currStage = 49;
+        else if (OptionsPtr->getCurrentLevel() < 61)
+            currStage = 61;
+        else if (OptionsPtr->getCurrentLevel() < 73)
+            currStage = 73;
+        else
+            currStage = 86;
+        
+        if ((i+2) > currStage)
+		{
+            int numLev = (i/12) + 1;
 			if (numLev > 9)
 				numLev -=9;
             ccColor3B color;
@@ -670,29 +741,43 @@ bool GameMapLayer::init(int nextLevel)
                 color = ccGREEN;
             else if (numLev == 9)
                 color = ccGREEN;
-			level->setEnabled(false);
-			level->setColor(color);
+            level->setColor(color);
+            level->getDisabledImage()->removeAllChildrenWithCleanup(true);
 		}
+        
+        for (int k = 0; k < FacebookPtr->friendsScores.size(); k++)
+        {
+            int friendCurrentLevel = -1;
+            for (int j = FacebookPtr->friendsScores[k].scores.size() - 1; j >=0; j--)
+            {
+                if (FacebookPtr->friendsScores[k].scores[j] != 0)
+                {
+                    friendCurrentLevel = j;
+                    break;
+                }
+            }
+            if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
+                if ((i + 1) == friendCurrentLevel)
+                {
+                    string avatarFileName = FacebookPtr->getWorkDirectory() + "/" + FacebookPtr->friendsScores[k].uid + ".png";
+                    CCSprite* avatar = CCSprite::create(avatarFileName.c_str());
+                    avatar->setColor(ccWHITE);
+                    level->addChild(avatar, 100);
+                    float avatarWidth = 128.0f*multiplier;
+                    avatar->setScaleX(avatarWidth/avatar->getContentSize().width);
+                    avatar->setScaleY(avatarWidth/avatar->getContentSize().height);
+                    avatar->setPosition(ccp(level->getContentSize().width/2.0f, level->getContentSize().height/2.0f - avatar->getContentSize().height*1.5f*avatar->getScaleY()));
+                    
+                    CCSprite* border = CCSprite::create("avatarBorder.png");
+                    border->setScaleX(((avatarWidth + 15)/border->getContentSize().width)/avatar->getScaleX());
+                    border->setScaleY(((avatarWidth + 15)/border->getContentSize().height)/avatar->getScaleY());
+                    border->setPosition(ccp(avatar->getContentSize().width/2.0f, avatar->getContentSize().height/2.0f));
+                    avatar->addChild(border);
+                }
+        }
 	}
     
-    CCSprite* normal;
-    CCSprite* select;
-    CCSprite* disable;
-    
-    normal = CCSprite::create("superLevel.png");
-    disable = CCSprite::create("gameMap/gray.png");
-    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
-    select->setColor(ccGRAY);
-    
-    CCMenuItemSprite* slevel = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
-    slevel->setPosition(path[29].x - CCDirector::sharedDirector()->getWinSize().width/2.0f - 50*multiplier,
-                       path[29].y - CCDirector::sharedDirector()->getWinSize().height/2.0f + 300*multiplier);
-    levels->addChild(slevel);
-    
-    if (OptionsPtr->getCurrentLevel() < 31)
-        slevel->setEnabled(false);
-
-    
+    extraLevelsDraw();
     levelPicsDraw();
     levelLabelsDraw();
 
@@ -715,17 +800,34 @@ bool GameMapLayer::init(int nextLevel)
     
     layerGradient->addChild(boy, 10);
     
-    if (nextLevel > 0)
+    if (nextLevel > 0  && !reinit)
     {
-        boy->setPosition(ccp(path[nextLevel - 2].x - boy->getContentSize().width/2.5f*boy->getScale(),
-                             path[nextLevel - 2].y + boy->getContentSize().height/1.5f*boy->getScale()));
-        
-        boy->runAction(CCSequence::createWithTwoActions(CCMoveTo::create(2.0f, ccp(path[nextLevel - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),                                                                                   path[nextLevel - 1].y + boy->getContentSize().height/1.5f*boy->getScale())),
-            CCCallFuncN::create(this, callfuncN_selector( GameMapLayer::boyMoveFinished))));
-        
- //       ((CCMenuItemSprite*)levels->getChildByTag(nextLevel))->setEnabled(false);
-        SimpleAudioEngine::sharedEngine()->playEffect("sound/footstep.mp3");
-        nextLevelForSender = nextLevel;
+        if (nextLevel == 25 || nextLevel == 37 || nextLevel == 49 || nextLevel == 61 || nextLevel == 73 || nextLevel == 85)
+        {
+            boy->setPosition(ccp(path[OptionsPtr->getLastGameLevel() - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),
+                                 path[OptionsPtr->getLastGameLevel() - 1].y + boy->getContentSize().height/1.5f*boy->getScale()));
+            nextLevel = OptionsPtr->getLastGameLevel();
+            
+            ((CCMenuItemSprite*)levels->getChildByTag(OptionsPtr->getCurrentLevel() - 1))->setEnabled(true);
+            nextLevelForSender = nextLevel;
+            CCNode* node = CCNode::create();
+            node->setTag(nextLevelForSender);
+            levelCallback(node);
+        }
+        else
+        {
+            boy->setPosition(ccp(path[nextLevel - 2].x - boy->getContentSize().width/2.5f*boy->getScale(),
+                                 path[nextLevel - 2].y + boy->getContentSize().height/1.5f*boy->getScale()));
+            
+            boy->runAction(CCSequence::createWithTwoActions(CCMoveTo::create(2.0f, ccp(path[nextLevel - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),                                                                                   path[nextLevel - 1].y + boy->getContentSize().height/1.5f*boy->getScale())),
+                                                            CCCallFuncN::create(this, callfuncN_selector( GameMapLayer::boyMoveFinished))));
+            CCLog("%d    %d", nextLevel, OptionsPtr->getCurrentLevel() - 1);
+            
+            if (nextLevel == OptionsPtr->getCurrentLevel())
+                ((CCMenuItemSprite*)levels->getChildByTag(OptionsPtr->getCurrentLevel() - 1))->setEnabled(false);
+            SimpleAudioEngine::sharedEngine()->playEffect("sound/footstep.mp3");
+            nextLevelForSender = nextLevel;
+        }
     }
     else
     {
@@ -739,7 +841,7 @@ bool GameMapLayer::init(int nextLevel)
         nextLevel = OptionsPtr->getLastGameLevel();
     }
     
-    layerGradient->setPosition(ccp(100,
+    layerGradient->setPosition(ccp(layerGradient->getPositionX(),
                                  -path[nextLevel - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
 	
     
@@ -750,6 +852,17 @@ bool GameMapLayer::init(int nextLevel)
     dark->setColor(ccBLACK);
     this->setTouchEnabled(true);
     
+    int levelCenter = nextLevel;
+    if (levelCenter > 69)
+        levelCenter = 69;
+    if (levelCenter < 15)
+        levelCenter = 10;
+    
+    CCPoint temp = path[77];
+    
+    int levelCenterX = 0;
+    if (path[nextLevel - 1].x > 1000)
+        levelCenterX = -300;
     
     if (IPAD)
     {
@@ -763,9 +876,10 @@ bool GameMapLayer::init(int nextLevel)
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
             
             layerGradient->setScale(0.56f);
-            layerGradient->setPosition(ccp(-40.0f, -path[nextLevel - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
-            
-            layerGradient->recoverPositionAndScale();            
+            if (nextLevel < 16)
+                layerGradient->setPosition(ccp(0.0f, 0.0f));
+            else
+                layerGradient->setPosition(ccp(-40.0f, -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
         }
         else
         {
@@ -775,8 +889,10 @@ bool GameMapLayer::init(int nextLevel)
             
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
             layerGradient->setScale(0.42f);
-            layerGradient->setPosition(ccp(-30.0f, -path[nextLevel - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
-            layerGradient->recoverPositionAndScale();
+            if (nextLevel < 20)
+                layerGradient->setPosition(ccp(0.0f, 0.0f));
+            else
+                layerGradient->setPosition(ccp(-30.0f, -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
         }
     }
     else if (IPHONE_4)
@@ -789,9 +905,9 @@ bool GameMapLayer::init(int nextLevel)
             
             layerGradient->setPosition(ccp(0.0f, 0.0f));
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
-            layerGradient->recoverPositionAndScale();
-            
             layerGradient->setScale(0.7f);
+            layerGradient->setPosition(ccp(levelCenterX, -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
+            layerGradient->recoverPositionAndScale();
         }
         else
         {
@@ -801,9 +917,10 @@ bool GameMapLayer::init(int nextLevel)
             
             layerGradient->setPosition(ccp(0.0f, 0.0f));
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
-            layerGradient->recoverPositionAndScale();
-            
             layerGradient->setScale(0.5f);
+            
+            layerGradient->setPosition(ccp(levelCenterX, -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
+            layerGradient->recoverPositionAndScale();
         }
     }
     else if (IPHONE_5)
@@ -814,11 +931,10 @@ bool GameMapLayer::init(int nextLevel)
             layerGradient->setMaxScale(1.2f);
             layerGradient->setPanBoundsRect(CCRect(0.0f, 0.0f, 1200.0f, 2200.0f));
             
-            layerGradient->setPosition(ccp(0.0f, 0.0f));
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
-            layerGradient->recoverPositionAndScale();
-            
             layerGradient->setScale(0.7f);
+            layerGradient->setPosition(ccp(levelCenterX, -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
+            layerGradient->recoverPositionAndScale();
         }
         else
         {
@@ -826,11 +942,10 @@ bool GameMapLayer::init(int nextLevel)
             layerGradient->setMaxScale(1.2f);
             layerGradient->setPanBoundsRect(CCRect(0.0f, 0.0f, 680.0f, 2200.0f));
             
-            layerGradient->setPosition(ccp(0.0f, 0.0f));
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
-            layerGradient->recoverPositionAndScale();
-            
             layerGradient->setScale(0.5f);
+            layerGradient->setPosition(ccp(levelCenterX, -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
+            layerGradient->recoverPositionAndScale();
         }
     }
     else
@@ -845,8 +960,11 @@ bool GameMapLayer::init(int nextLevel)
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
             
             layerGradient->setScale(0.56f);
-            layerGradient->setPosition(ccp(-20.0f, -15.0f));
-            
+            layerGradient->recoverPositionAndScale();
+            if (nextLevel < 16)
+                layerGradient->setPosition(ccp(0.0f, 0.0f));
+            else
+                layerGradient->setPosition(ccp(layerGradient->getPositionX(), -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
             layerGradient->recoverPositionAndScale();
         }
         else
@@ -858,17 +976,300 @@ bool GameMapLayer::init(int nextLevel)
             layerGradient->setAnchorPoint(ccp(0.0f, 0.0f));
             layerGradient->setScale(0.42f);
             layerGradient->setPosition(ccp(-15.0f, -15.0f));
+            if (nextLevel < 20)
+                layerGradient->setPosition(ccp(0.0f, 0.0f));
+            else
+                layerGradient->setPosition(ccp(layerGradient->getPositionX(), -path[levelCenter - 1].y * layerGradient->getScale() + CCDirector::sharedDirector()->getWinSize().height/2.0f));
             layerGradient->recoverPositionAndScale();
         }
     }
     
+    if (reinit)
+    {
+        CCNode* node = CCNode::create();
+        node->setTag(nextLevel);
+        levelCallback(node);
+    }
+        
 	return true;
+}
+
+
+void GameMapLayer::extraLevelsDraw()
+{
+    float multiplier = 0.5f;
+    if (WINSIZE.height < WINSIZE.width)
+    {
+        if (WINSIZE.width == 2048)
+        {
+            multiplier = 1.0f;
+        }
+        else
+        {
+            multiplier = 0.5f;
+        }
+    }
+    else
+    {
+        if (WINSIZE.height == 2048)
+        {
+            multiplier = 1.0f;
+        }
+        else
+        {
+            multiplier = 0.5f;
+        }
+    }
+    
+    int z = 3;
+    
+    CCSprite* normal;
+    CCSprite* select;
+    CCSprite* disable;
+    
+    normal = CCSprite::create("superLevel.png");
+    disable = CCSprite::create("gameMap/gray.png");
+    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
+    select->setColor(ccGRAY);
+    
+    CCMenuItemSprite* slevel1 = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
+    slevel1->setPosition(path[29].x - CCDirector::sharedDirector()->getWinSize().width/2.0f - 50*multiplier,
+                        path[29].y - CCDirector::sharedDirector()->getWinSize().height/2.0f + 300*multiplier);
+    slevel1->setTag(31);
+    levels->addChild(slevel1);
+    if (OptionsPtr->getCurrentLevel() < 31)
+        slevel1->setEnabled(false);
+
+//level 25
+    normal = CCSprite::create("superLevel.png");
+    disable = CCSprite::create("gameMap/gray.png");
+    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
+    select->setColor(ccGRAY);
+    
+    CCMenuItemSprite* slevel25 = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
+    slevel25->setPosition(path[23].x - CCDirector::sharedDirector()->getWinSize().width/2.0f + 200*multiplier,
+                        path[23].y - CCDirector::sharedDirector()->getWinSize().height/2.0f + 300*multiplier);
+    slevel25->setTag(25);
+    levels->addChild(slevel25);
+    if (OptionsPtr->getCurrentLevel() < 25)
+        slevel25->setEnabled(false);
+    
+    if (OptionsPtr->getLevelData(107).countStar > 0)
+    {
+        CCSprite* sprite = NULL;
+        if (OptionsPtr->getLevelData(107).countStar == 1)
+            sprite = CCSprite::createWithSpriteFrameName("common/star.png");
+        else if (OptionsPtr->getLevelData(107).countStar == 2)
+            sprite = CCSprite::createWithSpriteFrameName("common/star2.png");
+        else if (OptionsPtr->getLevelData(107).countStar == 3)
+            sprite = CCSprite::createWithSpriteFrameName("common/star3.png");
+        
+        sprite->setScale(0.9f);
+        sprite->setAnchorPoint(ccp(0.5f, 0.45f));
+        slevel25->addChild(sprite);
+        sprite->setPosition(ccp(slevel25->getContentSize().width/2.0f, slevel25->getContentSize().height/2.0f));
+    }
+    
+    CCSprite* way24 = CCSprite::create("superWay2.png");
+    way24->setPosition(ccp(path[23].x, path[23].y));
+    way24->setAnchorPoint(ccp(-0.3f, -0.3f));
+    way24->setFlipY(true);
+    way24->setScale(0.8f);
+    layerGradient->addChild(way24, z);
+    CCSprite* way25 = CCSprite::create("superWay2.png");
+    way25->setPosition(ccp(path[24].x, path[24].y));
+    way25->setAnchorPoint(ccp(-0.5f, 1.3f));
+    way25->setScale(0.8f);
+    layerGradient->addChild(way25, z);
+
+//level 37
+    normal = CCSprite::create("superLevel.png");
+    disable = CCSprite::create("gameMap/gray.png");
+    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
+    select->setColor(ccGRAY);
+    
+    CCMenuItemSprite* slevel37 = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
+    slevel37->setPosition(path[35].x - CCDirector::sharedDirector()->getWinSize().width/2.0f - 170*multiplier,
+                          path[35].y - CCDirector::sharedDirector()->getWinSize().height/2.0f - 400*multiplier);
+    slevel37->setTag(37);
+    levels->addChild(slevel37);
+    if (OptionsPtr->getCurrentLevel() < 37)
+        slevel37->setEnabled(false);
+    
+    if (OptionsPtr->getLevelData(108).countStar > 0)
+    {
+        CCSprite* sprite = NULL;
+        if (OptionsPtr->getLevelData(108).countStar == 1)
+            sprite = CCSprite::createWithSpriteFrameName("common/star.png");
+        else if (OptionsPtr->getLevelData(108).countStar == 2)
+            sprite = CCSprite::createWithSpriteFrameName("common/star2.png");
+        else if (OptionsPtr->getLevelData(108).countStar == 3)
+            sprite = CCSprite::createWithSpriteFrameName("common/star3.png");
+        
+        sprite->setScale(0.9f);
+        sprite->setAnchorPoint(ccp(0.5f, 0.45f));
+        slevel37->addChild(sprite);
+        sprite->setPosition(ccp(slevel37->getContentSize().width/2.0f, slevel37->getContentSize().height/2.0f));
+    }
+    
+    CCSprite* way36 = CCSprite::create("superWay2.png");
+    way36->setPosition(ccp(path[35].x  - 30*multiplier, path[35].y - 200*multiplier));
+    way36->setAnchorPoint(ccp(0.5f, 0.5f));
+    way36->setFlipY(true);
+    way36->setScale(0.8f);
+    layerGradient->addChild(way36, z);
+    CCSprite* way37 = CCSprite::create("superWay2.png");
+    way37->setPosition(ccp(path[36].x + 120*multiplier, path[36].y  - 150*multiplier));
+    way37->setAnchorPoint(ccp(0.5f, 0.5f));
+    way37->setScale(0.8f);
+    way37->setFlipY(true);
+    way37->setFlipX(true);
+    way37->setRotation(-20);
+    layerGradient->addChild(way37, z);
+    
+//level 49
+    normal = CCSprite::create("superLevel.png");
+    disable = CCSprite::create("gameMap/gray.png");
+    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
+    select->setColor(ccGRAY);
+    
+    CCMenuItemSprite* slevel49 = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
+    slevel49->setPosition(path[47].x - CCDirector::sharedDirector()->getWinSize().width/2.0f - 200*multiplier,
+                          path[47].y - CCDirector::sharedDirector()->getWinSize().height/2.0f - 350*multiplier);
+    slevel49->setTag(49);
+    levels->addChild(slevel49);
+    if (OptionsPtr->getCurrentLevel() < 49)
+        slevel49->setEnabled(false);
+    
+    if (OptionsPtr->getLevelData(109).countStar > 0)
+    {
+        CCSprite* sprite = NULL;
+        if (OptionsPtr->getLevelData(109).countStar == 1)
+            sprite = CCSprite::createWithSpriteFrameName("common/star.png");
+        else if (OptionsPtr->getLevelData(109).countStar == 2)
+            sprite = CCSprite::createWithSpriteFrameName("common/star2.png");
+        else if (OptionsPtr->getLevelData(109).countStar == 3)
+            sprite = CCSprite::createWithSpriteFrameName("common/star3.png");
+        
+        sprite->setScale(0.9f);
+        sprite->setAnchorPoint(ccp(0.5f, 0.45f));
+        slevel49->addChild(sprite);
+        sprite->setPosition(ccp(slevel49->getContentSize().width/2.0f, slevel49->getContentSize().height/2.0f));
+    }
+    
+    CCSprite* way48 = CCSprite::create("superWay2.png");
+    way48->setPosition(ccp(path[47].x  - 30*multiplier, path[47].y - 200*multiplier));
+    way48->setAnchorPoint(ccp(0.5f, 0.5f));
+    way48->setFlipY(true);
+    way48->setScale(0.8f);
+    layerGradient->addChild(way48, z);
+    CCSprite* way49 = CCSprite::create("superWay2.png");
+    way49->setPosition(ccp(path[48].x + 100*multiplier, path[48].y  - 200*multiplier));
+    way49->setAnchorPoint(ccp(0.5f, 0.5f));
+    way49->setScale(0.8f);
+    way49->setFlipY(true);
+    way49->setFlipX(true);
+    layerGradient->addChild(way49, z);
+//level 61
+    normal = CCSprite::create("superLevel.png");
+    disable = CCSprite::create("gameMap/gray.png");
+    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
+    select->setColor(ccGRAY);
+    
+    CCMenuItemSprite* slevel61 = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
+    slevel61->setPosition(path[60].x - CCDirector::sharedDirector()->getWinSize().width/2.0f + 200*multiplier,
+                          path[60].y - CCDirector::sharedDirector()->getWinSize().height/2.0f - 300*multiplier);
+    slevel61->setTag(61);
+    levels->addChild(slevel61);
+    if (OptionsPtr->getCurrentLevel() < 62)
+        slevel61->setEnabled(false);
+    
+    if (OptionsPtr->getLevelData(110).countStar > 0)
+    {
+        CCSprite* sprite = NULL;
+        if (OptionsPtr->getLevelData(110).countStar == 1)
+            sprite = CCSprite::createWithSpriteFrameName("common/star.png");
+        else if (OptionsPtr->getLevelData(110).countStar == 2)
+            sprite = CCSprite::createWithSpriteFrameName("common/star2.png");
+        else if (OptionsPtr->getLevelData(110).countStar == 3)
+            sprite = CCSprite::createWithSpriteFrameName("common/star3.png");
+        
+        sprite->setScale(0.9f);
+        sprite->setAnchorPoint(ccp(0.5f, 0.45f));
+        slevel61->addChild(sprite);
+        sprite->setPosition(ccp(slevel61->getContentSize().width/2.0f, slevel61->getContentSize().height/2.0f));
+    }
+    
+    CCSprite* way60 = CCSprite::create("superWay2.png");
+    way60->setPosition(ccp(path[59].x  + 180*multiplier, path[59].y - 60*multiplier));
+    way60->setAnchorPoint(ccp(0.5f, 0.5f));
+    way60->setFlipY(true);
+    way60->setRotation(50);
+    way60->setScale(0.8f);
+    layerGradient->addChild(way60, z);
+    
+    CCSprite* way61 = CCSprite::create("superWay2.png");
+    way61->setPosition(ccp(path[60].x + 100*multiplier, path[60].y  - 100*multiplier));
+    way61->setAnchorPoint(ccp(0.5f, 0.5f));
+    way61->setScale(0.8f);
+    layerGradient->addChild(way61, z);
+
+//level 73
+    normal = CCSprite::create("superLevel.png");
+    disable = CCSprite::create("gameMap/gray.png");
+    select = CCSprite::createWithSpriteFrame(normal->displayFrame());
+    select->setColor(ccGRAY);
+    
+    CCMenuItemSprite* slevel73 = CCMenuItemSprite::create(normal, select, disable, this, menu_selector(GameMapLayer::superLevelCallback));
+    slevel73->setPosition(path[72].x - CCDirector::sharedDirector()->getWinSize().width/2.0f - 250*multiplier,
+                          path[72].y - CCDirector::sharedDirector()->getWinSize().height/2.0f - 320*multiplier);
+    slevel73->setTag(73);
+    levels->addChild(slevel73);
+    if (OptionsPtr->getCurrentLevel() < 74)
+        slevel73->setEnabled(false);
+    
+    if (OptionsPtr->getLevelData(111).countStar > 0)
+    {
+        CCSprite* sprite = NULL;
+        if (OptionsPtr->getLevelData(111).countStar == 1)
+            sprite = CCSprite::createWithSpriteFrameName("common/star.png");
+        else if (OptionsPtr->getLevelData(111).countStar == 2)
+            sprite = CCSprite::createWithSpriteFrameName("common/star2.png");
+        else if (OptionsPtr->getLevelData(111).countStar == 3)
+            sprite = CCSprite::createWithSpriteFrameName("common/star3.png");
+        
+        sprite->setScale(0.9f);
+        sprite->setAnchorPoint(ccp(0.5f, 0.45f));
+        slevel73->addChild(sprite);
+        sprite->setPosition(ccp(slevel61->getContentSize().width/2.0f, slevel61->getContentSize().height/2.0f));
+    }
+    
+    CCSprite* way72 = CCSprite::create("superWay2.png");
+    way72->setPosition(ccp(path[71].x  - 180*multiplier, path[71].y + 100*multiplier));
+    way72->setAnchorPoint(ccp(0.5f, 0.5f));
+    way72->setFlipX(true);
+    way72->setFlipY(true);
+    way72->setRotation(-20);
+    way72->setScale(0.8f);
+    layerGradient->addChild(way72, z);
+    
+    CCSprite* way73 = CCSprite::create("superWay2.png");
+    way73->setPosition(ccp(path[72].x - 180*multiplier, path[72].y  - 100*multiplier));
+    way73->setAnchorPoint(ccp(0.5f, 0.5f));
+    way73->setScale(0.8f);
+    way73->setFlipY(true);
+    layerGradient->addChild(way73, z);
 }
 
 void GameMapLayer::showMessageBoard()
 {
     if (!isBuyLive)
         menu->showMessageboard();
+}
+
+void GameMapLayer::closeMessageBoard()
+{
+    menu->closeMessageboard();
 }
 
 void GameMapLayer::hideMessageBoard()
@@ -885,7 +1286,7 @@ void GameMapLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     if (!menu->isPopup)
     {
-        if (leftDownMenu->isLock())
+        if (leftDownMenu->isLock() && !leftDownMenu->buttonIsSelected())
             leftDownMenu->menuSettingCallback(NULL);
     }
     menu->ccTouchesBegan(NULL, NULL);
@@ -897,9 +1298,19 @@ void GameMapLayer::superLevelCallback(CCObject* pSender)
 		return;
     
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
-    
     layerGradient->clearTouches();
-    menu->levelPopup(106, OptionsPtr->getLevelData(106).countStar, OptionsPtr->getLevelData(106).countScore, OptionsPtr->getLevelData(106).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    if ((((CCMenuItemSprite*)pSender)->getTag()) == 31)
+        menu->levelPopup(106, OptionsPtr->getLevelData(106).countStar, OptionsPtr->getLevelData(106).countScore, OptionsPtr->getLevelData(106).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    else if ((((CCMenuItemSprite*)pSender)->getTag()) == 25)
+        menu->levelPopup(107, OptionsPtr->getLevelData(107).countStar, OptionsPtr->getLevelData(107).countScore, OptionsPtr->getLevelData(107).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    else if ((((CCMenuItemSprite*)pSender)->getTag()) == 37)
+        menu->levelPopup(108, OptionsPtr->getLevelData(108).countStar, OptionsPtr->getLevelData(108).countScore, OptionsPtr->getLevelData(108).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    else if ((((CCMenuItemSprite*)pSender)->getTag()) == 49)
+        menu->levelPopup(109, OptionsPtr->getLevelData(109).countStar, OptionsPtr->getLevelData(109).countScore, OptionsPtr->getLevelData(109).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    else if ((((CCMenuItemSprite*)pSender)->getTag()) == 61)
+        menu->levelPopup(110, OptionsPtr->getLevelData(110).countStar, OptionsPtr->getLevelData(110).countScore, OptionsPtr->getLevelData(110).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    else if ((((CCMenuItemSprite*)pSender)->getTag()) == 73)
+        menu->levelPopup(111, OptionsPtr->getLevelData(111).countStar, OptionsPtr->getLevelData(111).countScore, OptionsPtr->getLevelData(111).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
 }
 
 void GameMapLayer::changeOrientation()
@@ -1029,32 +1440,36 @@ void GameMapLayer::boyMoveFinished(CCNode* sender)
 {
     ((CCMenuItemSprite*)levels->getChildByTag(OptionsPtr->getCurrentLevel() - 1))->setEnabled(true);
     
-    CCParticleSystemQuad* explosion = CCParticleExplosion::createWithTotalParticles(50);
-    sender->addChild(explosion, 10);
-    explosion->setPosition(path[nextlevelCurr - 1].x,
-                           path[nextlevelCurr - 1].y);
-    explosion->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/star.png"));
-    explosion->setSpeed(100.0f);
-    explosion->setSpeedVar(10.0f);
-    explosion->setScale(3.0f);
-    explosion->setGravity(ccp(0.0f, -50.0f));
-    explosion->setEndSpin(800.0f);
-    explosion->setBlendAdditive(true);
-    ccBlendFunc blend;
-    blend.dst = GL_ONE;
-    blend.src = GL_ONE;
-    explosion->setBlendFunc(blend);
+    if (nextLevelForSender == OptionsPtr->getCurrentLevel())
+    {
+        CCParticleSystemQuad* explosion = CCParticleExplosion::createWithTotalParticles(50);
+        layerGradient->addChild(explosion, 10);
+        explosion->setPosition(path[OptionsPtr->getCurrentLevel() - 1].x,
+                               path[OptionsPtr->getCurrentLevel() - 1].y);
+        explosion->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/star.png"));
+        explosion->setSpeed(100.0f);
+        explosion->setSpeedVar(10.0f);
+        explosion->setScale(3.0f);
+        explosion->setGravity(ccp(0.0f, -50.0f));
+        explosion->setEndSpin(800.0f);
+        explosion->setBlendAdditive(true);
+        ccBlendFunc blend;
+        blend.dst = GL_ONE;
+        blend.src = GL_ONE;
+        explosion->setBlendFunc(blend);
+        
+        explosion->setEndColor(ccc4f(0, 255, 255, 255));
+        explosion->setEndColorVar(ccc4f(0, 0, 0, 0));
+        explosion->setStartColor(ccc4f(229, 229, 229, 229));
+        explosion->setStartColorVar(ccc4f(0, 0, 0, 25));
+        explosion->setEndSize(0.0f);
+        explosion->setLife(3.0f);
+    }
     
-    explosion->setEndColor(ccc4f(0, 255, 255, 255));
-    explosion->setEndColorVar(ccc4f(0, 0, 0, 0));
-    explosion->setStartColor(ccc4f(229, 229, 229, 229));
-    explosion->setStartColorVar(ccc4f(0, 0, 0, 25));
-    explosion->setEndSize(0.0f);
-    explosion->setLife(3.0f);
-
     CCNode* node = CCNode::create();
     node->setTag(nextLevelForSender - 1);
-    levelCallback(node);
+//    levelCallback(node);
+    this->runAction(CCSequence::create(CCDelayTime::create(1.0f), CCCallFuncO::create(this, callfuncO_selector(GameMapLayer::levelCallback), node), NULL));
 }
 
 void GameMapLayer::unclockMenu(CCNode* pSender)
@@ -1081,7 +1496,7 @@ void GameMapLayer::update(CCNode* sender)
         leftDownMenu->setLock(true);
         leftDownMenu->setVisible(false);
         leftDownMenu->isInvite = false;
-        popupLayer->popupPost("Invite friends", "Invite friends and get a bonus", "Invite", GreenPopup, BombPopBoot,
+        popupLayer->popupPost((char*)CCLocalizedString("INVITE_FRIENDS_TITLE", NULL), (char*)CCLocalizedString("INVITE_FRIENDS_TEXT", NULL), (char*)CCLocalizedString("INVITE_FRIENDS_BUTTON", NULL), GreenPopup, BombPopBoot,
                               this, callfuncN_selector(GameMapLayer::addBonus), this, callfuncN_selector(GameMapLayer::unclockMenu));
     }
     else if ((leftDownMenu->isLock() || menu->isLock()) && !lock)
@@ -1475,6 +1890,9 @@ void GameMapLayer::drawPoins(CCNode* sender)
 		return;
 
 	streak->setPosition(newPath[currentIdx]);
+    float multiplier = 1.0f;
+    if (!IPAD)
+        multiplier = 0.5f;
 	
 	bool flag = false;
 	for (int i = 0; i < path.size(); i++)
@@ -1496,9 +1914,24 @@ void GameMapLayer::drawPoins(CCNode* sender)
                     strcpy(buf, "gameMap/dashline.png");
             }
 			CCTexture2D* tex = CCTextureCache::sharedTextureCache()->addImage(buf);
-            if (WINSIZE.width == 2048 || WINSIZE.height == 2048)
-            {
-            if ((i + 2) > OptionsPtr->getCurrentLevel() && ((i+1)%12))
+            
+            int currStage = 0;
+            if (OptionsPtr->getCurrentLevel() < 13)
+                currStage = 13;
+            else if (OptionsPtr->getCurrentLevel() < 25)
+                currStage = 25;
+            else if (OptionsPtr->getCurrentLevel() < 37)
+                currStage = 37;
+            else if (OptionsPtr->getCurrentLevel() < 49)
+                currStage = 49;
+            else if (OptionsPtr->getCurrentLevel() < 61)
+                currStage = 61;
+            else if (OptionsPtr->getCurrentLevel() < 73)
+                currStage = 73;
+            else
+                currStage = 85;
+
+            if ((i+2) > currStage && ((i+1)%12))
             {
                 tex = CCTextureCache::sharedTextureCache()->addImage("gameMap/wite.png");
 
@@ -1522,15 +1955,11 @@ void GameMapLayer::drawPoins(CCNode* sender)
                 else if (numLev == 9)
                     color = ccGREEN;
                 
-                streak = IceMotionStreak::create(1.0f, 10.0f, 80.0f, color, tex);
+                streak = IceMotionStreak::create(1.0f, 10.0f, 80.0f*multiplier, color, tex);
             }
             else
-                streak = IceMotionStreak::create(1.0f, 10.0f, 80.0f, ccWHITE, tex);
-            }
-            else
-            {
-                streak = IceMotionStreak::create(1.0f, 10.0f, 40.0f, ccWHITE, tex);
-            }
+                streak = IceMotionStreak::create(1.0f, 10.0f, 80.0f*multiplier, ccWHITE, tex);
+            
 			streak->reset();
 			streak->setPosition(newPath[currentIdx++]);
 			layerGradient->addChild(streak,4);

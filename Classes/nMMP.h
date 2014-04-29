@@ -27,6 +27,7 @@ public:
     ~MMP(){};
     
     void mmpTracking();
+    void mmpBanner();
     void startSession();
     void endedSession();
     void sessionLoaded();
@@ -42,10 +43,17 @@ public:
     void facebookConnected(string fbId, string name);
     void contentShared();
     void friendsInvited();
+    
+    bool isBanner = false;
+    string imageUrl = "";
+    string trackingUrl = "";
+    string storeUrl = "";
 private:
     void mmpAnalytics(string json);
     void trackingServerResponse(CCHttpClient * client, CCHttpResponse * response);
     void analyticsServerResponse(CCHttpClient * client, CCHttpResponse * response);
+    void bannerServerResponse(CCHttpClient * client, CCHttpResponse * response);
+    void imageServerResponse(CCHttpClient * client, CCHttpResponse * response);
     string meta();
     time_t startTime;
 };

@@ -71,6 +71,11 @@ void cFacebook::login()
         [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
             if (!user) {
                 NSLog(@"Uh oh. The user cancelled the Facebook login.");
+                if (GlobalsPtr->iceCreamScene == Menu)
+                {
+                    MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                    layer->closeLoading();
+                }
             } else if (user.isNew) {
                 isLogin = true;
                 NSLog(@"User signed up and logged in through Facebook!");
@@ -184,6 +189,11 @@ void cFacebook::loginWithInvite()
     [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
         if (!user) {
             NSLog(@"Uh oh. The user cancelled the Facebook login.");
+            if (GlobalsPtr->iceCreamScene == Menu)
+            {
+                MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->closeLoading();
+            }
         } else if (user.isNew) {
             isLogin = true;
             NSLog(@"User signed up and logged in through Facebook!");
@@ -1553,6 +1563,7 @@ bool cFacebook::unlockStage(int stage)
 {
     if (!sessionIsOpened())
         return false;
+    
     NSString *linkURL = [NSString stringWithUTF8String:ITUNES_LINK];
     NSString *pictureURL = @"http://i58.fastpic.ru/big/2014/0313/75/917b3a214cddffd909048872a47e5c75.png";
     

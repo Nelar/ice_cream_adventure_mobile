@@ -783,6 +783,20 @@ void GameMenuLayer::changeOrientation(void)
         playOn->setPosition(ccp(WINSIZE.width/2.0f + playOn->getContentSize().width/2.0f, WINSIZE.height/3.0f));
         exitOn->setPosition(ccp(WINSIZE.width/2.0f + playOn->getContentSize().width/2.0f, WINSIZE.height/3.0f - playOn->getContentSize().height*1.5f));
     }
+    
+    if (countMoves <= 5)
+    {
+        if (mig)
+        {
+            mig->removeFromParentAndCleanup(true);
+            mig = NULL;
+        }
+        
+        mig = CCSprite::createWithSpriteFrameName("game/circle.png");
+        downPanel->addChild(mig, 1);
+        mig->setPosition(labelCountMoves->getPosition());
+        mig->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.2f, 1.2f), CCScaleTo::create(0.2f, 0.5f))));
+    }
 }
 
 void GameMenuLayer::startTime()
@@ -1263,8 +1277,10 @@ void GameMenuLayer::unclockMenu(CCNode* pSender)
 {
     if (((GameScene*)getParent())->isEndDialog)
     {
-        playOn->setEnabled(true);
-        exitOn->setEnabled(true);
+        if (playOn)
+            playOn->setEnabled(true);
+        if (exitOn)
+            exitOn->setEnabled(true);
     }
     menu->setTouchEnabled(true);
     ((CCLayer*)getParent())->setTouchEnabled(true);
@@ -1327,7 +1343,7 @@ void GameMenuLayer::setCountMoves(int nTargetScore)
 
 	downPanel->addChild(labelCountMoves, 2);
     
-    if (countMoves == 5)
+    if (countMoves <= 5)
     {
         if (mig)
         {
@@ -1349,6 +1365,25 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
     {
         firstStep = false;
         OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() - 1);
+        OptionsPtr->save();
+        
+        if (GlobalsPtr->booster_2)
+        {
+            OptionsPtr->setBombCount(OptionsPtr->getBombCount() - 1);
+            GlobalsPtr->booster_2 = false;
+        }
+        
+        if (GlobalsPtr->booster_1)
+        {
+            OptionsPtr->setCrystalCount(OptionsPtr->getCrystalCOunt() - 1);
+            GlobalsPtr->booster_1 = false;
+        }
+        
+        if (GlobalsPtr->booster_3 && type != Score)
+        {
+            OptionsPtr->setFishCount(OptionsPtr->getFishCount() - 1);
+            GlobalsPtr->booster_3 = false;
+        }
         OptionsPtr->save();
     }
 	

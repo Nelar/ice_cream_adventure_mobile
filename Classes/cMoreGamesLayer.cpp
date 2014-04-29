@@ -157,7 +157,11 @@ CCNode* MoreGamesLayer::createMessageboard()
         sprintf(buf, "%d", i);
         string iconFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("icon") + buf + string(".png");
         
-        CCSprite* iconMoreGames = CCSprite::create(iconFile.c_str());
+        CCSprite* iconMoreGames = NULL;
+        if (CCFileUtils::sharedFileUtils()->isFileExist(iconFile))
+            iconMoreGames = CCSprite::create(iconFile.c_str());
+        else
+            iconMoreGames = CCSprite::create("loading.png");
         CCNode* nodeIcon = CCNode::create();
         CCSprite* plate = CCSprite::create("panel.png");
         nodeIcon->setContentSize(CCSize(plate->getContentSize().width, plate->getContentSize().height/1.2f));

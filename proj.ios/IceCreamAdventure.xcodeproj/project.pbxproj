@@ -79,6 +79,7 @@
 		4A571B3F17FA17810024F2B9 /* Localizable_en in Resources */ = {isa = PBXBuildFile; fileRef = 4A571B3D17FA17810024F2B9 /* Localizable_en */; };
 		4A571B4017FA17810024F2B9 /* Localizable_ru in Resources */ = {isa = PBXBuildFile; fileRef = 4A571B3E17FA17810024F2B9 /* Localizable_ru */; };
 		B004A01818D308C200A19915 /* nMMP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B004A01618D308C200A19915 /* nMMP.cpp */; };
+		B0292999190637F80083D9ED /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0292998190637F80083D9ED /* GameKit.framework */; };
 		B0446E11182133CB00D6B11A /* cComixScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0446DF5182133CB00D6B11A /* cComixScene.cpp */; };
 		B0446E14182133CB00D6B11A /* cGameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0446DFB182133CB00D6B11A /* cGameObject.cpp */; };
 		B0446E15182133CB00D6B11A /* cPopupLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0446DFE182133CB00D6B11A /* cPopupLayer.cpp */; };
@@ -411,6 +412,7 @@
 		7855E0DF153FEF240059DD9A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = SOURCE_ROOT; };
 		B004A01618D308C200A19915 /* nMMP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nMMP.cpp; path = ../Classes/nMMP.cpp; sourceTree = "<group>"; };
 		B004A01718D308C200A19915 /* nMMP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nMMP.h; path = ../Classes/nMMP.h; sourceTree = "<group>"; };
+		B0292998190637F80083D9ED /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		B0446DF5182133CB00D6B11A /* cComixScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cComixScene.cpp; path = ../Classes/cComixScene.cpp; sourceTree = "<group>"; };
 		B0446DF6182133CB00D6B11A /* cComixScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cComixScene.h; path = ../Classes/cComixScene.h; sourceTree = "<group>"; };
 		B0446DFB182133CB00D6B11A /* cGameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cGameObject.cpp; path = ../Classes/cGameObject.cpp; sourceTree = "<group>"; };
@@ -700,6 +702,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0292999190637F80083D9ED /* GameKit.framework in Frameworks */,
 				CEACC8BA17D7512C005023BA /* StoreKit.framework in Frameworks */,
 				B0C935B618ED7E5300C5752D /* libAppsFlyerLib.a in Frameworks */,
 				B0DDCA6118EC1BF200B0EB59 /* iAd.framework in Frameworks */,
@@ -1057,6 +1060,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B0292998190637F80083D9ED /* GameKit.framework */,
 				B0C935B518ED7E5300C5752D /* libAppsFlyerLib.a */,
 				B0DDCA6018EC1BF200B0EB59 /* iAd.framework */,
 				B0DDCA5E18EC1BBC00B0EB59 /* MobileAppTracker.framework */,
@@ -1873,8 +1877,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Destiny Group LLC (8B8RGH7S75)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1928,8 +1932,8 @@
 				OTHER_CFLAGS = "-O2";
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "52F0B0E9-81D6-40FE-A502-622CD6D4BA17";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "52F0B0E9-81D6-40FE-A502-622CD6D4BA17";
+				PROVISIONING_PROFILE = "7182E2FC-BF0B-4E50-9490-9516EA345775";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7182E2FC-BF0B-4E50-9490-9516EA345775";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1944,8 +1948,8 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Destiny Group LLC (8B8RGH7S75)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Konstantin Andryushchenko (25QGC4UQ8C)";
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1996,8 +2000,8 @@
 				);
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "52F0B0E9-81D6-40FE-A502-622CD6D4BA17";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "52F0B0E9-81D6-40FE-A502-622CD6D4BA17";
+				PROVISIONING_PROFILE = "7182E2FC-BF0B-4E50-9490-9516EA345775";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7182E2FC-BF0B-4E50-9490-9516EA345775";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

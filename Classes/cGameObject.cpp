@@ -607,18 +607,18 @@ void sGameObject::destroy(float delayC)
                 if (i%2)
                 {
                     stripes[i]->setScale(0.33f);
-                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.2f, 1.0f),
-                                                             CCDelayTime::create(0.3f), CCMoveBy::create(0.7f, ccp(WINSIZE.width, 0.0f)), CCFadeOut::create(0.1f), NULL));
+                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.1f, 1.0f),
+                                                             CCDelayTime::create(0.15f), CCSpawn::createWithTwoActions(CCScaleTo::create(0.4f, 10.0f, 0.6f),CCMoveBy::create(0.7f, ccp(WINSIZE.width*1.5f, 0.0f))), CCFadeOut::create(0.1f), NULL));
                 }
                 else
                 {
                     stripes[i]->setScale(0.33f);
-                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.2f, 1.0f),
-                                                             CCDelayTime::create(0.3f), CCMoveBy::create(0.7f, ccp(-WINSIZE.width, 0.0f)), CCFadeOut::create(0.1f), NULL));
+                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.1f, 1.0f),
+                                                             CCDelayTime::create(0.15f), CCSpawn::createWithTwoActions(CCScaleTo::create(0.4f, 10.0f, 0.6f),CCMoveBy::create(0.7f, ccp(-WINSIZE.width*1.5f, 0.0f))), CCFadeOut::create(0.1f), NULL));
                 }
             }
-            spriteUp->runAction(CCSequence::create(CCScaleTo::create(0.2f, 1.0f),
-                                                   CCDelayTime::create(0.3f), CCHide::create(), NULL));
+            spriteUp->runAction(CCSequence::create(CCScaleTo::create(0.1f, 1.0f),
+                                                   CCDelayTime::create(0.15f), CCHide::create(), NULL));
             sprite->setOpacity(0);
 		}
         else if (isMegaBombVertical)
@@ -680,18 +680,18 @@ void sGameObject::destroy(float delayC)
                 if (i%2)
                 {
                     stripes[i]->setScale(0.33f);
-                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.2f, 1.0f),
-                                                             CCDelayTime::create(0.3f), CCMoveBy::create(0.7f, ccp(0.0f,WINSIZE.height)), CCFadeOut::create(0.1f), NULL));
+                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.1f, 1.0f),
+                                                             CCDelayTime::create(0.15f), CCSpawn::createWithTwoActions(CCScaleTo::create(0.4f, 0.6f, 10.0f),CCMoveBy::create(0.7f, ccp(0.0f,WINSIZE.height*1.5f))), CCFadeOut::create(0.1f), NULL));
                 }
                 else
                 {
                     stripes[i]->setScale(0.33f);
-                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.2f, 1.0f),
-                                                             CCDelayTime::create(0.3f), CCMoveBy::create(0.7f, ccp(0.0f,-WINSIZE.height)), CCFadeOut::create(0.1f), NULL));
+                    stripes[i]->runAction(CCSequence::create(CCScaleTo::create(0.1f, 1.0f),
+                                                             CCDelayTime::create(0.15f), CCSpawn::createWithTwoActions(CCScaleTo::create(0.4f, 0.6f, 10.0f),CCMoveBy::create(0.7f, ccp(0.0f,-WINSIZE.height*1.5f))), CCFadeOut::create(0.1f), NULL));
                 }
             }
-            spriteUp->runAction(CCSequence::create(CCScaleTo::create(0.2f, 1.0f),
-                                                   CCDelayTime::create(0.3f), CCHide::create(), NULL));
+            spriteUp->runAction(CCSequence::create(CCScaleTo::create(0.1f, 1.0f),
+                                                   CCDelayTime::create(0.15f), CCHide::create(), NULL));
             sprite->setOpacity(0);
 		}
         else if (isMegaBomb)
@@ -750,13 +750,13 @@ void sGameObject::destroy(float delayC)
 		{
             delay = delayDestroy;
             SimpleAudioEngine::sharedEngine()->playEffect("sound/bomb_explosion.mp3");
-            CCSprite* bang = CCSprite::createWithSpriteFrameName("game/krug.png");
-            sprite->getParent()->addChild(bang, sprite->getZOrder() + 1);
-            bang->setPosition(sprite->getPosition());
-            bang->setScale(0.01f);
-            bang->setOpacity(120);
-            bang->runAction(CCSequence::create(CCDelayTime::create(delay), CCScaleTo::create(0.3f, 0.8f),  NULL));
-            bang->runAction(CCSequence::create(CCDelayTime::create(delay + 0.2f), CCFadeTo::create(0.2f, 0), CCCallFuncN::create(this, callfuncN_selector(sGameObject::cleaningBang)), NULL));
+            /*            CCSprite* bang = CCSprite::createWithSpriteFrameName("game/krug.png");
+             sprite->getParent()->addChild(bang, sprite->getZOrder() + 1);
+             bang->setPosition(sprite->getPosition());
+             bang->setScale(0.01f);
+             bang->setOpacity(120);
+             bang->runAction(CCSequence::create(CCDelayTime::create(delay), CCScaleTo::create(0.3f, 0.8f),  NULL));
+             bang->runAction(CCSequence::create(CCDelayTime::create(delay + 0.2f), CCFadeTo::create(0.2f, 0), CCCallFuncN::create(this, callfuncN_selector(sGameObject::cleaningBang)), NULL));*/
             this->sprite->runAction(CCSequence::create(CCDelayTime::create(delay), CCScaleTo::create(0.3f, 0.01f), CCFadeOut::create(0.01f), CCCallFuncN::create(this, callfuncN_selector(sGameObject::unvisibleObject)), NULL));
             
             float bombScale = 1.0f;
@@ -790,23 +790,38 @@ void sGameObject::destroy(float delayC)
                      ccp(sprite->getPosition().x + CELL_WIDTH/2.2f, sprite->getPosition().y - 3.0f*CELL_HEIGHT/4.0f), bombScale, delay);
             lighting(sprite->getPosition(),
                      ccp(sprite->getPosition().x - CELL_WIDTH/2.2f, sprite->getPosition().y - 3.0f*CELL_HEIGHT/4.0f), bombScale, delay);
-
-            /*lighting(sprite->getPosition(),
-                     ccp(sprite->getPosition().x - CELL_WIDTH, sprite->getPosition().y - CELL_HEIGHT), bombScale, delay);
-            lighting(sprite->getPosition(),
-                     ccp(sprite->getPosition().x + CELL_WIDTH, sprite->getPosition().y - CELL_HEIGHT), bombScale, delay);
-            lighting(sprite->getPosition(),
-                     ccp(sprite->getPosition().x - CELL_WIDTH, sprite->getPosition().y + CELL_HEIGHT), bombScale, delay);
-            lighting(sprite->getPosition(),
-                     ccp(sprite->getPosition().x + CELL_WIDTH, sprite->getPosition().y + CELL_HEIGHT), bombScale, delay);*/
             
-            CCSprite* expo = CCSprite::create("explos.png");
-            expo->setAnchorPoint(ccp(1.0f, 1.0f));
-            sprite->getParent()->addChild(expo, sprite->getZOrder() + 3);
-            expo->setPosition(sprite->getPosition());
-            expo->setOpacity(0);
-            expo->runAction(CCSequence::create(CCDelayTime::create(delay*2.0f), CCFadeIn::create(0.01f), CCDelayTime::create(0.1f), CCFadeOut::create(0.01f), NULL));
-
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x + CELL_WIDTH, sprite->getPosition().y), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x + 3.0f*CELL_WIDTH/4.0f, sprite->getPosition().y + CELL_HEIGHT/2.2f), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x + 3.0f*CELL_WIDTH/4.0f, sprite->getPosition().y - CELL_HEIGHT/2.2f), bombScale, delay);
+            
+            
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x - CELL_WIDTH, sprite->getPosition().y), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x - 3.0f*CELL_WIDTH/4.0f, sprite->getPosition().y + CELL_HEIGHT/2.2f), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x - 3.0f*CELL_WIDTH/4.0f, sprite->getPosition().y - CELL_HEIGHT/2.2f), bombScale, delay);
+            
+            
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x, sprite->getPosition().y + CELL_HEIGHT), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x + CELL_WIDTH/2.2f, sprite->getPosition().y + 3.0f*CELL_HEIGHT/4.0f), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x - CELL_WIDTH/2.2f, sprite->getPosition().y + 3.0f*CELL_HEIGHT/4.0f), bombScale, delay);
+            
+            
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x, sprite->getPosition().y - CELL_HEIGHT), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x + CELL_WIDTH/2.2f, sprite->getPosition().y - 3.0f*CELL_HEIGHT/4.0f), bombScale, delay);
+            lighting(sprite->getPosition(),
+                     ccp(sprite->getPosition().x - CELL_WIDTH/2.2f, sprite->getPosition().y - 3.0f*CELL_HEIGHT/4.0f), bombScale, delay);
+            
             
             if (isNext)
                 sprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.0f), CCCallFuncO::create(this, callfuncO_selector(sGameObject::setNext), this)));
@@ -867,42 +882,17 @@ void sGameObject::destroy(float delayC)
 
 void sGameObject::lighting(CCPoint begin, CCPoint end, float bScale, float delay)
 {
-    CCAnimation *animation = CCAnimation::create();
+    CCNode* grandParent = NULL;
+    grandParent = ((CCNode*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
     
-    CCSprite* light = CCSprite::create("lite.png");
-    CCSprite* lightFlip = CCSprite::create("liteFlip.png");
-    
-    animation->addSpriteFrame(light->displayFrame());
-    animation->addSpriteFrame(lightFlip->displayFrame());
-    
-    animation->setDelayPerUnit(0.05f);
-    animation->setRestoreOriginalFrame(true);
-    animation->setLoops(10);
-    
-    CCAnimate *action = CCAnimate::create(animation);
-    light->runAction(action);
-    
-    float scaleX = begin.getDistance(end)/light->getContentSize().width;
-    light->setAnchorPoint(ccp(0.5f, 0.5f));
-    light->setPosition(begin);
-    CCPoint vector1 = ccp(1.0f, 0.0f);
-    CCPoint vector2 = ccp(end.x - begin.x, end.y - begin.y);
-    vector2 = vector2.normalize();
-    float angle = (vector1.x*vector2.x + vector1.y*vector2.y)/
-        sqrt(vector1.x*vector1.x + vector1.y*vector1.y)*sqrt(vector2.x*vector2.x + vector2.y*vector2.y);
-
-    angle = acos(angle)*57.29577951f;
-    
-    if (end.y > begin.y)
-        light->setRotation(-angle);
-    else
-        light->setRotation(angle);
-    
-    ((CCNode*)sprite->getParent())->addChild(light, sprite->getZOrder()+2);
-    light->setScaleX(0.01f);
-    light->setOpacity(255);
-    light->runAction(CCSequence::create(CCDelayTime::create(delay), CCSpawn::createWithTwoActions(CCScaleTo::create(0.2f, scaleX*1.5f, 0.8f), CCMoveTo::create(0.2f, end)),
-                                        CCDelayTime::create(0.3f), CCFadeOut::create(0.1f), NULL));
+    CCParticleSystem* meteorRight = CCParticleMeteor::create();
+    meteorRight->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/fire.png"));
+    meteorRight->setPosition(begin);
+    meteorRight->setScale(1.0f);
+    meteorRight->setGravity(ccp(0.0f, -100.0f));
+    meteorRight->setLife(1.0f);
+    grandParent->addChild(meteorRight, 100);
+    meteorRight->runAction(CCSequence::create(CCDelayTime::create(delay + ((float)(rand()%20))/100.0f), CCMoveTo::create(0.2f, end), CCDelayTime::create(0.1f), CCScaleTo::create(0.2f, 0.01f), CCHide::create(), NULL));
 }
 
 void sGameObject::setNext(CCObject* sender)
