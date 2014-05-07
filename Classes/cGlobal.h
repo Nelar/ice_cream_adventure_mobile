@@ -52,7 +52,7 @@
 #define FONT_SIZE_32 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?32:16
 #define FONT_SIZE_26 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?26:13
 #define FONT_SIZE_22 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?22:11
-#define MULTIPLIER (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?1.0f:0.5f
+#define MULTIPLIER ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?1.0f:0.5f)
 
 #define ITUNES_LINK "https://itunes.apple.com/us/app/ice-cream-adventure/id705058125?l=ru&ls=1&mt=8"
 

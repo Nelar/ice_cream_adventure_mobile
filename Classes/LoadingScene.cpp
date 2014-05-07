@@ -85,6 +85,7 @@ bool LoadingScene::init()
         else
             background = CCSprite::create("loadingIphonePortrait.png");
     }
+	
     background->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     
     labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
