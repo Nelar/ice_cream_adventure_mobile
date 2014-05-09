@@ -67,7 +67,7 @@ public:
     {
 #ifdef DEBUG
         --instanceCounter;
-        CCLOG( "CCHttpResponse instances = %i", instanceCounter );
+        CCLOG( "CCHttpResponse instances = %i, %p", instanceCounter, _pHttpRequest->getTarget() );
 #endif
         if (_pHttpRequest)
         {

@@ -362,8 +362,12 @@ public:
     /// @param responseCode Null not allowed
     bool perform(int *responseCode)
     {
-        if (CURLE_OK != curl_easy_perform(m_curl))
+		
+		CURLcode performCode = curl_easy_perform(m_curl);
+		
+        if (CURLE_OK != performCode)
             return false;
+		
         CURLcode code = curl_easy_getinfo(m_curl, CURLINFO_RESPONSE_CODE, responseCode);
         if (code != CURLE_OK || *responseCode != 200)
             return false;
