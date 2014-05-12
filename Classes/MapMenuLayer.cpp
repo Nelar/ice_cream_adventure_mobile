@@ -979,14 +979,6 @@ void MapMenuLayer::livesCallback(CCObject* pSender)
 
 void MapMenuLayer::fishingEnded(CCNode* sender)
 {
-    if (levelNumForPost == 42 && !OptionsPtr->getJubPost() && OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened())
-    {
-        popaplayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot,
-                              this, callfuncN_selector(MapMenuLayer::addBonus), this, callfuncN_selector(MapMenuLayer::unclockMenu));
-        menu->setEnabled(false);
-    }
-    
-    
     if (currentLevel == OptionsPtr->getCurrentLevel() && OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened())
     {
         char buf[255];
@@ -1831,7 +1823,7 @@ void MapMenuLayer::playAfterLoad(CCNode* pSender)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(4));
     else if (currentLevel == 49 && OptionsPtr->getCurrentLevel() <= currentLevel)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(5));
-    else if (currentLevel == 61 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 61/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(6));
     else if (currentLevel == 73 && OptionsPtr->getCurrentLevel() <= currentLevel)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(7));

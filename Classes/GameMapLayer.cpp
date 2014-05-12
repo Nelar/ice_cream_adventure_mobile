@@ -1300,17 +1300,17 @@ void GameMapLayer::superLevelCallback(CCObject* pSender)
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     layerGradient->clearTouches();
     if ((((CCMenuItemSprite*)pSender)->getTag()) == 31)
-        menu->levelPopup(106, OptionsPtr->getLevelData(106).countStar, OptionsPtr->getLevelData(106).countScore, OptionsPtr->getLevelData(106).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        menu->levelPopup(106, OptionsPtr->getLevelData(106).countStar, OptionsPtr->getLevelData(106).targetScore, OptionsPtr->getLevelData(106).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else if ((((CCMenuItemSprite*)pSender)->getTag()) == 25)
-        menu->levelPopup(107, OptionsPtr->getLevelData(107).countStar, OptionsPtr->getLevelData(107).countScore, OptionsPtr->getLevelData(107).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        menu->levelPopup(107, OptionsPtr->getLevelData(107).countStar, OptionsPtr->getLevelData(107).targetScore, OptionsPtr->getLevelData(107).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else if ((((CCMenuItemSprite*)pSender)->getTag()) == 37)
-        menu->levelPopup(108, OptionsPtr->getLevelData(108).countStar, OptionsPtr->getLevelData(108).countScore, OptionsPtr->getLevelData(108).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        menu->levelPopup(108, OptionsPtr->getLevelData(108).countStar, OptionsPtr->getLevelData(108).targetScore, OptionsPtr->getLevelData(108).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else if ((((CCMenuItemSprite*)pSender)->getTag()) == 49)
-        menu->levelPopup(109, OptionsPtr->getLevelData(109).countStar, OptionsPtr->getLevelData(109).countScore, OptionsPtr->getLevelData(109).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        menu->levelPopup(109, OptionsPtr->getLevelData(109).countStar, OptionsPtr->getLevelData(109).targetScore, OptionsPtr->getLevelData(109).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else if ((((CCMenuItemSprite*)pSender)->getTag()) == 61)
-        menu->levelPopup(110, OptionsPtr->getLevelData(110).countStar, OptionsPtr->getLevelData(110).countScore, OptionsPtr->getLevelData(110).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        menu->levelPopup(110, OptionsPtr->getLevelData(110).countStar, OptionsPtr->getLevelData(110).targetScore, OptionsPtr->getLevelData(110).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else if ((((CCMenuItemSprite*)pSender)->getTag()) == 73)
-        menu->levelPopup(111, OptionsPtr->getLevelData(111).countStar, OptionsPtr->getLevelData(111).countScore, OptionsPtr->getLevelData(111).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        menu->levelPopup(111, OptionsPtr->getLevelData(111).countStar, OptionsPtr->getLevelData(111).targetScore, OptionsPtr->getLevelData(111).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
 }
 
 void GameMapLayer::changeOrientation()
@@ -1988,8 +1988,8 @@ void GameMapLayer::levelCallback(CCObject* pSender)
 	int numLevel = ((CCMenuItemSprite*)pSender)->getTag();
     if (numLevel == 84)
         menu->showLastStage(84);
-    else if (OptionsPtr->getLevelData(numLevel).lock)
-        menu->showUnlock(numLevel);
+/*    else if (OptionsPtr->getLevelData(numLevel).lock)
+        menu->showUnlock(numLevel);*/
     else if (OptionsPtr->getLevelData(numLevel).levelType != Score)
         menu->levelPopup(numLevel + 1, OptionsPtr->getLevelData(numLevel).countStar, OptionsPtr->getLevelData(numLevel).targetScore, OptionsPtr->getLevelData(numLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else

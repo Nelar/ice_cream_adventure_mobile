@@ -80,6 +80,10 @@ public:
     void closeAfterLoading(CCNode* node);
     
     void afterGetScores();
+    
+    void finishingEnded(CCNode* sender);
+    void addBonus(CCNode* pSender);
+    void unclockMenu(CCNode* pSender);
 private:
     
     void explosionCallback(CCNode* sender);
@@ -130,7 +134,6 @@ private:
     void popupOk3(CCNode* pSender);
     void endTutorial(CCNode* pSender);
     void endStage(CCNode* pSender);
-    void unclockMenu(CCNode* pSender);
     
     void retryEnd(CCNode* pSender);
     

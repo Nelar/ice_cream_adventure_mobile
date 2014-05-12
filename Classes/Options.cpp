@@ -21,6 +21,9 @@ Options::Options()
 		levels[i].countStar = 0;
 		levels[i].levelType = Score;
         levels[i].lock = false;
+        levels[i].countGames = 0;
+        levels[i].lastGame = 0;
+        levels[i].isSimple = false;
 	}
     levels[24].lock = true;
     levels[36].lock = true;
@@ -50,12 +53,18 @@ void Options::setCurrentLevel(int nCurrentLevel)
     FacebookPtr->unlockNewLevel(currentLevel);
 }
 
-void Options::setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock)
+void Options::setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock, int nCountGame, time_t nLastGame, bool nIsSimple)
 {
 	levels[idx].countStar = nCountStar;
 	levels[idx].countScore = nCountScore;
 	levels[idx].levelType = nLevelType;
     levels[idx].lock = lock;
+    if (nCountGame != 0)
+        levels[idx].countGames = nCountGame;
+    if (nLastGame != 0)
+        levels[idx].lastGame = nLastGame;
+    if (nIsSimple)
+        levels[idx].isSimple = nIsSimple;
 }
 
 sLevelData Options::getLevelData(int idx)
@@ -351,6 +360,16 @@ void Options::load()
             isStageUnlocked = CCUserDefault::sharedUserDefault()->getBoolForKey(buf, false);
 
         levels[i].lock = isStageUnlocked;
+        
+        sprintf(buf, "countGames_%d", i);
+        levels[i].countGames = CCUserDefault::sharedUserDefault()->getIntegerForKey(buf, 0);
+        
+        sprintf(buf, "lastTime_%d", i);
+        string lastGame = CCUserDefault::sharedUserDefault()->getStringForKey(buf, "0");
+        levels[i].lastGame = atol(lastGame.c_str());
+        
+        sprintf(buf, "isSimple_%d", i);
+        levels[i].isSimple = CCUserDefault::sharedUserDefault()->getBoolForKey(buf, false);
 	}
     
     levels[0].levelType = Score;
@@ -620,20 +639,20 @@ void Options::load()
     levels[106].levelType = Ice;
     levels[106].targetScore = 50000;
     
-    levels[107].levelType = Score;
-    levels[107].targetScore = 100;
+    levels[107].levelType = Ice;
+    levels[107].targetScore = 15000;
     
-    levels[108].levelType = Score;
-    levels[108].targetScore = 100;
+    levels[108].levelType = Ice;
+    levels[108].targetScore = 20000;
     
-    levels[109].levelType = Score;
-    levels[109].targetScore = 100;
+    levels[109].levelType = Ice;
+    levels[109].targetScore = 15000;
     
-    levels[110].levelType = Score;
-    levels[110].targetScore = 100;
+    levels[110].levelType = Ice;
+    levels[110].targetScore = 20000;
     
-    levels[111].levelType = Score;
-    levels[111].targetScore = 100;
+    levels[111].levelType = Ice;
+    levels[111].targetScore = 25000;
 }
 
 void Options::save()
@@ -695,6 +714,14 @@ void Options::save()
         CCUserDefault::sharedUserDefault()->setIntegerForKey(buf, (int)levels[i].levelType);
         sprintf(buf, "lock_%d", i);
         CCUserDefault::sharedUserDefault()->setBoolForKey(buf, levels[i].lock);
+        sprintf(buf, "countGames_%d", i);
+        CCUserDefault::sharedUserDefault()->setIntegerForKey(buf, levels[i].countGames);
+        sprintf(buf, "lastTime_%d", i);
+        char bufLastGame[255];
+        sprintf(bufLastGame, "%ld", levels[i].lastGame);
+        CCUserDefault::sharedUserDefault()->setStringForKey(buf, bufLastGame);
+        sprintf(buf, "isSimple_%d", i);
+        CCUserDefault::sharedUserDefault()->setBoolForKey(buf, levels[i].isSimple);
 	}
 
     CCUserDefault::sharedUserDefault()->flush();

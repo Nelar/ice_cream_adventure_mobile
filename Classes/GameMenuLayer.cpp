@@ -379,7 +379,7 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     
     char buf[255];
     sprintf(buf, "%d/%d", currentScore, targetScore);
-    CCLabelTTF* scoreLabel = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_48);
+    CCLabelTTF* scoreLabel = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_72);
     scoreLabel->setColor(color);
     scoreLabel->setAnchorPoint(ccp(0.0f, 0.5f));
     scoreLabel->setPosition(ccp(upBack->getContentSize().width/10.0f + checkScore->getContentSize().width*checkScore->getScale() + star->getContentSize().width*star->getScale(), upBack->getContentSize().height/2.0f));
@@ -388,11 +388,11 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
     CCLabelTTF* titleLabel;
     if (((GameScene*)getParent())->isEndDialog)
         if (type == Time)
-            titleLabel = CCLabelTTF::create(CCLocalizedString("OUT_OF_TIME", NULL), FONT_COMMON, FONT_SIZE_48);
+            titleLabel = CCLabelTTF::create(CCLocalizedString("OUT_OF_TIME", NULL), FONT_COMMON, FONT_SIZE_72);
         else
-            titleLabel = CCLabelTTF::create(CCLocalizedString("OUT_OF_MOVES", NULL), FONT_COMMON, FONT_SIZE_48);
+            titleLabel = CCLabelTTF::create(CCLocalizedString("OUT_OF_MOVES", NULL), FONT_COMMON, FONT_SIZE_72);
     else
-        titleLabel = CCLabelTTF::create(CCLocalizedString("PRESS_QUIT", NULL), FONT_COMMON, FONT_SIZE_48);
+        titleLabel = CCLabelTTF::create(CCLocalizedString("PRESS_QUIT", NULL), FONT_COMMON, FONT_SIZE_54);
     
     
     titleLabel->setColor(color);
@@ -432,7 +432,7 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
         
         char buf[255];
         sprintf(buf, "%d/%d", bringDownCurrent, bringDownTarget);
-        CCLabelTTF* bringLabel = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_48);
+        CCLabelTTF* bringLabel = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_72);
         bringLabel->setAnchorPoint(ccp(0.0f, 0.5f));
         bringLabel->setColor(color);
         bringLabel->setPosition(ccp(upBack->getContentSize().width/1.7f + bringScore->getContentSize().width*bringScore->getScale()  + checkBring->getContentSize().width*checkBring->getScale(), upBack->getContentSize().height/2.0f));
@@ -457,7 +457,7 @@ void GameMenuLayer::popupExit(int iceTarget, int iceCount)
         
         char buf[255];
         sprintf(buf, "%d/%d", iceCount, iceTarget);
-        CCLabelTTF* iceLabel = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_48);
+        CCLabelTTF* iceLabel = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_72);
         iceLabel->setAnchorPoint(ccp(0.0f, 0.5f));
         iceLabel->setColor(color);
         iceLabel->setPosition(ccp(upBack->getContentSize().width/1.7f + iceScore->getContentSize().width*iceScore->getScale() + checkBring->getContentSize().width*checkBring->getScale(), upBack->getContentSize().height/2.0f));
@@ -546,7 +546,7 @@ void GameMenuLayer::playOnCallback(CCObject* pSender)
         }
         else
         {
-            popupBooster->popupBoosterInApp((char*)CCLocalizedString("EXTRA_MOVES", NULL), (char*)CCLocalizedString("EXTRA_MOVES_TEXT", NULL), GreenPopup, TimePopBoot, this, callfuncN_selector(GameMenuLayer::popupOk2), this, callfuncN_selector(GameMenuLayer::unclockMenu));
+            popupBooster->popupBoosterInApp((char*)CCLocalizedString("EXTRA_MOVES", NULL), (char*)CCLocalizedString("EXTRA_MOVES_TEXT", NULL), GreenPopup, MovesPopBoot, this, callfuncN_selector(GameMenuLayer::popupOk2), this, callfuncN_selector(GameMenuLayer::unclockMenu));
         }
     }
     else
@@ -784,7 +784,7 @@ void GameMenuLayer::changeOrientation(void)
         exitOn->setPosition(ccp(WINSIZE.width/2.0f + playOn->getContentSize().width/2.0f, WINSIZE.height/3.0f - playOn->getContentSize().height*1.5f));
     }
     
-    if (countMoves <= 5)
+    if (countMoves <= 5 && type != Time)
     {
         if (mig)
         {
@@ -1343,7 +1343,7 @@ void GameMenuLayer::setCountMoves(int nTargetScore)
 
 	downPanel->addChild(labelCountMoves, 2);
     
-    if (countMoves <= 5)
+    if (countMoves <= 5 && type != Time)
     {
         if (mig)
         {
@@ -1431,12 +1431,15 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
         progressBar->setPosition(ccp(downPanel->getContentSize().width/6.05f , downPanel->getContentSize().height/5.4f));
     }
     
-    if (purcent >= targetScore/(thirdStar/100.0f))
+    if (currentScore >= targetScore)
         star1->setVisible(true);
-    if (purcent >= secondStar/(thirdStar/100.0f))
+    if (currentScore >= secondStar)
         star2->setVisible(true);
-    if (purcent >= 100)
+    if (currentScore >= thirdStar)
+    {
         star3->setVisible(true);
+        isThirdStar = true;
+    }
 }
 
 void GameMenuLayer::setBringDownCurrent(int current)
