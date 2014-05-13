@@ -1454,8 +1454,8 @@ void ComixScene::comix_8()
         comix->setPosition(ccp(0.0f, (WINSIZE.height - 2048.0f*scale)/2.0f));
     }
     
-    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.5f), CCCallFuncN::create(this, callfuncN_selector(ComixScene::pauseComix))));
-    nextBubbleTime = 3.5f;
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.5f), CCCallFuncN::create(this, callfuncN_selector(ComixScene::pauseComix))));
+    nextBubbleTime = 2.5f;
 }
 
 void ComixScene::comix_8_end()

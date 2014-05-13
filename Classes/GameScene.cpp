@@ -422,6 +422,7 @@ void GameScene::loadLevel(const char* levelName)
         color.g = 0x78;
         color.b = 0xa6;
 		menu->bannerIce("game/iceBanner.png", 1.0f, color);
+        isBeginBanner = true;
 	}
 	else if (gameType == Score)
 	{
@@ -431,6 +432,8 @@ void GameScene::loadLevel(const char* levelName)
         color.b = 0x1a;
 		sprintf(buf, CCLocalizedString("BANNER_TEXT_SCORE"), menu->getTargetScore(), menu->getCountMoves());
 		menu->banner("game/orangeBanner.png", buf, 1.0f, color);
+        isBeginBanner = true;
+
 	}
 	else if (gameType == BringDown)
 	{
@@ -441,6 +444,7 @@ void GameScene::loadLevel(const char* levelName)
 		menu->bannerBringDown("game/bringDownBanner.png", 1.0f, color);
 		menu->setBringDownTarget(atoi(root->Attribute("bringDownCount")));
 		menu->setBringDownCurrent(0);
+        isBeginBanner = true;
 	}
 	else if (gameType == Time)
 	{
@@ -450,7 +454,9 @@ void GameScene::loadLevel(const char* levelName)
         color.b = 0x8d;
 		sprintf(buf, CCLocalizedString("BANNER_TEXT_TIME"), menu->getTargetScore(), atoi(root->Attribute("time")));
 		menu->banner("game/violetBanner.png", buf, 1.0f, color);
+        isBeginBanner = true;
 	}
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::beginBannerEndCallback))));
     
     if (WINSIZE.width == 640)
     {
@@ -485,6 +491,11 @@ void GameScene::loadLevel(const char* levelName)
         gameObjects[idxBoost]->changeType(Fish);
     }
     OptionsPtr->save();
+}
+
+void GameScene::beginBannerEndCallback(CCNode* sender)
+{
+    isBeginBanner = false;
 }
 
 GameScene::~GameScene()
@@ -592,6 +603,7 @@ bool GameScene::init(int levNum)
     else
         sprintf(buf, "levels/%d.xml", numLevel);
     
+
     if (!OptionsPtr->getLevelData(numLevel-1).isSimple)
     {
         int currLevel = OptionsPtr->getCurrentLevel();
@@ -629,7 +641,9 @@ bool GameScene::init(int levNum)
 	fieldLayer->setPosition(fieldLayer->getPositionX() + CCDirector::sharedDirector()->getWinSize().width, fieldLayer->getPositionY());
 	fieldLayer->runAction(CCSequence::create(CCDelayTime::create(1.5f),
 		CCEaseOut::create(CCMoveBy::create(0.5f, ccp(-CCDirector::sharedDirector()->getWinSize().width, fieldLayer->getPositionY())), 2.5f),
-		CCCallFuncN::create(this, callfuncN_selector(GameScene::fieldMoveFinished)), NULL));
+        NULL));
+    //this->runAction(CCSequence::create(CCDelayTime::create(2.5f),
+    //                                   CCCallFuncN::create(this, callfuncN_selector(GameScene::fieldMoveFinished)), NULL));
 	
     
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::addingBacground))));
@@ -768,6 +782,7 @@ void GameScene::changeOrientation(void)
     
     for (int i = 0; i < gameObjects.size(); i++)
     {
+        gameObjects[i]->sprite->stopAllActions();
         gameObjects[i]->sprite->setPosition(ccp(gameObjects[i]->y*CELL_WIDTH + xZero, yZero - gameObjects[i]->x*CELL_HEIGHT));
         gameObjects[i]->xZero = xZero;
         gameObjects[i]->yZero = yZero;
@@ -861,6 +876,51 @@ void GameScene::changeOrientation(void)
         }
     }
     
+    if (isBeginBanner)
+    {
+        menu->bannerSprite->setVisible(false);
+        char buf[255];
+        if (gameType == Ice)
+        {
+            ccColor3B color;
+            color.r = 0x16;
+            color.g = 0x78;
+            color.b = 0xa6;
+            menu->bannerIce("game/iceBanner.png", 1.0f, color);
+            isBeginBanner = true;
+        }
+        else if (gameType == Score)
+        {
+            ccColor3B color;
+            color.r = 0x8e;
+            color.g = 0x2d;
+            color.b = 0x1a;
+            sprintf(buf, CCLocalizedString("BANNER_TEXT_SCORE"), menu->getTargetScore(), menu->getCountMoves());
+            menu->banner("game/orangeBanner.png", buf, 1.0f, color);
+            isBeginBanner = true;
+            
+        }
+        else if (gameType == BringDown)
+        {
+            ccColor3B color;
+            color.r = 0x17;
+            color.g = 0x94;
+            color.b = 0x46;
+            menu->bannerBringDown("game/bringDownBanner.png", 1.0f, color);
+            isBeginBanner = true;
+        }
+        else if (gameType == Time)
+        {
+            ccColor3B color;
+            color.r = 0x5b;
+            color.g = 0x20;
+            color.b = 0x8d;
+            sprintf(buf, CCLocalizedString("BANNER_TEXT_TIME"), menu->getTargetScore(), 60);
+            menu->banner("game/violetBanner.png", buf, 1.0f, color);
+            isBeginBanner = true;
+        }
+    }
+    
     if (IPHONE_5 || IPHONE_4)
     {
         if (LANDSCAPE)
@@ -882,6 +942,7 @@ void GameScene::changeOrientation(void)
             menu->setScale(0.913f);
         }
     }
+    timesLock = false;
 }
 
 void GameScene::setTutorial_1()
@@ -2149,6 +2210,11 @@ void GameScene::timeUpdate(CCNode* sender)
 
 void GameScene::fieldMoveFinished(CCNode* sender)
 {
+    
+}
+
+void GameScene::addingBacground(CCNode* sender)
+{
     if (menu->getCurrentLevel()== 1)
         setTutorial_1();
     if (menu->getCurrentLevel() == 2)
@@ -2163,10 +2229,6 @@ void GameScene::fieldMoveFinished(CCNode* sender)
         setTutorial_6_1();
 	if (gameType == Time)
 		menu->startTime();
-}
-
-void GameScene::addingBacground(CCNode* sender)
-{
     lock = false;
 }
 
@@ -6588,6 +6650,11 @@ bool GameScene::endConditionCheck()
             else if (!countMoves && !isNotElementFish)
             {
                 //isNotElementFish = true;
+                menu->booster_1_Button->setEnabled(false);
+                menu->booster_2_Button->setEnabled(false);
+                menu->booster_3_Button->setEnabled(false);
+                menu->isLastAction = true;
+
                 if (!isRunFish)
                 {
                     isRunFish = true;
@@ -6757,7 +6824,7 @@ void GameScene::updateMenu(CCNode* sender)
         timesLeftDownLock = false;
         leftDownMenu->setLock(false);
         dark->runAction(CCFadeTo::create(0.5f, 0));
-        if (!menu->isDialog)
+        if (!menu->isDialog && !menu->isLastAction)
         {
             menu->booster_1_Button->setEnabled(true);
             menu->booster_2_Button->setEnabled(true);
@@ -7154,6 +7221,9 @@ void GameScene::registerWithTouchDispatcher()
 
 void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
+    if (endGameMenu != NULL)
+        endGameMenu->ccTouchesBegan(NULL, NULL);
+    
 	if (!menu->getCountMoves())
 		return;
 

@@ -224,11 +224,7 @@ bool GameMenuLayer::init(eLevelType ntype)
         char buf[255];
         sprintf(buf, "%d", OptionsPtr->getHammerCount());
         CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
-        ccColor3B color;
-        color.r = 0x16;
-        color.g = 0x78;
-        color.b = 0xa6;
-        label->setColor(color);
+        label->setColor(ccWHITE);
         if (!IPAD)
             label->setScale(0.5f);
         
@@ -740,7 +736,7 @@ void GameMenuLayer::changeOrientation(void)
     
     setCurrentScore(currentScore);
     
-    if (type == Time)
+    if (type == Time && timeGradient)
     {
         if(LANDSCAPE)
             timeGradient->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*3.0f));
@@ -1144,12 +1140,9 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
             char buf[255];
             sprintf(buf, "%d", OptionsPtr->getHammerCount());
             CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
-            ccColor3B color;
-            color.r = 0x16;
-            color.g = 0x78;
-            color.b = 0xa6;
-            label->setColor(color);
-            
+            label->setColor(ccWHITE);
+            if (!IPAD)
+                label->setScale(0.5f);
             
             boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
             boosterPlus->addChild(label);
@@ -1187,12 +1180,8 @@ void GameMenuLayer::addHammer()
     char buf[255];
     sprintf(buf, "%d", OptionsPtr->getHammerCount());
     CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
-    ccColor3B color;
-    color.r = 0x16;
-    color.g = 0x78;
-    color.b = 0xa6;
-    label->setColor(color);
-    
+
+    label->setColor(ccWHITE);
     if (!IPAD)
         label->setScale(0.5f);
     
@@ -1219,6 +1208,7 @@ void GameMenuLayer::addMovesInApp()
     {
         setCountMoves(getCountMoves() + 5);
     }
+    isLastAction = false;
 }
 
 void GameMenuLayer::popupOk1(CCNode* pSender)

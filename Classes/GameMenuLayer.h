@@ -112,6 +112,8 @@ public:
     bool isDialog = false;
     
     bool isThirdStar = false;
+    CCSprite* bannerSprite;
+    bool isLastAction = false;
 private:
     
     void playOnCallback(CCObject* pSender);
@@ -158,7 +160,6 @@ private:
 
     bool lock;
     
-    CCSprite* bannerSprite;
     CCLabelTTF* labelBan;
     
 

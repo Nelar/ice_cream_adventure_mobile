@@ -234,7 +234,7 @@ bool EndGameLayer::init()
 	popup->addChild(scoreTitle);
     
     targetPopupTitle = CCLabelTTF::create("1", FONT_COMMON, FONT_SIZE_64);
-    targetPopupTitle->setPosition(targetSubstrate->getPosition());
+    targetPopupTitle->setPosition(ccp(targetSubstrate->getPosition().x + targetSubstrate->getContentSize().width/6.0f, targetSubstrate->getPosition().y));
     popup->addChild(targetPopupTitle);
 
     
@@ -1080,8 +1080,9 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
     
     targetSubstrate->setScale(1.5f);
     
-    targetPopupTitle->setScale(0.5f);
-    
+    targetPopupTitle->setScale(0.9f);
+    if (typeLevel == BringDown)
+        targetPopupTitle->setScale(0.7f);
     
     sprintf(buf, "%s %d", CCLocalizedString("LEVEL"), currentLevel);
 	levelTitle->setString(buf);
@@ -1221,9 +1222,18 @@ void EndGameLayer::updateBoosters()
 void EndGameLayer::helpModalCallback(CCObject* pSender)
 {
     if (helpModal->isVisible())
+    {
         helpModal->setVisible(false);
+    }
     else
+    {
         helpModal->setVisible(true);
+        booster_1->setEnabled(false);
+        booster_2->setEnabled(false);
+        booster_3->setEnabled(false);
+        close->setEnabled(false);
+        play->setEnabled(false);
+    }
 }
 
 void EndGameLayer::registerWithTouchDispatcher()
@@ -1235,7 +1245,14 @@ void EndGameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     if (helpModal)
         if (helpModal->isVisible())
+        {
             helpModal->setVisible(false);
+            booster_1->setEnabled(true);
+            booster_2->setEnabled(true);
+            booster_3->setEnabled(true);
+            close->setEnabled(true);
+            play->setEnabled(true);
+        }
 }
 
 bool EndGameLayer::isLock()
@@ -1539,10 +1556,20 @@ void EndGameLayer::retryEnd(CCNode* pSender)
             this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextWithLivePanel)), NULL));
         return;
     }
-    if (OptionsPtr->getLevelData(currentLevel - 1).levelType != Score)
-        levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel - 1).countStar, OptionsPtr->getLevelData(currentLevel - 1).targetScore, OptionsPtr->getLevelData(currentLevel - 1).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+    if (currentLevel < 106)
+    {
+        if (OptionsPtr->getLevelData(currentLevel - 1).levelType != Score)
+            levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel - 1).countStar, OptionsPtr->getLevelData(currentLevel - 1).targetScore, OptionsPtr->getLevelData(currentLevel - 1).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        else
+            levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel - 1).countStar, OptionsPtr->getLevelData(currentLevel - 1).targetScore, OptionsPtr->getLevelData(currentLevel - 1).levelType, BoosterCrystal, BoosterBomb, BoosterNone);
+    }
     else
-        levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel - 1).countStar, OptionsPtr->getLevelData(currentLevel - 1).targetScore, OptionsPtr->getLevelData(currentLevel - 1).levelType, BoosterCrystal, BoosterBomb, BoosterNone);
+    {
+        if (OptionsPtr->getLevelData(currentLevel).levelType != Score)
+            levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel).countStar, OptionsPtr->getLevelData(currentLevel).targetScore, OptionsPtr->getLevelData(currentLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        else
+            levelPopup(currentLevel, OptionsPtr->getLevelData(currentLevel).countStar, OptionsPtr->getLevelData(currentLevel).targetScore, OptionsPtr->getLevelData(currentLevel).levelType, BoosterCrystal, BoosterBomb, BoosterNone);
+    }
 }
 
 void EndGameLayer::booster_1_Callback(CCObject* pSender)

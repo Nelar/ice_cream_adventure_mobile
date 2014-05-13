@@ -1691,6 +1691,12 @@ void MapMenuLayer::helpModalCallback(CCObject* pSender)
         helpModal->setVisible(false);
     else
         helpModal->setVisible(true);
+    
+    booster_1->setEnabled(false);
+    booster_2->setEnabled(false);
+    booster_3->setEnabled(false);
+    close->setEnabled(false);
+    play->setEnabled(false);
 }
 
 void MapMenuLayer::registerWithTouchDispatcher()
@@ -1701,8 +1707,18 @@ void MapMenuLayer::registerWithTouchDispatcher()
 void MapMenuLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     if (helpModal)
+    {
         if (helpModal->isVisible())
+        {
             helpModal->setVisible(false);
+            
+            booster_1->setEnabled(true);
+            booster_2->setEnabled(true);
+            booster_3->setEnabled(true);
+            close->setEnabled(true);
+            play->setEnabled(true);
+        }
+    }
 }
 
 bool MapMenuLayer::isLock()
@@ -1813,21 +1829,21 @@ void MapMenuLayer::playAfterLoad(CCNode* pSender)
     OptionsPtr->save();
 	menu->setVisible(false);
 	popup->setVisible(false);
-    if (currentLevel == 1 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    if (currentLevel == 1/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(1));
-    else if (currentLevel == 13 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 13/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(2));
-    else if (currentLevel == 25 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 25/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(3));
-    else if (currentLevel == 37 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 37/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(4));
-    else if (currentLevel == 49 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 49/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(5));
     else if (currentLevel == 61/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(6));
-    else if (currentLevel == 73 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 73/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(7));
-    else if (currentLevel == 85 && OptionsPtr->getCurrentLevel() <= currentLevel)
+    else if (currentLevel == 85/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(8));
     else
         CCDirector::sharedDirector()->replaceScene(GameScene::scene(currentLevel));

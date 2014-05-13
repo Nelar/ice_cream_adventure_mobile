@@ -160,6 +160,8 @@ public:
     
     void afterGetScores();
     
+    void beginBannerEndCallback(CCNode* sender);
+    
 private:
     
     void lightingBomb(CCPoint begin, CCPoint end, float scale, float delay);
@@ -384,6 +386,7 @@ private:
     bool isFishNeedRun = false;
     bool crystalCrystal = false;
     bool isSimplified = false;
+    bool isBeginBanner = false;    
 };
 
 #endif

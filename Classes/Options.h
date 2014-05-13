@@ -58,7 +58,6 @@ public:
     void setFacebookConnection(bool music);
     bool isFacebookConnection();
 
-
 	int	getCurrentLevel();
 	void setCurrentLevel(int nCurrentLevel);
     void restoreCurrentLevel(int nCurrentLevel);
