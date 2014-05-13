@@ -383,6 +383,7 @@ private:
     
     bool isFishNeedRun = false;
     bool crystalCrystal = false;
+    bool isSimplified = false;
 };
 
 #endif

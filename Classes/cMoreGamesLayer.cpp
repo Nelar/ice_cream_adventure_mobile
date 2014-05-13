@@ -134,12 +134,8 @@ CCNode* MoreGamesLayer::createMessageboard()
     CCSprite* panelTemp = CCSprite::create("panel.png");
     
     CCLayer* container = CCLayer::create();
-    int sizeMoreGames = GlobalsPtr->globalMoreGames.size();
-    CCLog("Count more games %d", GlobalsPtr->globalMoreGames.size());
     float containerHeight = panelTemp->getContentSize().height*1.1f * GlobalsPtr->globalMoreGames.size();
     container->setContentSize(CCSize(greyBack->getContentSize().width, containerHeight));
-    
-    float scaleNode = 1.08f;
     
     for (int i = 0; i < GlobalsPtr->globalMoreGames.size(); i++)
     {
@@ -155,7 +151,7 @@ CCNode* MoreGamesLayer::createMessageboard()
         
         char buf[255];
         sprintf(buf, "%d", i);
-        string iconFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("icon") + buf + string(".png");
+        string iconFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + "icon" + buf + ".png";
         
         CCSprite* iconMoreGames = NULL;
         if (CCFileUtils::sharedFileUtils()->isFileExist(iconFile))

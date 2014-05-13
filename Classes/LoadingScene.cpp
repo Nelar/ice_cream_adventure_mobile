@@ -48,22 +48,25 @@ LoadingScene::~LoadingScene()
 
 
 bool LoadingScene::init()
-{
+{	
+	CCLOG("LoadingScene address: %p", this);
+	
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
 	if (!CCLayer::init())
 		return false;
     
     GlobalsPtr->iceCreamScene = Loading;
-    action = NULL;
     
-    cocos2d::extension::CCHttpClient::getInstance()->setTimeoutForConnect(5);
-    cocos2d::extension::CCHttpClient::getInstance()->setTimeoutForRead(5);
+    cocos2d::extension::CCHttpClient::getInstance()->setTimeoutForConnect(3);
+    cocos2d::extension::CCHttpClient::getInstance()->setTimeoutForRead(10);
     
     Options* options = new Options();
+	CC_UNUSED_PARAM(options);
 	OptionsPtr->load();
     
     MMP* mmp = new MMP();
-    
+	CC_UNUSED_PARAM(mmp);
+	
     if (IPAD)
     {
         if (LANDSCAPE)
@@ -85,6 +88,7 @@ bool LoadingScene::init()
         else
             background = CCSprite::create("loadingIphonePortrait.png");
     }
+	
     background->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     
     labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -92,7 +96,6 @@ bool LoadingScene::init()
     this->addChild(labelLoad, 1001);
     
     this->addChild(background);
-        
     
     if (getNetworkStatus())
     {
@@ -107,13 +110,9 @@ bool LoadingScene::init()
             FacebookPtr->login();
         }
         MMPPtr->mmpBanner();
-        moreGamesRequest();
-        action = this->runAction(CCSequence::create(CCDelayTime::create(25.0f), CCCallFuncN::create(this, callfuncN_selector(LoadingScene::moreGamesLoadSavedData)), NULL));
     }
-    else
-    {
-        moreGamesLoadSavedData();
-    }
+
+	moreGamesRequest();
     
     OptionsPtr->launchCount++;
     OptionsPtr->save();
@@ -128,7 +127,7 @@ void LoadingScene::trackingServerResponse(CCHttpClient * client, CCHttpResponse 
 {
     if (!response->isSucceed())
     {
-        CCLOG("Server TRACKING responce ERROR: %d", response->getErrorBuffer());
+        CCLOG("Server TRACKING responce ERROR: %s", response->getErrorBuffer());
         if (getNetworkStatus())
             cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
         return;
@@ -245,15 +244,13 @@ void LoadingScene::moreGamesRequest()
             langName = "en";
             break;
     }
-    string requestStr = "https://id.ddestiny.ru/mobile/api/games/get/?lang=" + langName + string("&country=") + string(getCountry()) +
-    string("&app_id=705058125") + string("&platform=ios");
+    string requestStr = "https://id.ddestiny.ru/mobile/api/games/get/?app_id=705058125&platform=ios&lang=" + langName + "&country=" + getCountry();
     
     CCHttpRequest * request = new CCHttpRequest();
     request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
     request->setUrl(requestStr.c_str());
     request->setResponseCallback(this, httpresponse_selector(LoadingScene::moreGamesServerResponse));
-    CCLOG("HTTPClient Timeout %d", cocos2d::extension::CCHttpClient::getInstance()->getTimeoutForConnect());
-    CCLOG("HTTPClient Timeout %d", cocos2d::extension::CCHttpClient::getInstance()->getTimeoutForRead());
+    
     cocos2d::extension::CCHttpClient::getInstance()->send(request);
     request->release();
 }
@@ -264,154 +261,129 @@ void LoadingScene::linkCallback(CCObject * sender)
     goToLink(GlobalsPtr->globalMoreGames[((CCMenuItemSprite*)sender)->getTag()].url.c_str());
 }
 
-void LoadingScene::moreGamesLoadSavedData()
-{
-    if (action)
-        this->stopAction(action);
-    int countMoreGames = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey("countMoreGames", 0);
-    if (countMoreGames == 0)
-    {
-        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(LoadingScene::loadingFinished))));
-        return;
-    }
-    
-    for (int i = 0; i < countMoreGames; i++)
-    {
-        sMoreGames moreGame;
-        moreGame.compatibility = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesCompatibility" + to_string(i)).c_str());
-        moreGame.rating = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(string("MoreGamesRating" + to_string(i)).c_str());
-        moreGame.name = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesName" + to_string(i)).c_str());
-        moreGame.url = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesUrl" + to_string(i)).c_str());
-        moreGame.price = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesPrice" + to_string(i)).c_str());
-        moreGame.description = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesDescription" + to_string(i)).c_str());
-        moreGame.stars = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(string("MoreGamesStars" + to_string(i)).c_str());
-        moreGame.genre = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesGenre" + to_string(i)).c_str());
-        moreGame.iconUrl = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesIconUrl" + to_string(i)).c_str());
-        GlobalsPtr->globalMoreGames.push_back(moreGame);
-    }
-    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(LoadingScene::loadingFinished))));
-}
 
 void LoadingScene::moreGamesLoadedCallback(CCNode *sender)
 {
-    cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey("countMoreGames", GlobalsPtr->globalMoreGames.size());
-    for (int i = 0; i < GlobalsPtr->globalMoreGames.size(); i++)
-    {
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesCompatibility" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].compatibility);
-        cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey(string("MoreGamesRating" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].rating);
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesName" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].name);
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesUrl" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].url);
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesPrice" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].price);
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesDescription" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].description);
-        cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey(string("MoreGamesStars" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].stars);
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesGenre" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].genre);
-        cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesIconUrl" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].iconUrl);
-    }
-    cocos2d::CCUserDefault::sharedUserDefault()->flush();
-    loadingFinished(NULL);
+	CCLOG("More games loading finished. Loaded: %lu", GlobalsPtr->globalMoreGames.size());
+	
+	//more games loaded from server
+	if(GlobalsPtr->globalMoreGames.size() > 0) {
+
+		cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey("countMoreGames", GlobalsPtr->globalMoreGames.size());
+		
+		for (int i = 0; i < GlobalsPtr->globalMoreGames.size(); i++)
+		{
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesCompatibility" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].compatibility);
+			cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey(string("MoreGamesRating" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].rating);
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesName" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].name);
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesUrl" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].url);
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesPrice" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].price);
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesDescription" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].description);
+			cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey(string("MoreGamesStars" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].stars);
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesGenre" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].genre);
+			cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey(string("MoreGamesIconUrl" + to_string(i)).c_str() , GlobalsPtr->globalMoreGames[i].iconUrl);
+		}
+		cocos2d::CCUserDefault::sharedUserDefault()->flush();
+		
+	} else { //restore more gamse from shared
+		
+		int countMoreGames = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey("countMoreGames", 0);
+		
+		for (int i = 0; i < countMoreGames; i++)
+		{
+			sMoreGames moreGame;
+			moreGame.compatibility = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesCompatibility" + to_string(i)).c_str());
+			moreGame.rating = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(string("MoreGamesRating" + to_string(i)).c_str());
+			moreGame.name = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesName" + to_string(i)).c_str());
+			moreGame.url = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesUrl" + to_string(i)).c_str());
+			moreGame.price = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesPrice" + to_string(i)).c_str());
+			moreGame.description = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesDescription" + to_string(i)).c_str());
+			moreGame.stars = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(string("MoreGamesStars" + to_string(i)).c_str());
+			moreGame.genre = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesGenre" + to_string(i)).c_str());
+			moreGame.iconUrl = cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(string("MoreGamesIconUrl" + to_string(i)).c_str());
+			
+			GlobalsPtr->globalMoreGames.push_back(moreGame);
+		}
+		
+	}
+	
+	loadingFinished(NULL);
 }
 
 void LoadingScene::iconsServerResponse(CCHttpClient * client, CCHttpResponse * response)
 {
     if (!response->isSucceed())
     {
-        CCLOG("Server ICON responce ERROR: %d", response->getErrorBuffer());
-        if (action)
-            this->stopAction(action);
-        moreGamesLoadedCallback(NULL);
+        CCLOG("Server MORE GAMES responce ERROR: %s", response->getErrorBuffer());
         return;
     }
-    string writeFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + string("icon") + response->getHttpRequest()->getTag() + string(".png");
-    std::ofstream outfile(writeFile, std::ios::out | std::ios::binary);
-    std::ostream_iterator<char> oi(outfile, "\0");
-    
-    std::vector<char> *buffer = response->getResponseData();
-    std::copy(buffer->begin(), buffer->end(), oi);
-    
+	
+	const char * idx = response->getHttpRequest()->getTag();
+
+	string writeFile = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + "icon" + idx + ".png";
+
     CCImage* image = new CCImage();
     image->initWithImageData(response->getResponseData()->data(), response->getResponseData()->size(), CCImage::kFmtPng);
-    image->saveToFile(writeFile.c_str(), false);
-    
-    if( outfile.good() )
-    {
-        CCLOG( "Icon: Banner good");
-        if (atoi(response->getHttpRequest()->getTag()) == (sizeMoreGames - 1))
-        {
-            int size = GlobalsPtr->globalMoreGames.size();
-            moreGamesLoadedCallback(NULL);
-        }
-    }
-    else
-    {
-        CCLOG( "Icon: Banner file path is bad");
-    }
-    outfile.close();
+    image->saveToFile(writeFile.c_str(), false);	
 }
 
 
 void LoadingScene::moreGamesServerResponse(CCHttpClient * client, CCHttpResponse * response)
 {
-    if (!response->isSucceed())
-    {
-        CCLOG("Server MORE GAMES responce ERROR: %d", response->getErrorBuffer());
-        if (action)
-            this->stopAction(action);
-        moreGamesLoadedCallback(NULL);
-        return;
-    }
-    std::vector<char> *buffer = response->getResponseData();
-    std::string str = std::string(buffer->begin(), buffer->end());
-    
-    if (action)
-        this->stopAction(action);
-    
-    rapidjson::Document d;    
-    d.Parse<0>(str.c_str());
-    string status =  d["status"].GetString();
-    bool error = !d["error"].IsNull();
-    if (status == "ok" && !error)
-    {
-        rapidjson::Value response(rapidjson::kArrayType);
-        response = d["response"];
-        int size = response.Size();
-        sizeMoreGames = size;
-        for (int i = 0; i < size; i++)
-        {
-            rapidjson::Value object(rapidjson::kObjectType);
-            object = response[rapidjson::SizeType(i)];
-            int rating = object["rating"].GetInt();
-            string name = object["name"].GetString();
-            string url = object["url"].GetString();
-            int stars = object["stars"].GetInt();
-            string genre = object["genre"].GetString();
-            string compatibility = object["compatibility"].GetString();
-            string icon = object["icon"].GetString();
-            GlobalsPtr->globalMoreGames.push_back(sMoreGames(object["rating"].GetInt(), object["name"].GetString(), object["url"].GetString(), "0", object["stars"].GetInt(),object["genre"].GetString(),object["compatibility"].GetString(), object["icon"].GetString(), object["description"].GetString()));
-            
-            CCHttpRequest * request = new CCHttpRequest();
-            request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
-            request->setUrl(icon.c_str());
-            char buf[255];
-            sprintf(buf, "%d", i);
-            request->setTag(buf);
-            request->setResponseCallback(this, httpresponse_selector(LoadingScene::iconsServerResponse));
-            cocos2d::extension::CCHttpClient::getInstance()->send(request);
-            request->release();
-        }
-        if (sizeMoreGames == 0)
-        {
-            moreGamesLoadedCallback(NULL);
-        }
-    }
-    else
-    {
-        moreGamesLoadedCallback(NULL);
-    }
+    if (response->isSucceed()) {
+		
+		std::vector<char> *buffer = response->getResponseData();
+		std::string str = std::string(buffer->begin(), buffer->end());
+		
+		rapidjson::Document d;
+		d.Parse<0>(str.c_str());
+		
+		if(d.IsObject()) {
+			string status =  d["status"].GetString();
+			bool error = !d["error"].IsNull();
+			if (status == "ok" && !error)
+			{
+				rapidjson::Value response(rapidjson::kArrayType);
+				response = d["response"];
+				int size = response.Size();
+				for (int i = 0; i < size; i++)
+				{
+					rapidjson::Value object(rapidjson::kObjectType);
+					object = response[rapidjson::SizeType(i)];
+					
+					int rating = object["rating"].GetInt();
+					string name = object["name"].GetString();
+					string url = object["url"].GetString();
+					int stars = object["stars"].GetInt();
+					string genre = object["genre"].GetString();
+					string compatibility = object["compatibility"].GetString();
+					string icon = object["icon"].GetString();
+					string description = object["description"].GetString();
+
+					GlobalsPtr->globalMoreGames.push_back(sMoreGames(rating, name, url, "0", stars, genre, compatibility, icon, description));
+					
+					CCHttpRequest * request = new CCHttpRequest();
+					request->setRequestType(cocos2d::extension::CCHttpRequest::kHttpGet);
+					request->setUrl(icon.c_str());
+					char buf[255];
+					sprintf(buf, "%d", i);
+					request->setTag(buf);
+					request->setResponseCallback(this, httpresponse_selector(LoadingScene::iconsServerResponse));
+					cocos2d::extension::CCHttpClient::getInstance()->send(request);
+					request->release();
+				}
+			}
+		}
+	} else {
+		CCLOG("Server MORE GAMES responce ERROR: %s", response->getErrorBuffer());
+	}
+
+	moreGamesLoadedCallback(NULL);
 }
 
 void LoadingScene::loadingFinished(CCNode* sender)
 {
-    CCLog("Loading more games %d", GlobalsPtr->globalMoreGames.size());
+    CCLog("Loading more games %lu", GlobalsPtr->globalMoreGames.size());
     
     bool flagLoad = false;
     flagLoad = CCUserDefault::sharedUserDefault()->getBoolForKey("gameCenterLogin", false);

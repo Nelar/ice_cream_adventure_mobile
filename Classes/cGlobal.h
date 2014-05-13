@@ -45,6 +45,7 @@
 #define FONT_SIZE_140 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?140:70
 #define FONT_SIZE_86 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?86:43
 #define FONT_SIZE_64 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?64:32
+#define FONT_SIZE_72 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?72:36
 #define FONT_SIZE_54 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?54:27
 #define FONT_SIZE_48 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?48:24
 #define FONT_SIZE_40 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?40:20
@@ -52,7 +53,7 @@
 #define FONT_SIZE_32 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?32:16
 #define FONT_SIZE_26 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?26:13
 #define FONT_SIZE_22 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?22:11
-#define MULTIPLIER (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?1.0f:0.5f
+#define MULTIPLIER ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?1.0f:0.5f)
 
 #define ITUNES_LINK "https://itunes.apple.com/us/app/ice-cream-adventure/id705058125?l=ru&ls=1&mt=8"
 

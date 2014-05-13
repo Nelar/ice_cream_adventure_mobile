@@ -110,6 +110,8 @@ public:
     
     void closeLoading();
     bool isDialog = false;
+    
+    bool isThirdStar = false;
 private:
     
     void playOnCallback(CCObject* pSender);

@@ -187,9 +187,13 @@ void MMP::bannerServerResponse(CCHttpClient * client, CCHttpResponse * response)
     std::string str = std::string(buffer->begin(), buffer->end());
     rapidjson::Document d;
     d.Parse<0>(str.c_str());
-    
+	
+	if(!d.IsObject())
+		return;
+	
     if (d["status"].IsNull())
         return;
+	
     string code = d["status"].GetString();
     CCLOG("BANNER RESPONCE %s", code.c_str());
     if(code == "ok")
@@ -636,19 +640,13 @@ void MMP::mmpTracking()
 
 void MMP::analyticsServerResponse(CCHttpClient * client, CCHttpResponse * response)
 {
+	CCLOG("MMP: %p, Server ANALYTICS responce: %s", this, response->getErrorBuffer());
     if (!response->isSucceed())
     {
-        CCLOG("Server ANALYTICS responce ERROR: %d", response->getErrorBuffer());
+        CCLOG("Server ANALYTICS responce ERROR: %s", response->getErrorBuffer());
         if (getNetworkStatus())
             cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
         return;
-    }
-    std::vector<char> *buffer = response->getResponseData();
-    std::string str = std::string(buffer->begin(), buffer->end());
-    if (str != "OK") {
-        int a = 0;
-        CCLog("Error MMP");
-        a = 45 + 43;
     }
     return;
 }
@@ -657,7 +655,7 @@ void MMP::trackingServerResponse(CCHttpClient * client, CCHttpResponse * respons
 {
     if (!response->isSucceed())
     {
-        CCLOG("Server responce ERROR: %d", response->getErrorBuffer());
+        CCLOG("Server responce ERROR: %s", response->getErrorBuffer());
         if (getNetworkStatus())
             cocos2d::extension::CCHttpClient::getInstance()->send(response->getHttpRequest());
         return;

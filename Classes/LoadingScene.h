@@ -28,7 +28,7 @@ public:
     void loadingFinished(CCNode* sender);
     
     void linkCallback(CCObject * sender);
-    void moreGamesLoadSavedData();
+
     void moreGamesLoadedCallback(CCNode *sender);
     void iconsServerResponse(CCHttpClient * client, CCHttpResponse * response);
     void moreGamesServerResponse(CCHttpClient * client, CCHttpResponse * response);
@@ -39,8 +39,6 @@ public:
 private:
 
     CCSprite* background;
-    int sizeMoreGames;
-    CCAction* action = NULL;
     CCLabelTTF* labelLoad;
 };
 

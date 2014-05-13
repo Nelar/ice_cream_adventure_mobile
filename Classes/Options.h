@@ -5,6 +5,7 @@
 #include "cSingleton.h"
 #include <vector>
 #include "NotificationTypes.h"
+#include <ctime>
 
 #define LEVEL_COUNT 120
 
@@ -24,6 +25,9 @@ struct sLevelData
 	eLevelType levelType;
     int targetScore;
     bool lock;
+    int countGames;
+    time_t lastGame;
+    bool isSimple;
 };
 
 struct sRequestData
@@ -60,7 +64,7 @@ public:
     void restoreCurrentLevel(int nCurrentLevel);
 
 
-	void setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock = false);
+	void setLevelData(int idx, int nCountStar, int nCountScore, eLevelType nLevelType, bool lock = false, int nCountGame = 0, time_t nLastGame = 0, bool nIsSimple = false);
 	sLevelData getLevelData(int idx);
     
     void setLifeCount(int nLife);

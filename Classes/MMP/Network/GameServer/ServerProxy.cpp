@@ -50,7 +50,7 @@ namespace AngryPets
                 {
                     fclose ( pFile );
                 }
-                cocos2d::extension::CCHttpClient::cookieFilepath = GetCookieFileName();
+//                cocos2d::extension::CCHttpClient::cookieFilepath = GetCookieFileName();
                 _httpClient = cocos2d::extension::CCHttpClient::getInstance();
 
                 _outputAdapter = new OutputAdapter();

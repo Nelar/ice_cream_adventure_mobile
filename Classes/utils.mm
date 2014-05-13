@@ -124,45 +124,20 @@ const char* getCountry()
 
 bool getNetworkStatus()
 {
-    /*Reachability* reachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
-    
-    if(remoteHostStatus == NotReachable)
-        return false;
-    else if (remoteHostStatus == ReachableViaWiFi)
-    {
-        return true;
-    }
-    else if (remoteHostStatus == ReachableViaWWAN)
-    {
-        return true;
-    }
-    
-    return false;*/
-    const char *host_name = "www.google.com";
-    BOOL _isDataSourceAvailable = NO;
-    Boolean success;
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL,host_name);
-    SCNetworkReachabilityFlags flags;
-    success = SCNetworkReachabilityGetFlags(reachability, &flags);
-    _isDataSourceAvailable = success &&
-    (flags & kSCNetworkFlagsReachable) &&
-    !(flags & kSCNetworkFlagsConnectionRequired);
-    
-    CFRelease(reachability);
-    return _isDataSourceAvailable;
+	const char * currentStatus = networkStatus();
+	return strcmp(currentStatus, "no") != 0;
 }
 
 const char* networkStatus()
 {
     Reachability* reachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    NetworkStatus status = [reachability currentReachabilityStatus];
     
-    if(remoteHostStatus == NotReachable)
+    if(status == NotReachable)
         return "no";
-    else if (remoteHostStatus == ReachableViaWiFi)
+    else if (status == ReachableViaWiFi)
         return "wifi";
-    else if (remoteHostStatus == ReachableViaWWAN)
+    else if (status == ReachableViaWWAN)
         return "wwan";
     
     return "no";

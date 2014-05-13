@@ -592,6 +592,31 @@ bool GameScene::init(int levNum)
     else
         sprintf(buf, "levels/%d.xml", numLevel);
     
+    if (!OptionsPtr->getLevelData(numLevel-1).isSimple)
+    {
+        int currLevel = OptionsPtr->getCurrentLevel();
+        int countGames = OptionsPtr->getLevelData(numLevel-1).countGames;
+        time_t timeLast = (time(0) - OptionsPtr->getLevelData(numLevel-1).lastGame);
+        if (OptionsPtr->getLevelData(numLevel-1).countGames >= 4)
+        {
+            if ((time(0) - OptionsPtr->getLevelData(numLevel-1).lastGame) > 86400)
+            {
+                if (currLevel == numLevel)
+                {
+                    isSimplified = true;
+                }
+            }
+        }
+    }
+    else
+    {
+        isSimplified = true;
+    }
+    
+    OptionsPtr->setLevelData(numLevel-1, OptionsPtr->getLevelData(numLevel-1).countStar, OptionsPtr->getLevelData(numLevel-1).countScore, OptionsPtr->getLevelData(numLevel-1).levelType, false, OptionsPtr->getLevelData(numLevel-1).countGames+1, time(0), isSimplified);
+    OptionsPtr->save();
+
+    
 	loadLevel(CCFileUtils::sharedFileUtils()->fullPathForFilename(buf).c_str());
     
     helpAction = NULL;
@@ -2241,9 +2266,10 @@ bool GameScene::findMatch()
                         break;
                     }
                 }
-				if (findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i - 2, j)]->type != Cookie)
 				{
-					if (findGameObject(i - 1, j + 1) >= 0 && findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 1, j + 1) >= 0 && findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 1, j + 1)]->type != Cookie)
 					{
                         if (gameField[i - 2][j] != CageCell && gameField[i - 1][j + 1] != CageCell && gameField[i - 2][j] != CageIceCell && gameField[i - 1][j + 1] != CageIceCell
                             && gameField[i - 1][j] != CageCell && gameField[i - 1][j] != CageIceCell)
@@ -2255,7 +2281,7 @@ bool GameScene::findMatch()
                             break;
                         }
                     }
-					if (findGameObject(i - 1, j - 1) >= 0 && findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 1, j - 1) >= 0 && findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 1, j - 1)]->type != Cookie)
 					{
                         if (gameField[i - 2][j] != CageCell && gameField[i - 1][j - 1] != CageCell && gameField[i - 2][j] != CageIceCell && gameField[i - 1][j - 1] != CageIceCell
                             && gameField[i - 1][j] != CageCell && gameField[i - 1][j] != CageIceCell)
@@ -2269,9 +2295,10 @@ bool GameScene::findMatch()
 					}
 				}
 
-				if (findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i + 2, j)]->type != Cookie)
 				{
-					if (findGameObject(i + 1, j + 1) >= 0 && findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i + 1, j + 1) >= 0 && findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 1, j + 1)]->type != Cookie)
 					{
                         if (gameField[i + 2][j] != CageCell && gameField[i + 1][j + 1] != CageCell && gameField[i + 2][j] != CageIceCell && gameField[i + 1][j + 1] != CageIceCell
                             && gameField[i + 1][j] != CageCell && gameField[i + 1][j] != CageIceCell)
@@ -2283,7 +2310,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					if (findGameObject(i + 1, j - 1) >= 0 && findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i + 1, j - 1) >= 0 && findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 1, j - 1)]->type != Cookie)
 					{
                         if (gameField[i + 2][j] != CageCell && gameField[i + 1][j - 1] != CageCell && gameField[i + 2][j] != CageIceCell && gameField[i + 1][j - 1] != CageIceCell
                             && gameField[i + 1][j] != CageCell && gameField[i + 1][j] != CageIceCell)
@@ -2297,9 +2324,10 @@ bool GameScene::findMatch()
 					}
 				}
 
-				if (findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i, j + 2)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i, j + 2)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i, j + 2)]->type != Cookie)
 				{
-					if (findGameObject(i + 1, j + 1) >= 0 && findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i + 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i + 1, j + 1) >= 0 && findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i + 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 1, j + 1)]->type != Cookie)
 					{
                         if (gameField[i][j + 2] != CageCell && gameField[i + 1][j + 1] != CageCell && gameField[i][j + 2] != CageIceCell && gameField[i + 1][j + 1] != CageIceCell
                             && gameField[i][j + 1] != CageCell && gameField[i][j + 1] != CageIceCell)
@@ -2311,7 +2339,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					if (findGameObject(i - 1, j + 1) >= 0 && findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i - 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 1, j + 1) >= 0 && findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i - 1, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 1, j + 1)]->type != Cookie)
 					{
                         if (gameField[i][j + 2] != CageCell && gameField[i - 1][j + 1] != CageCell && gameField[i][j + 2] != CageIceCell && gameField[i - 1][j + 1] != CageIceCell
                             && gameField[i][j + 1] != CageCell && gameField[i][j + 1] != CageIceCell)
@@ -2325,9 +2353,10 @@ bool GameScene::findMatch()
 					}
 				}
 
-				if (findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i, j - 2)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i, j - 2)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i, j - 2)]->type != Cookie)
 				{
-					if (findGameObject(i + 1, j - 1) >= 0 && findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i + 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i + 1, j - 1) >= 0 && findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i + 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 1, j - 1)]->type != Cookie)
 					{
                         if (gameField[i][j - 2] != CageCell && gameField[i + 1][j - 1] != CageCell && gameField[i][j - 2] != CageIceCell && gameField[i + 1][j - 1] != CageIceCell
                             && gameField[i][j - 1] != CageCell && gameField[i][j - 1] != CageIceCell)
@@ -2339,7 +2368,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					if (findGameObject(i - 1, j - 1) >= 0 && findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i - 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 1, j - 1) >= 0 && findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i - 1, j - 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 1, j - 1)]->type != Cookie)
 					{
                         if (gameField[i][j - 2] != CageCell && gameField[i - 1][j - 1] != CageCell && gameField[i][j - 2] != CageIceCell && gameField[i - 1][j - 1] != CageIceCell
                             && gameField[i][j - 1] != CageCell && gameField[i][j - 1] != CageIceCell)
@@ -2354,9 +2383,10 @@ bool GameScene::findMatch()
 				}
 
 
-				if (findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i - 1, j) >= 0 && gameObjects[findGameObject(i - 1, j)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i - 1, j)]->type != Cookie)
 				{
-					if (findGameObject(i - 2, j - 1) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 2, j - 1) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j - 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 2, j - 1)]->type != Cookie)
 					{
                         if (gameField[i - 2][j - 1] != CageCell && gameField[i - 1][j] != CageCell && gameField[i - 2][j - 1] != CageIceCell && gameField[i - 1][j] != CageIceCell
                             && gameField[i - 2][j] != CageCell && gameField[i - 2][j] != CageIceCell)
@@ -2368,7 +2398,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i - 2, j + 1) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i - 2, j + 1) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 2, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 2, j + 1)]->type != Cookie)
 					{
                         if (gameField[i - 2][j + 1] != CageCell && gameField[i - 1][j] != CageCell && gameField[i - 2][j + 1] != CageIceCell && gameField[i - 1][j] != CageIceCell
                             && gameField[i - 2][j] != CageCell && gameField[i - 2][j] != CageIceCell)
@@ -2380,7 +2410,8 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i - 3, j) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 3, j)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i - 3, j) >= 0 && findGameObject(i - 2, j) >= 0 && gameObjects[findGameObject(i - 3, j)]->color == gameObjects[findGameObject(i, j)]->color
+                             && gameObjects[findGameObject(i - 3, j)]->type != Cookie)
 					{
                         if (gameField[i - 3][j] != CageCell && gameField[i - 1][j] != CageCell && gameField[i - 3][j] != CageIceCell && gameField[i - 1][j] != CageIceCell
                             && gameField[i - 2][j] != CageCell && gameField[i - 2][j] != CageIceCell)
@@ -2394,9 +2425,10 @@ bool GameScene::findMatch()
 					}					
 				}				
 
-				if (findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i + 1, j) >= 0 && gameObjects[findGameObject(i + 1, j)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i + 1, j)]->type != Cookie)
 				{					
-					if (findGameObject(i + 2, j - 1) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i + 2, j - 1) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j - 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 2, j - 1)]->type != Cookie)
 					{
                         if (gameField[i + 2][j - 1] != CageCell && gameField[i + 1][j] != CageCell && gameField[i + 2][j - 1] != CageIceCell && gameField[i + 1][j] != CageIceCell
                             && gameField[i + 2][j] != CageCell && gameField[i + 2][j] != CageIceCell)
@@ -2408,7 +2440,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i + 2, j + 1) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i + 2, j + 1) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 2, j + 1)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 2, j + 1)]->type != Cookie)
 					{
                         if (gameField[i + 2][j + 1] != CageCell && gameField[i + 1][j] != CageCell && gameField[i + 2][j + 1] != CageIceCell && gameField[i + 1][j] != CageIceCell
                             && gameField[i + 2][j] != CageCell && gameField[i + 2][j] != CageIceCell)
@@ -2420,7 +2452,8 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i + 3, j) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 3, j)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i + 3, j) >= 0 && findGameObject(i + 2, j) >= 0 && gameObjects[findGameObject(i + 3, j)]->color == gameObjects[findGameObject(i, j)]->color
+                             && gameObjects[findGameObject(i + 3, j)]->type != Cookie)
 					{
                         if (gameField[i + 3][j] != CageCell && gameField[i + 1][j] != CageCell && gameField[i + 3][j] != CageIceCell && gameField[i + 1][j] != CageIceCell
                             && gameField[i + 2][j] != CageCell && gameField[i + 2][j] != CageIceCell)
@@ -2434,9 +2467,10 @@ bool GameScene::findMatch()
 					}	
 				}	
 
-				if (findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i, j - 1)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i, j - 1) >= 0 && gameObjects[findGameObject(i, j - 1)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i, j - 1)]->type != Cookie)
 				{
-					if (findGameObject(i - 1, j - 2) >= 0 && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i - 1, j - 2)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 1, j - 2) >= 0 && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i - 1, j - 2)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 1, j - 2)]->type != Cookie)
 					{
                         if (gameField[i - 1][j - 2] != CageCell && gameField[i][j - 1] != CageCell && gameField[i - 1][j - 2] != CageIceCell && gameField[i][j - 1] != CageIceCell
                             && gameField[i][j - 2] != CageCell && gameField[i][j - 2] != CageIceCell )
@@ -2448,7 +2482,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i + 1, j - 2) >= 0  && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i + 1, j - 2)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i + 1, j - 2) >= 0  && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i + 1, j - 2)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 1, j - 2)]->type != Cookie)
 					{
                         if (gameField[i + 1][j - 2] != CageCell && gameField[i][j - 1] != CageCell && gameField[i + 1][j - 2] != CageIceCell && gameField[i][j - 1] != CageIceCell
                             && gameField[i][j - 2] != CageCell && gameField[i][j - 2] != CageIceCell)
@@ -2460,7 +2494,8 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i, j - 3) >= 0  && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i, j - 3)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i, j - 3) >= 0  && findGameObject(i, j - 2) >= 0 && gameObjects[findGameObject(i, j - 3)]->color == gameObjects[findGameObject(i, j)]->color
+                             && gameObjects[findGameObject(i, j - 3)]->type != Cookie)
 					{
                         if (gameField[i][j - 3] != CageCell && gameField[i][j - 1] != CageCell && gameField[i][j - 3] != CageIceCell && gameField[i][j - 1] != CageIceCell
                             && gameField[i][j - 2] != CageCell && gameField[i][j - 2] != CageIceCell)
@@ -2474,9 +2509,10 @@ bool GameScene::findMatch()
 					}					
 				}
 
-				if (findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i, j + 1)]->color == gameObjects[findGameObject(i, j)]->color)
+				if (findGameObject(i, j + 1) >= 0 && gameObjects[findGameObject(i, j + 1)]->color == gameObjects[findGameObject(i, j)]->color
+                    && gameObjects[findGameObject(i, j + 1)]->type != Cookie)
 				{
-					if (findGameObject(i - 1, j + 2) >= 0  && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i - 1, j + 2)]->color == gameObjects[findGameObject(i, j)]->color)
+					if (findGameObject(i - 1, j + 2) >= 0  && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i - 1, j + 2)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i - 1, j + 2)]->type != Cookie)
 					{
                         if (gameField[i - 1][j + 2] != CageCell && gameField[i][j + 1] != CageCell && gameField[i - 1][j + 2] != CageIceCell && gameField[i][j + 1] != CageIceCell
                             && gameField[i][j + 2] != CageCell && gameField[i][j + 2] != CageIceCell)
@@ -2488,7 +2524,7 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i + 1, j + 2) >= 0 && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i + 1, j + 2)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i + 1, j + 2) >= 0 && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i + 1, j + 2)]->color == gameObjects[findGameObject(i, j)]->color && gameObjects[findGameObject(i + 1, j + 2)]->type != Cookie)
 					{
                         if (gameField[i + 1][j + 2] != CageCell && gameField[i][j + 1] != CageCell && gameField[i + 1][j + 2] != CageIceCell && gameField[i][j + 1] != CageIceCell
                             && gameField[i][j + 2] != CageCell && gameField[i][j + 2] != CageIceCell)
@@ -2500,7 +2536,8 @@ bool GameScene::findMatch()
                             break;
                         }
 					}
-					else if (findGameObject(i, j + 3) >= 0  && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i, j + 3)]->color == gameObjects[findGameObject(i, j)]->color)
+					else if (findGameObject(i, j + 3) >= 0  && findGameObject(i, j + 2) >= 0 && gameObjects[findGameObject(i, j + 3)]->color == gameObjects[findGameObject(i, j)]->color
+                             && gameObjects[findGameObject(i, j + 3)]->type != Cookie)
 					{
                         if (gameField[i][j + 3] != CageCell && gameField[i][j + 1] != CageCell && gameField[i][j + 3] != CageIceCell && gameField[i][j + 1] != CageIceCell
                             && gameField[i][j + 2] != CageCell && gameField[i][j + 2] != CageIceCell)
@@ -5431,28 +5468,52 @@ void GameScene::refillObject(CCNode* sender)
                     bool isColor = false;
 					
                     int randomBreak = 0;
-					while (!isColor && randomBreak < 1000)
+                    if (!isSimplified)
+                    {
+                        while (!isColor && randomBreak < 1000)
+                        {
+                            color = (eColorGameObject)(rand()%colorNumber);
+                            isColor = true;
+                            if (findGameObject(j - 1, i) >= 0)
+                                if (color == gameObjects[findGameObject(j - 1, i)]->color)
+                                    isColor = false;
+                            
+                            if (findGameObject(j, i + 1) >= 0)
+                                if (color == gameObjects[findGameObject(j, i + 1)]->color)
+                                    isColor = false;
+                            
+                            if (findGameObject(j, i - 1) >= 0)
+                                if (color == gameObjects[findGameObject(j, i - 1)]->color)
+                                    isColor = false;
+                            
+                            if (color == prevColor)
+                                isColor = false;
+                            
+                            randomBreak++;
+                        }
+                    }
+                    else
                     {
                         color = (eColorGameObject)(rand()%colorNumber);
-                        isColor = true;
-                        if (findGameObject(j - 1, i) >= 0)
-                            if (color == gameObjects[findGameObject(j - 1, i)]->color)
-                                isColor = false;
                         
-                        if (findGameObject(j, i + 1) >= 0)
-                            if (color == gameObjects[findGameObject(j, i + 1)]->color)
-                                isColor = false;
-                        
-                        if (findGameObject(j, i - 1) >= 0)
-                            if (color == gameObjects[findGameObject(j, i - 1)]->color)
-                                isColor = false;
-                        
-                        if (color == prevColor)
-                            isColor = false;
-                        
-                        randomBreak++;
-                    }
+                        if (rand()%100 > 60)
+                        {
+                            int randColor = rand() % 3;
 
+                            if (randColor == 0)
+                                if (findGameObject(j - 1, i) >= 0)
+                                    color = gameObjects[findGameObject(j - 1, i)]->color;
+                            
+                            if (randColor == 1)
+                                if (findGameObject(j, i + 1) >= 0)
+                                    color = gameObjects[findGameObject(j, i + 1)]->color;
+                            
+                            if (randColor == 2)
+                                if (findGameObject(j, i - 1) >= 0)
+                                    color = gameObjects[findGameObject(j, i - 1)]->color;
+                        }
+                    }
+					
 					prevColor = color;
 					sGameObject* gameObj = new sGameObject(Simple, color, j, i, xZero, yZero);
 					if (isNeedCookie)
@@ -5491,7 +5552,7 @@ void GameScene::refillObject(CCNode* sender)
                             gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[rowNormal][i]->getPositionY() + CELL_HEIGHT/2.0f));
                     }
                     
-                    if (gameType == Time  && !(rand()%25))
+                    if (gameType == Time  && !(rand()%25) && !menu->isThirdStar)
                     {
                         gameObj->setTime();
                     }

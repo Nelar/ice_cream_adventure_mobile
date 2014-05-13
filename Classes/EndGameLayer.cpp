@@ -374,7 +374,7 @@ void EndGameLayer::changeOrientation()
                 spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
             else
                 spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-            this->setScale(1.0f);
+            spriteLoading->setScale(1.2f);
         }
         
         labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -933,9 +933,32 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
     close->setScale(0.7f);
 	close->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
+    menu->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::finishingEnded))));
+    
     social->showScoreboard(currentLevel);
     
+    
     getLevelDataFromGC();
+}
+
+void EndGameLayer::finishingEnded(CCNode* sender)
+{
+    if (currentLevel == 48 && !OptionsPtr->getJubPost() && OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened())
+    {
+        popaplayer->popupPost((char*)CCLocalizedString("POST_ON_WALL", NULL), (char*)CCLocalizedString("POST_ON_WALL_TEXT", NULL), (char*)CCLocalizedString("POST_ON_WALL", NULL), GreenPopup, BombPopBoot,
+                              this, callfuncN_selector(EndGameLayer::addBonus), this, callfuncN_selector(EndGameLayer::unclockMenu));
+        menu->setEnabled(false);
+    }
+}
+
+void EndGameLayer::addBonus(CCNode* pSender)
+{
+    FacebookPtr->jubileePost();
+}
+
+void EndGameLayer::unclockMenu(CCNode* pSender)
+{
+    menu->setEnabled(true);
 }
 
 void EndGameLayer::explosionCallback(CCNode* sender)
@@ -1039,6 +1062,7 @@ void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
 	sprintf(buf, "%s:%d", CCLocalizedString("SCORE"), countScore);
     
     scoreTitle->setString(buf);
+    scoreTitle->setColor(IceCreamPink);
     
 	next->setVisible(false);
     play->setVisible(false);
@@ -1245,7 +1269,7 @@ void EndGameLayer::closeCallback(CCObject* pSender)
             spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
             spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-        this->setScale(1.0f);
+        spriteLoading->setScale(1.2f);
     }
     
     labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -1383,7 +1407,7 @@ void EndGameLayer::nextCallback(CCObject* pSender)
             spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
             spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-        this->setScale(1.0f);
+        spriteLoading->setScale(1.2f);
     }
     
     labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -1489,7 +1513,7 @@ void EndGameLayer::retryEnd(CCNode* pSender)
                 spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
             else
                 spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-            this->setScale(1.0f);
+            spriteLoading->setScale(1.2f);
         }
         
         labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -1741,8 +1765,4 @@ void EndGameLayer::endStage(CCNode* pSender)
     }
 }
 
-void EndGameLayer::unclockMenu(CCNode* pSender)
-{
-    menu->setEnabled(true);
-}
 
