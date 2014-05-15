@@ -374,7 +374,7 @@ void EndGameLayer::changeOrientation()
                 spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
             else
                 spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-            spriteLoading->setScale(1.2f);
+            spriteLoading->setScale(1.0f/this->getScale());
         }
         
         labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -1236,11 +1236,6 @@ void EndGameLayer::helpModalCallback(CCObject* pSender)
     }
 }
 
-void EndGameLayer::registerWithTouchDispatcher()
-{
-	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(this, 1);
-}
-
 void EndGameLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     if (helpModal)
@@ -1286,7 +1281,7 @@ void EndGameLayer::closeCallback(CCObject* pSender)
             spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
             spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-        spriteLoading->setScale(1.2f);
+        spriteLoading->setScale(1.0f/this->getScale());
     }
     
     labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -1424,7 +1419,7 @@ void EndGameLayer::nextCallback(CCObject* pSender)
             spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
         else
             spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-        spriteLoading->setScale(1.2f);
+        spriteLoading->setScale(1.0f/this->getScale());
     }
     
     labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
@@ -1530,7 +1525,7 @@ void EndGameLayer::retryEnd(CCNode* pSender)
                 spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
             else
                 spriteLoading = CCSprite::create("loadingIphonePortrait.png");
-            spriteLoading->setScale(1.2f);
+            spriteLoading->setScale(1.0f/this->getScale());
         }
         
         labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);

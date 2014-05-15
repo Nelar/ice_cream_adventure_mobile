@@ -62,7 +62,6 @@ public:
     
     void closeEnded(CCNode* sender);
     
-    void registerWithTouchDispatcher();
     virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
     
     CCSprite* helpModal;

@@ -428,13 +428,18 @@ void MMP::purchaseMade(string sku, string currency, float price, bool is_valid)
     
     char buf[255];
     sprintf(buf, "%f", price);
+    string validStr;
+    if (is_valid)
+        validStr = "true";
+    else
+        validStr = "false";
     
     string str = "{\"key\":\"purchase_made\","+ meta() + string(",")+
     string("\"props\":{") +
     string("\"sku\":\"") + sku + string("\",") +
     string("\"currency\":\"") + currency + string("\",") +
     string("\"price\":") + string(buf) + string(",") +
-    string("\"is_valid\":true") +
+    string("\"is_valid\":") + validStr +
     string("}}");
     
     appsFlyerTrackEvent("purchase_made", sku.c_str());

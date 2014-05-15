@@ -115,7 +115,7 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
         return;
     }
     SKPaymentTransaction * transaction = (SKPaymentTransaction*)notification.object;
-        
+    
     SKProduct * product = nil;
     for(int i =0; i < [self.products count]; ++i)
     {
@@ -141,11 +141,11 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     string project   = "com.destinygroup.icecreamadventure";
     string password  = "tPRVWTFA0tCmD9pAh0h7WFXi3cDXBd3s";
     
-    string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + do_test + ";" + password;
-    //string signature = password + ";;;" + currency + ";" + base64packet + ";" + project + ";" + password;
+    string signature = password + ";" +idfa() + ";;" + currency + ";" + base64packet + ";" + project + ";" + do_test + ";" + password;
+//    string signature = password + ";" +idfa() + ";;" + currency + ";" + base64packet + ";" + project + ";" + password;
     string md5signature = md5(signature);
-    string requestData = "project=" + project + "&test=" + do_test + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
-    //string requestData = "project=" + project + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
+    string requestData = "project=" + project + "&account=" + idfa() + "&test=" + do_test + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
+//    string requestData = "project=" + project + "&account=" + idfa() + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
     
     IAP::sharedInstance().validateReciept(url, requestData, productIdentifier);
     
@@ -179,32 +179,32 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     [AppsFlyerTracker sharedTracker].currencyCode = currencyCode;
     
     
-/*    bool shouldTrack = true;
-    if (shouldTrack)
-    {
-        NSString *eventName = @"purchase";        
-        if (nil != product)
-        {
-            NSString *currencyCode = [product.priceLocale objectForKey:NSLocaleCurrencyCode];
-            int quantity = transaction.payment.quantity;
-            float unitPrice = [product.price floatValue];
-            float revenue = unitPrice * quantity;
-            MATEventItem *eventItem = [MATEventItem eventItemWithName:product.localizedTitle unitPrice:unitPrice quantity:quantity revenue:revenue attribute1:@"attr1" attribute2:@"attr2" attribute3:@"attr3" attribute4:@"attr4" attribute5:@"attr5"];
-            NSArray *arrEventItems = @[ eventItem ];
-            float extraRevenue = 0;
-            
-            if (FacebookPtr->sessionIsOpened())
-                [MobileAppTracker setFacebookUserId:[NSString stringWithFormat:@"%llu", FacebookPtr->fbid]];
-            
-            [MobileAppTracker measureAction:eventName
-                                  eventItems:arrEventItems
-                                 referenceId:transaction.transactionIdentifier
-                               revenueAmount:extraRevenue
-                                currencyCode:currencyCode];
-            NSLog(@"Transaction event tracked: %@", eventName);
-        }
-    }*/
-
+    /*    bool shouldTrack = true;
+     if (shouldTrack)
+     {
+     NSString *eventName = @"purchase";
+     if (nil != product)
+     {
+     NSString *currencyCode = [product.priceLocale objectForKey:NSLocaleCurrencyCode];
+     int quantity = transaction.payment.quantity;
+     float unitPrice = [product.price floatValue];
+     float revenue = unitPrice * quantity;
+     MATEventItem *eventItem = [MATEventItem eventItemWithName:product.localizedTitle unitPrice:unitPrice quantity:quantity revenue:revenue attribute1:@"attr1" attribute2:@"attr2" attribute3:@"attr3" attribute4:@"attr4" attribute5:@"attr5"];
+     NSArray *arrEventItems = @[ eventItem ];
+     float extraRevenue = 0;
+     
+     if (FacebookPtr->sessionIsOpened())
+     [MobileAppTracker setFacebookUserId:[NSString stringWithFormat:@"%llu", FacebookPtr->fbid]];
+     
+     [MobileAppTracker measureAction:eventName
+     eventItems:arrEventItems
+     referenceId:transaction.transactionIdentifier
+     revenueAmount:extraRevenue
+     currencyCode:currencyCode];
+     NSLog(@"Transaction event tracked: %@", eventName);
+     }
+     }*/
+    
     MMPPtr->purchaseConfirmed();
 }
 

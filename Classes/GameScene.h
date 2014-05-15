@@ -386,7 +386,9 @@ private:
     bool isFishNeedRun = false;
     bool crystalCrystal = false;
     bool isSimplified = false;
-    bool isBeginBanner = false;    
+    bool isBeginBanner = false;
+    
+    CCAction* beginBannerAction = NULL;
 };
 
 #endif

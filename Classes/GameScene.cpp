@@ -13,6 +13,7 @@
 #include "draw_nodes/CCDrawingPrimitives.h"
 #include "GameMapLayer.h"
 #include "nMMP.h"
+#include "cFacebook.h"
 
 using namespace CocosDenshion;
 using namespace cocos2d;
@@ -456,7 +457,7 @@ void GameScene::loadLevel(const char* levelName)
 		menu->banner("game/violetBanner.png", buf, 1.0f, color);
         isBeginBanner = true;
 	}
-    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::beginBannerEndCallback))));
+    beginBannerAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::beginBannerEndCallback))));
     
     if (WINSIZE.width == 640)
     {
@@ -496,6 +497,7 @@ void GameScene::loadLevel(const char* levelName)
 void GameScene::beginBannerEndCallback(CCNode* sender)
 {
     isBeginBanner = false;
+    beginBannerAction = NULL;
 }
 
 GameScene::~GameScene()
@@ -602,6 +604,17 @@ bool GameScene::init(int levNum)
         sprintf(buf, "levels/%d.txt", numLevel);
     else
         sprintf(buf, "levels/%d.xml", numLevel);
+    
+    if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    {
+        if (OptionsPtr->getLevelData(numLevel-1).countGames >= 0)
+        {
+            if (OptionsPtr->getCurrentLevel() == numLevel)
+            {
+                FacebookPtr->askBooster();
+            }
+        }
+    }
     
 
     if (!OptionsPtr->getLevelData(numLevel-1).isSimple)
@@ -920,6 +933,13 @@ void GameScene::changeOrientation(void)
             isBeginBanner = true;
         }
     }
+    if (beginBannerAction)
+    {
+        this->stopAction(beginBannerAction);
+        beginBannerAction = NULL;
+    }
+    beginBannerAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::beginBannerEndCallback))));
+
     
     if (IPHONE_5 || IPHONE_4)
     {
@@ -5720,6 +5740,21 @@ void GameScene::refillPortals(CCNode* sender)
             {
                 if (isLockCell(gameField[i][j]))
                     break;
+                bool isLastNone = false;
+                if (isNoneCell(i,j))
+                {
+                    isLastNone = true;
+                    for (int n = i; n < rowCount; n++)
+                    {
+                        if (findGameObject(n, j) >= 0)
+                        {
+                            isLastNone = false;
+                        }
+                    }
+                }
+                if (isLastNone)
+                    break;
+
                 if (findGameObject(i, j) >= 0)
                     break;
                 countObjectRefill++;
@@ -5779,8 +5814,15 @@ void GameScene::refillPortals(CCNode* sender)
                         
 						gameObjects[findGameObject(i, j)]->sprite->
                         runAction(CCSequence::create(CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*countShift)), accel), CCCallFuncN::create(this, callfuncN_selector(GameScene::deletingTeleportingObject)), NULL));
-                        
-                        gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+
+                        if (LANDSCAPE)
+                        {
+                            gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT)));
+                        }
+                        else
+                        {
+                            gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                        }
                         newCreateObjects.push_back(gameObjects[findGameObject(i, j)]);
                         
                         
@@ -5789,7 +5831,28 @@ void GameScene::refillPortals(CCNode* sender)
                             colorTelObject = Red;
                         sGameObject* gameObj = new sGameObject(Simple, colorTelObject, portals[k].x + countObjectRefill, portals[k].y, xZero, yZero);
                         
-                        gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT));
+                        if (IPHONE_5 || IPHONE_4)
+                        {
+                            if (LANDSCAPE)
+                            {
+                                gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY()));
+                            }
+                            else
+                            {
+                                gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT));
+                            }
+                        }
+                        else
+                        {
+                            if (LANDSCAPE)
+                            {
+                                gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY()));
+                            }
+                            else
+                            {
+                                gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT/2.0f));
+                            }
+                        }
                         
                         if (gameObjects[findGameObject(i, j)]->type != Simple)
                             gameObj->changeType(gameObjects[findGameObject(i, j)]->type);
@@ -7800,172 +7863,7 @@ void GameScene::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         idxSelectedObject = -1;
     }
     return;
-    
-    if (menu->isLock())
-		return;
-	if (!menu->getCountMoves())
-		return;
-	if (lock)
-		return;
-    if (leftDownMenu->isLock())
-        return;
-	if (isSelectedGameObject < 0)
-		return;
-    
-    if (isFish)
-		return;
-
-	CCTouch* touch = (CCTouch*)( pTouches->anyObject());
-	CCPoint location = touch->getLocation();
-    
-    location = this->convertToNodeSpace(location);
-    
-    if (LANDSCAPE)
-    {
-        location.x = location.x - CELL_WIDTH*2.0f;
-        location.y = location.y + CELL_HEIGHT/2.0f;
-    }
-
-	int moveFlag = false;
-	if (abs(beginPosition.x - location.x) > abs(beginPosition.y - location.y))
-	{
-		if (abs(beginPosition.x - location.x) > 20)
-		{
-			if (beginPosition.x > location.x)
-			{
-				if (gameObjects[isSelectedGameObject]->y > 0)
-				{
-					if (isSimpleCell(gameField[gameObjects[isSelectedGameObject]->x][gameObjects[isSelectedGameObject]->y - 1])
-                        && gameField[gameObjects[isSelectedGameObject]->x][gameObjects[isSelectedGameObject]->y - 1] != CageCell
-                        && gameField[gameObjects[isSelectedGameObject]->x][gameObjects[isSelectedGameObject]->y - 1] != CageIceCell)
-					{
-						firstObject = isSelectedGameObject;
-						secondObject = findGameObject(gameObjects[isSelectedGameObject]->x, gameObjects[isSelectedGameObject]->y - 1);
-
-						if (firstObject < 0 || secondObject < 0)
-							return;
-
-						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
-							return;
-
-						gameObjects[firstObject]->moveLeft();
-						gameObjects[secondObject]->moveRight();			
-						moveFlag = true;
-						prevShift = LeftShift;
-					}
-				}
-			}
-			else
-			{
-				if (gameObjects[isSelectedGameObject]->y  < columnCount - 1)
-				{
-					if (isSimpleCell(gameField[gameObjects[isSelectedGameObject]->x][gameObjects[isSelectedGameObject]->y + 1])
-                        && gameField[gameObjects[isSelectedGameObject]->x][gameObjects[isSelectedGameObject]->y + 1] != CageCell
-                        && gameField[gameObjects[isSelectedGameObject]->x][gameObjects[isSelectedGameObject]->y + 1] != CageIceCell)
-					{
-						firstObject = isSelectedGameObject;
-						secondObject = findGameObject(gameObjects[isSelectedGameObject]->x, gameObjects[isSelectedGameObject]->y + 1);
-
-						if (firstObject < 0 || secondObject < 0)
-							return;
-
-						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
-							return;
-
-						gameObjects[firstObject]->moveRight();
-						gameObjects[secondObject]->moveLeft();
-						moveFlag = true;
-						prevShift = RightShift;					
-					}
-				}
-			}
-		}
-	}
-	else
-	{
-		if (abs(beginPosition.y - location.y) > 20)
-		{
-			if (beginPosition.y > location.y)
-			{				
-				if (gameObjects[isSelectedGameObject]->x < rowCount - 1)
-				{
-					if (isSimpleCell(gameField[gameObjects[isSelectedGameObject]->x + 1][gameObjects[isSelectedGameObject]->y])
-                        && gameField[gameObjects[isSelectedGameObject]->x + 1][gameObjects[isSelectedGameObject]->y] != CageCell
-                        && gameField[gameObjects[isSelectedGameObject]->x + 1][gameObjects[isSelectedGameObject]->y] != CageIceCell)
-					{
-						firstObject = isSelectedGameObject;
-						secondObject = findGameObject(gameObjects[isSelectedGameObject]->x + 1, gameObjects[isSelectedGameObject]->y);
-
-						if (firstObject < 0 || secondObject < 0)
-							return;
-
-						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
-							return;
-
-						gameObjects[firstObject]->moveDown();
-						gameObjects[secondObject]->moveUp();
-						moveFlag = true;
-						prevShift = DownShift;
-					}
-				}				
-			}
-			else
-			{
-				if (gameObjects[isSelectedGameObject]->x > 0)
-				{
-					if (isSimpleCell(gameField[gameObjects[isSelectedGameObject]->x - 1][gameObjects[isSelectedGameObject]->y])
-                        && gameField[gameObjects[isSelectedGameObject]->x - 1][gameObjects[isSelectedGameObject]->y] != CageCell
-                        && gameField[gameObjects[isSelectedGameObject]->x - 1][gameObjects[isSelectedGameObject]->y] != CageIceCell)
-					{
-						firstObject = isSelectedGameObject;
-						secondObject = findGameObject(gameObjects[isSelectedGameObject]->x - 1, gameObjects[isSelectedGameObject]->y);
-
-						if (firstObject < 0 || secondObject < 0)
-							return;
-
-						if (gameObjects[firstObject]->isLock || gameObjects[secondObject]->isLock)
-							return;
-
-						gameObjects[firstObject]->moveUp();
-						gameObjects[secondObject]->moveDown();
-						moveFlag = true;
-						prevShift = UpShift;
-					}
-				}
-			}
-		}
-	}
-
-	if (moveFlag)
-	{
-        if (isTutorial)
-        {
-            isTutorial = false;
-            tutorialCell.clear();
-            tutorialLayer->removeFromParentAndCleanup(true);
-        }
-		lock = true;
-		this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(MOVE_DELTA*1.5f), CCCallFuncN::create( this, 
-			callfuncN_selector(GameScene::shiftFinished))));
-        isSelectedGameObject = -1;
-        idxSelectedObject = -1;
-	}
 }
-
-/*void sGameObject::lighting(CCPoint begin, CCPoint end, float bScale, float delay)
-{
-    CCNode* grandParent = NULL;
-    grandParent = ((CCNode*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
-    
-    CCParticleSystem* meteorRight = CCParticleMeteor::create();
-    meteorRight->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/fire.png"));
-    meteorRight->setPosition(begin);
-    meteorRight->setScale(1.0f);
-    meteorRight->setGravity(ccp(0.0f, -100.0f));
-    meteorRight->setLife(1.0f);
-    grandParent->addChild(meteorRight, 100);
-    meteorRight->runAction(CCSequence::create(CCDelayTime::create(delay + ((float)(rand()%20))/100.0f), CCMoveTo::create(0.2f, end), CCDelayTime::create(0.1f), CCScaleTo::create(0.2f, 0.01f), CCHide::create(), NULL));
-}*/
 
 void GameScene::lighting(CCPoint begin, CCPoint end, float delay)
 {
@@ -8563,7 +8461,15 @@ void GameScene::unlock(CCNode* sender)
 
 void GameScene::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent)
 {
-	int a = 0;
+	if (isSelectedGameObject > 0)
+    {
+        gameObjects[isSelectedGameObject]->sprite->runAction(CCScaleTo::create(0.3f, ELEMENT_SCALE));
+        gameObjects[isSelectedGameObject]->sprite->setRotation(0.0f);
+        gameObjects[isSelectedGameObject]->isSelected = false;
+        isSelectedGameObject = -1;
+        idxSelectedObject = -1;
+    }
+    return;
 }
 
 int GameScene::findGameObject(int x, int y)

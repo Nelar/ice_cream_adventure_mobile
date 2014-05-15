@@ -35,7 +35,6 @@ struct GiftMessage
     bool accept;
 };
 
-
 class cFacebook: public cSingleton<cFacebook>
 {
 public:
@@ -85,12 +84,14 @@ public:
     bool endGame();
     
     void askLife(string fromId);
+    void askBooster();
     vector<int> myScores;
     vector<Leaderboard> friendsScores;
     string name;
     unsigned long long fbid;
     
     void sendLife(string fromId);
+    void sendBooster(string fromId);
     
     void checkNotification();
     

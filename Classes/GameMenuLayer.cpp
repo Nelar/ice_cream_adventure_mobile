@@ -1355,7 +1355,6 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
     {
         firstStep = false;
         OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() - 1);
-        OptionsPtr->save();
         
         if (GlobalsPtr->booster_2)
         {
@@ -1374,7 +1373,6 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
             OptionsPtr->setFishCount(OptionsPtr->getFishCount() - 1);
             GlobalsPtr->booster_3 = false;
         }
-        OptionsPtr->save();
     }
 	
 	if (labelCurrentScore)

@@ -205,6 +205,7 @@ bool MainMenuScene::init()
     gcIcon->setScale(0.5f);
     gcIcon->setPosition(ccp(gameCenter->getContentSize().width/4.0f, gameCenter->getContentSize().height/2.0f));
     gameCenter->addChild(gcIcon);
+    gameCenter->setScale(0.9f);
 	gameCenter->runAction(CCRepeatForever::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 0.9f, 0.8f), CCScaleTo::create(0.5f, 0.85f, 0.85f))));
     
     labelTTF = CCLabelTTF::create(CCLocalizedString("CONNECT", NULL), FONT_COMMON, FONT_SIZE_64);

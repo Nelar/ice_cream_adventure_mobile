@@ -82,8 +82,8 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
     
     
     
-    if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && !reinit && (OptionsPtr->getLifeCount() < 5))
-        FacebookPtr->checkNotification();
+   // if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && !reinit && (OptionsPtr->getLifeCount() < 5))
+   //     FacebookPtr->checkNotification();
     
     vector<sRequestData> requests = OptionsPtr->appRequests;
     

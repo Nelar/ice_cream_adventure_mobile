@@ -887,6 +887,34 @@ void cFacebook::sendOG()
     [conn start];
 }
 
+void cFacebook::sendBooster(string fromId)
+{
+    PFQuery *pushQuery = [PFInstallation query];
+    [pushQuery whereKey:@"fbId" equalTo:[NSString stringWithUTF8String:fromId.c_str()]];
+    PFPush *push = [[PFPush alloc] init];
+    [push setQuery:pushQuery];
+    
+    int booster = 3 + rand()%4;
+    char bufBooster[255];
+    sprintf(bufBooster, "%d", booster);
+    
+    string message = name + ": " + "I have booster for you";
+    
+    NSDictionary *data = @{
+                           @"alert": [NSString stringWithUTF8String:message.c_str()],
+                           @"notif": [NSString stringWithUTF8String:bufBooster],
+                           @"fb":[NSString stringWithUTF8String:fromId.c_str()]
+                           };
+    [push setData:data];
+    [push sendPushInBackground];
+    
+    PFObject *exchanger = [PFObject objectWithClassName:@"Exchanger"];
+    exchanger[@"fbId"] = [NSString stringWithUTF8String:fromId.c_str()];
+    exchanger[@"senderFbId"] = [NSString stringWithFormat:@"%llu", FacebookPtr->fbid];
+    exchanger[@"message"] = [NSString stringWithUTF8String:bufBooster];
+    [exchanger saveInBackground];
+}
+
 void cFacebook::sendLife(string fromId)
 {
     PFQuery *pushQuery = [PFInstallation query];
@@ -1967,7 +1995,20 @@ void cFacebook::acceptMessage()
                 }
                 else
                 {
-                    [object deleteInBackground];
+                    [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                     {
+                         if (succeeded)
+                         {
+                             int a = 0;
+                             NSLog(@"DELETING OBJECT SUCEEDED");
+                         }
+                         else
+                         {
+                             int a = 0;
+                             NSLog(@"DELETING OBJECT ERROR");
+                             NSLog(@"%@", error.localizedDescription);
+                         }
+                     }];
                 }
             }];
         }
@@ -1978,6 +2019,8 @@ void cFacebook::checkMessages()
 {
     messages.clear();
     PFQuery* query = [PFQuery queryWithClassName:@"Exchanger"];
+    char bufTemp[255];
+    sprintf(bufTemp, "%llu", FacebookPtr->fbid);
     [query whereKey:@"fbId" equalTo:[NSString stringWithFormat:@"%llu", FacebookPtr->fbid]];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -2001,6 +2044,16 @@ void cFacebook::checkMessages()
                     message.notif = HELP_ME;
                 else if (notStr == "1")
                     message.notif = HELPED_YOU;
+                else if (notStr == "2")
+                    message.notif = HELP_ME_BOOSTER;
+                else if (notStr == "3")
+                    message.notif = HELPED_YOU_BOOSTER_HAMMER;
+                else if (notStr == "4")
+                    message.notif = HELPED_YOU_BOOSTER_FISH;
+                else if (notStr == "5")
+                    message.notif = HELPED_YOU_BOOSTER_CRYSTAL;
+                else if (notStr == "6")
+                    message.notif = HELPED_YOU_BOOSTER_BOMB;
                 
                 for (int j = 0; j < friendsScores.size(); j++)
                     if (friendsScores[j].uid == message.from)
@@ -2042,6 +2095,47 @@ void cFacebook::askLife(string fromId)
     exchanger[@"senderFbId"] = [NSString stringWithFormat:@"%llu", FacebookPtr->fbid];
     exchanger[@"message"] = @"0";
     [exchanger saveInBackground];
+}
+
+void cFacebook::askBooster()
+{
+    for (int i = 0; i < friendsScores.size(); i++)
+    {
+        PFQuery *pushQuery = [PFInstallation query];
+        [pushQuery whereKey:@"fbId" equalTo:[NSString stringWithUTF8String:friendsScores[i].uid.c_str()]];
+        PFPush *push = [[PFPush alloc] init];
+        [push setQuery:pushQuery];
+        
+        string message = name + ":" + "Help me";
+        [push setMessage:[NSString stringWithUTF8String:message.c_str()]];
+        [push sendPushInBackground];
+        
+        string nameForpost;
+        
+        requestHelp(friendsScores[i].name);
+        
+        PFObject *exchanger = [PFObject objectWithClassName:@"Exchanger"];
+        exchanger[@"fbId"] = [NSString stringWithUTF8String:friendsScores[i].uid.c_str()];
+        exchanger[@"senderFbId"] = [NSString stringWithFormat:@"%llu", FacebookPtr->fbid];
+        exchanger[@"message"] = @"2";
+        [exchanger saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+         {
+             if (succeeded)
+             {
+                 int a = 0;
+                 NSLog(@"ASK BOOSTER SUCCEEDED");
+             }
+             else
+             {
+                 int a = 0;
+                 NSLog(@"ASK BOOSTER ERROR");
+                 if (error)
+                 {
+                     NSLog(@"%@", error.localizedDescription);
+                 }
+             }
+         }];
+    }
 }
 
 void cFacebook::sendBrag(const int nScore)

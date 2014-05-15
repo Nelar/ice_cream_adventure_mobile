@@ -391,15 +391,13 @@ CCNode* SocialLayer::createScoreLayer(int level)
         label->setColor(ccBLACK);
         if (LANDSCAPE)
         {
-            label->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height/2.5f));
-            label->setFontSize(FONT_SIZE_22);
+            label->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height/2.6f));
+            label->setFontSize(FONT_SIZE_48);
         }
         else
         {
             label->setPosition(ccp(layer->getContentSize().width/1.5f, layer->getContentSize().height/2.5f));
             label->setFontSize(FONT_SIZE_48);
-            if (IPHONE_5 || IPHONE_4)
-                label->setFontSize(FONT_SIZE_36);
         }
         layer->addChild(label, 3);
         
@@ -533,10 +531,9 @@ CCNode* SocialLayer::createMessageboardForAsk()
     greyBack->addChild(scrollMessage, 3);
     
     
-    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("ASK_FRIEND"), FONT_COMMON, FONT_SIZE_36);
+    CCLabelTTF* highScoreLabel = CCLabelTTF::create(CCLocalizedString("ASK_FRIEND"), FONT_COMMON, FONT_SIZE_64);
     layer->addChild(highScoreLabel, 3);
     highScoreLabel->setPosition(ccp(layer->getContentSize().width/2.0f, layer->getContentSize().height*0.9f));
-    highScoreLabel->setScale(multiplier);
     highScoreLabel->setColor(color);
     
     CCMenu* cmenu = CCMenu::create();
@@ -825,9 +822,41 @@ CCNode* SocialLayer::createMessage(string fromId, string from, NotificationType 
 
     char buf[255];
     if (notif == HELPED_YOU)
-        sprintf(buf, "%s \n %s %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
     else if (notif == HELP_ME)
-        sprintf(buf, "%s \n %s %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
+    else if (notif == HELPED_YOU_BOOSTER_BOMB)
+    {
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        CCSprite* booster = CCSprite::create("message/bomb.png");
+        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        node->addChild(booster);
+    }
+    else if (notif == HELPED_YOU_BOOSTER_CRYSTAL)
+    {
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        CCSprite* booster = CCSprite::create("message/crystal.png");
+        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        node->addChild(booster);
+    }
+    else if (notif == HELPED_YOU_BOOSTER_FISH)
+    {
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        CCSprite* booster = CCSprite::create("message/fish.png");
+        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        node->addChild(booster);
+    }
+    else if (notif == HELPED_YOU_BOOSTER_HAMMER)
+    {
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        CCSprite* booster = CCSprite::create("message/clearBoost.png");
+        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        node->addChild(booster);
+    }
+    else if (notif == HELP_ME_BOOSTER)
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
+    
+    
     
     CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_40);
     ccColor3B color;
@@ -960,6 +989,9 @@ void SocialLayer::acceptCallback(CCObject* pSender)
                         OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() + 1);
                     }
                 }
+            }
+            else
+            {
                 
             }
         }

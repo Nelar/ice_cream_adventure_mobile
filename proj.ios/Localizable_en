@@ -16,7 +16,7 @@ RESET = "Reset";
 RESET_TEXT = "All your current progress will be erased!\n Are you sure you want to continue?";
 ON = "On";
 OFF = "Off";
-SETTING_FACEBOOK_TEXT = "See how your friends are doing!\n Connect to Facebook";
+SETTING_FACEBOOK_TEXT = "See how your\n friends are doing!\n Connect to Facebook";
 SETTING_ASK_TEXT = "Do you have a problem with the game or\n wonder about a game mechanic?\n Check out the Frequently Asked Questions!\n (this will minimize the game\n and go to a website)";
 SETTING_RESTORE_TEXT = "Have you made a purchase\n in the game that does not show up?\n Try restoring in-App purchases";
 SETTING_RESET_TEXT = "Reset All in-game progress and\n restart from level 1.\n You will be logged out of Facebook,\n but your progress will be\n restored if you reconnect";
@@ -126,7 +126,7 @@ NETWORK_MESSAGE = "No internet connection.\n Please try again later";
 LOADING = "Loading...";
 
 END_LEVEL_TITLE ="Congratulations!";
-END_LEVEL_TEXT = "You are one of the first players to make it through all the available levels!\n Like our Facebook page to stay up to date\n on all our latest news!\n As soon as we reach 100,000 subscribers,\n we'll launch a new update our team\n is already hard at work on.";
+END_LEVEL_TEXT = "You are one of the first players to make it\n through all the available levels!\n Like our Facebook page to stay up to date\n on all our latest news!\n As soon as we reach 100,000 subscribers,\n we'll launch a new update our team\n is already hard at work on.";
 
 NEWS_BUTTON = "Share";
 SUBSCRIBE = "Like";

@@ -692,9 +692,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0292999190637F80083D9ED /* GameKit.framework in Frameworks */,
 				3068325419195167007B99F9 /* libcocos2dx.a in Frameworks */,
 				3068325519195167007B99F9 /* libCocosDenshion.a in Frameworks */,
-				B0292999190637F80083D9ED /* GameKit.framework in Frameworks */,
 				306832581919518A007B99F9 /* MobileAppTracker.framework in Frameworks */,
 				CEACC8BA17D7512C005023BA /* StoreKit.framework in Frameworks */,
 				B0C935B618ED7E5300C5752D /* libAppsFlyerLib.a in Frameworks */,
