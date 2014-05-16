@@ -214,13 +214,27 @@ bool MainMenuScene::init()
     gameCenter->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.65f, labelTTF->getParent()->getContentSize().height/2.0f));
 
+#ifdef NEW_ART
+    CCSprite* settingSpriteNormal = CCSprite::create("updateArt/button.png");
+	CCSprite* settingSpriteSelected = CCSprite::create("updateArt/button.png");
+    settingSpriteSelected->setAnchorPoint(ccp(0.5f, 0.5f));
+    settingSpriteSelected->setColor(ccGRAY);
+    settingSpriteSelected->setScale(0.9f);
+    settingSpriteSelected->setPosition(ccp(settingSpriteSelected->getContentSize().width/20.0f, settingSpriteSelected->getContentSize().height/20.0f));
+
+	setting = CCMenuItemSprite::create(settingSpriteNormal, settingSpriteSelected, this, menu_selector(MainMenuScene::menuSettingCallback));
+	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.0f,
+                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.0f));
+#else
 	CCSprite* settingSpriteNormal = CCSprite::create("gameMap/setting.png");
 	CCSprite* settingSpriteSelected = CCSprite::create("gameMap/setting.png");
-	settingSpriteSelected->setScale(0.9f);
+    settingSpriteSelected->setScale(0.9f);
 	setting = CCMenuItemSprite::create(settingSpriteNormal, settingSpriteSelected, this, menu_selector(MainMenuScene::menuSettingCallback));
 	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.6f,
-		-CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.6f));
-    
+                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.6f));
+
+#endif
+	   
     CCSprite* inviteNormal = CCSprite::create("inviteFriends.png");
 	CCSprite* inviteSelected = CCSprite::create("inviteFriends.png");
     inviteSelected->setColor(ccGRAY);
@@ -712,8 +726,15 @@ void MainMenuScene::changeOrientation()
     
     gameCenter->setPosition(ccp(play->getPositionX(), play->getPositionY() - gameCenter->getContentSize().height*1.9f));
     
-	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 3.0f,
-                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 3.0f));
+    
+#ifdef NEW_ART
+	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.0f,
+                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.0f));
+#else
+	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.6f,
+                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.6f));
+    
+#endif
     
 	invite->setPosition(ccp(invite->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f - settingBlob->getContentSize().width / 20.0f,
                             -invite->getContentSize().height/1.3f - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height/0.99f));

@@ -6,6 +6,8 @@
 #include "cMoreGamesLayer.h"
 #include "CCLocalizedString.h"
 
+#define NEW_ART true
+
 #define IPHONE_4 (CCDirector::sharedDirector()->getWinSize().height == 960 || CCDirector::sharedDirector()->getWinSize().width == 960)
 #define IPAD_MINI (CCDirector::sharedDirector()->getWinSize().height == 1024 || CCDirector::sharedDirector()->getWinSize().width == 1024)
 #define IPAD (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)
@@ -80,7 +82,7 @@ enum IceCreamScene
 class Globals : public cSingleton<Globals>
 {
 public:
-	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false), bannerShow(false) {};
+	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false), bannerShow(false), messageShow(false) {};
 	~Globals(){};
     IceCreamScene iceCreamScene;
     vector<sMoreGames> globalMoreGames;
@@ -88,6 +90,9 @@ public:
     bool booster_2;
     bool booster_3;
     bool bannerShow;
+    
+    bool messageShow;
+
     
     string currency;
     float price;

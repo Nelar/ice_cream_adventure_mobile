@@ -144,12 +144,19 @@ bool GameMenuLayer::init(eLevelType ntype)
     }
     else
     {
+#ifdef NEW_ART
+        upPanel = CCSprite::create("updateArt/panelHor.png");
+#else
         upPanel = CCSprite::createWithSpriteFrameName("game/panelverh.png");
+#endif
         upPanel->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width - upPanel->getContentSize().width/2.0f,
                                  CCDirector::sharedDirector()->getWinSize().height - upPanel->getContentSize().height/2.0f));
 
-        
+#ifdef NEW_ART
+        downPanel = CCSprite::create("updateArt/panelHorDown.png");
+#else
         downPanel = CCSprite::createWithSpriteFrameName("game/score_moves_stars.png");
+#endif
         
         downPanel->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f,
                                    downPanel->getContentSize().height/1.7f));
@@ -667,13 +674,21 @@ void GameMenuLayer::changeOrientation(void)
     }
     else
     {
+#ifdef NEW_ART
+        upPanel->setDisplayFrame(CCSprite::create("updateArt/panelHor.png")->displayFrame());
+#else
         upPanel->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("game/panelverh.png"));
+#endif
         upPanel->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width - upPanel->getContentSize().width/2.0f,
                                  CCDirector::sharedDirector()->getWinSize().height - upPanel->getContentSize().height/2.0f));
         
         upPanel->setAnchorPoint(ccp(0.5f, 0.5f));
-        
+       
+#ifdef NEW_ART
+        downPanel->setDisplayFrame(CCSprite::create("updateArt/panelHorDown.png")->displayFrame());
+#else
         downPanel->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("game/score_moves_stars.png"));
+#endif
         
         downPanel->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f,
                                    downPanel->getContentSize().height/1.7f));

@@ -88,6 +88,8 @@ public:
     
     void checkMessage(CCNode* pSender);
     
+    void chatCallback(CCObject* pSender);
+    
     void playAfterLoad(CCNode* pSender);
     
     void showUnlock(int numLevel);
@@ -110,6 +112,8 @@ public:
 //    void buyPack
     
     int levelNumForPost = 0;
+    
+    
 private:
     
     CCMenu* bannerMenu = NULL;
@@ -159,6 +163,7 @@ private:
     
     CCMenu* livesMenu;
     CCMenuItemSprite* livesPanel;
+    CCMenuItemSprite* chatPanel;
     
     
     eBoosterType firstBooster;

@@ -827,36 +827,39 @@ CCNode* SocialLayer::createMessage(string fromId, string from, NotificationType 
         sprintf(buf, "%s \n %s\n %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
     else if (notif == HELPED_YOU_BOOSTER_BOMB)
     {
-        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_BOOST", NULL));
         CCSprite* booster = CCSprite::create("message/bomb.png");
-        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        booster->setPosition(ccp(node->getContentSize().width/10.0f*8.8f, node->getContentSize().height/2.0f));
         node->addChild(booster);
     }
     else if (notif == HELPED_YOU_BOOSTER_CRYSTAL)
     {
-        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_BOOST", NULL));
         CCSprite* booster = CCSprite::create("message/crystal.png");
-        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        booster->setPosition(ccp(node->getContentSize().width/10.0f*8.8f, node->getContentSize().height/2.0f));
         node->addChild(booster);
     }
     else if (notif == HELPED_YOU_BOOSTER_FISH)
     {
-        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_BOOST", NULL));
         CCSprite* booster = CCSprite::create("message/fish.png");
-        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        booster->setPosition(ccp(node->getContentSize().width/10.0f*8.8f, node->getContentSize().height/2.0f));
         node->addChild(booster);
     }
     else if (notif == HELPED_YOU_BOOSTER_HAMMER)
     {
-        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_LIFE", NULL));
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("YOUR_GOT_GIFT", NULL), from.c_str(), CCLocalizedString("GAVE_BOOST", NULL));
         CCSprite* booster = CCSprite::create("message/clearBoost.png");
-        booster->setPosition(ccp(node->getContentSize().width/4.0f*3.0f, node->getContentSize().height/2.0f));
+        booster->setPosition(ccp(node->getContentSize().width/10.0f*8.8f, node->getContentSize().height/2.0f));
         node->addChild(booster);
     }
     else if (notif == HELP_ME_BOOSTER)
-        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_LIFE", NULL));
-    
-    
+    {
+        sprintf(buf, "%s \n %s\n %s", CCLocalizedString("HELP_FRIEND", NULL), from.c_str(), CCLocalizedString("REQUEST_BOOST", NULL));
+        CCSprite* booster = CCSprite::create("message/bomb.png");
+        booster->setPosition(ccp(node->getContentSize().width/10.0f*8.8f, node->getContentSize().height/2.0f));
+        node->addChild(booster);
+    }
     
     CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_40);
     ccColor3B color;
@@ -989,6 +992,27 @@ void SocialLayer::acceptCallback(CCObject* pSender)
                         OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() + 1);
                     }
                 }
+                else if (FacebookPtr->messages[sender->getTag()].notif == HELP_ME_BOOSTER)
+                {
+                    FacebookPtr->sendBooster(FacebookPtr->messages[sender->getTag()].from);
+                }
+                else if (FacebookPtr->messages[sender->getTag()].notif == HELPED_YOU_BOOSTER_BOMB)
+                {
+                    OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                }
+                else if (FacebookPtr->messages[sender->getTag()].notif == HELPED_YOU_BOOSTER_CRYSTAL)
+                {
+                    OptionsPtr->setCrystalCount(OptionsPtr->getCrystalCOunt() + 1);
+                }
+                else if (FacebookPtr->messages[sender->getTag()].notif == HELPED_YOU_BOOSTER_FISH)
+                {
+                    OptionsPtr->setFishCount(OptionsPtr->getFishCount() + 1);
+                }
+                else if (FacebookPtr->messages[sender->getTag()].notif == HELPED_YOU_BOOSTER_HAMMER)
+                {
+                    OptionsPtr->setHammerCount(OptionsPtr->getHammerCount() + 1);
+                }
+                OptionsPtr->save();
             }
             else
             {

@@ -47,6 +47,7 @@ static AppDelegate s_sharedApplication;
     
     PFACL *defaultACL = [PFACL ACL];
     [defaultACL setPublicReadAccess:YES];
+    [defaultACL setPublicWriteAccess:YES];
     
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
 

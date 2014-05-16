@@ -1224,10 +1224,17 @@ void EndGameLayer::helpModalCallback(CCObject* pSender)
     if (helpModal->isVisible())
     {
         helpModal->setVisible(false);
+        
+        booster_1->setEnabled(true);
+        booster_2->setEnabled(true);
+        booster_3->setEnabled(true);
+        close->setEnabled(true);
+        play->setEnabled(true);
     }
     else
     {
         helpModal->setVisible(true);
+        
         booster_1->setEnabled(false);
         booster_2->setEnabled(false);
         booster_3->setEnabled(false);

@@ -605,29 +605,19 @@ bool GameScene::init(int levNum)
     else
         sprintf(buf, "levels/%d.xml", numLevel);
     
-    if (OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened() && getNetworkStatus())
-    {
-        if (OptionsPtr->getLevelData(numLevel-1).countGames >= 0)
-        {
-            if (OptionsPtr->getCurrentLevel() == numLevel)
-            {
-                FacebookPtr->askBooster();
-            }
-        }
-    }
-    
 
     if (!OptionsPtr->getLevelData(numLevel-1).isSimple)
     {
         int currLevel = OptionsPtr->getCurrentLevel();
         int countGames = OptionsPtr->getLevelData(numLevel-1).countGames;
         time_t timeLast = (time(0) - OptionsPtr->getLevelData(numLevel-1).lastGame);
-        if (OptionsPtr->getLevelData(numLevel-1).countGames >= 4)
+        if ((time(0) - OptionsPtr->getLevelData(numLevel-1).lastGame) > 86400)
         {
-            if ((time(0) - OptionsPtr->getLevelData(numLevel-1).lastGame) > 86400)
+            if (OptionsPtr->getLevelData(numLevel-1).countGames >= 4)
             {
                 if (currLevel == numLevel)
                 {
+                    FacebookPtr->askBooster();
                     isSimplified = true;
                 }
             }

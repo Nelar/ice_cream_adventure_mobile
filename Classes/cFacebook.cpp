@@ -1987,14 +1987,26 @@ void cFacebook::acceptMessage()
     {
         if (messages[i].accept)
         {
+            CCLOG("%s", messages[i].id.c_str());
             PFQuery* query = [PFQuery queryWithClassName:@"Exchanger"];
+            
             [query getObjectInBackgroundWithId:[NSString stringWithUTF8String:messages[i].id.c_str()] block:^(PFObject *object, NSError *error) {
+                if (object)
+                {
+                    NSLog(@"Object find %@", object);
+                }
+                else
+                {
+                    NSLog(@"Object not find");
+                }
+                
                 if (error)
                 {
                     NSLog(@"ERROR");
                 }
                 else
                 {
+                    NSLog(@"%@", object.parseClassName);
                     [object deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
                      {
                          if (succeeded)
@@ -2004,9 +2016,10 @@ void cFacebook::acceptMessage()
                          }
                          else
                          {
-                             int a = 0;
                              NSLog(@"DELETING OBJECT ERROR");
                              NSLog(@"%@", error.localizedDescription);
+                             NSLog(@"%@", error.localizedFailureReason);
+                             int a = 0;
                          }
                      }];
                 }
@@ -2030,6 +2043,7 @@ void cFacebook::checkMessages()
         }
         else
         {
+            int countHelpedBooster = 0;
             for (int i = 0; i < objects.count; i++)
             {
                 GiftMessage message;
@@ -2047,19 +2061,58 @@ void cFacebook::checkMessages()
                 else if (notStr == "2")
                     message.notif = HELP_ME_BOOSTER;
                 else if (notStr == "3")
+                {
                     message.notif = HELPED_YOU_BOOSTER_HAMMER;
+                    countHelpedBooster++;
+                }
                 else if (notStr == "4")
+                {
                     message.notif = HELPED_YOU_BOOSTER_FISH;
+                    countHelpedBooster++;
+                }
                 else if (notStr == "5")
+                {
                     message.notif = HELPED_YOU_BOOSTER_CRYSTAL;
+                    countHelpedBooster++;
+                }
                 else if (notStr == "6")
+                {
                     message.notif = HELPED_YOU_BOOSTER_BOMB;
+                    countHelpedBooster++;
+                }
                 
                 for (int j = 0; j < friendsScores.size(); j++)
                     if (friendsScores[j].uid == message.from)
                         message.name = friendsScores[j].name;
                 
-                messages.push_back(message);
+                bool isAddMessage = true;
+                
+                if (countHelpedBooster > 3)
+                {
+                    if (message.notif == HELPED_YOU_BOOSTER_HAMMER || message.notif == HELPED_YOU_BOOSTER_FISH ||
+                        message.notif == HELPED_YOU_BOOSTER_CRYSTAL || message.notif == HELPED_YOU_BOOSTER_BOMB)
+                    {
+                        isAddMessage = false;
+                        [obj deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                         {
+                             if (succeeded)
+                             {
+                                 int a = 0;
+                                 NSLog(@"DELETING OBJECT SUCEEDED");
+                             }
+                             else
+                             {
+                                 NSLog(@"DELETING OBJECT ERROR");
+                                 NSLog(@"%@", error.localizedDescription);
+                                 NSLog(@"%@", error.localizedFailureReason);
+                                 int a = 0;
+                             }
+                         }];
+                    }
+                }
+                
+                if (isAddMessage)
+                    messages.push_back(message);
             }
             if (messages.size() > 0)
             {

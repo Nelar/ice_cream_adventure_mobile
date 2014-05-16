@@ -227,16 +227,40 @@ bool MapMenuLayer::init()
         menu->setPosition(ccp(menu->getPositionX(), menu->getPositionY() + WINSIZE.height));
     }
     
-    CCSprite* livesPanelDown = CCSprite::createWithSpriteFrameName("gameMap/livesPanel.png");
+#ifdef NEW_ART
+    CCSprite* livesPanelDown = CCSprite::create("updateArt/life.png");
     livesPanelDown->setColor(ccc3(128, 128, 128));
-    livesPanel =CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("gameMap/livesPanel.png"), livesPanelDown,
+    livesPanel =CCMenuItemSprite::create(CCSprite::create("updateArt/life.png"), livesPanelDown,
                                          this, menu_selector(MapMenuLayer::livesCallback));
 
     livesPanel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + livesPanel->getContentSize().width/1.9f,
                                 CCDirector::sharedDirector()->getWinSize().height/2.0f - livesPanel->getContentSize().height/1.9f));
+#else
+    CCSprite* livesPanelDown = CCSprite::createWithSpriteFrameName("gameMap/livesPanel.png");
+    livesPanelDown->setColor(ccc3(128, 128, 128));
+    livesPanel =CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("gameMap/livesPanel.png"), livesPanelDown,
+                                         this, menu_selector(MapMenuLayer::livesCallback));
+    
+    livesPanel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + livesPanel->getContentSize().width/1.9f,
+                                CCDirector::sharedDirector()->getWinSize().height/2.0f - livesPanel->getContentSize().height/1.9f));
+
+#endif
+    
+    CCSprite* chatPanelDown = CCSprite::create("lifeSend.png");
+    chatPanelDown->setColor(ccGRAY);
+    chatPanel = CCMenuItemSprite::create(CCSprite::create("lifeSend.png"), chatPanelDown,
+                                         this, menu_selector(MapMenuLayer::chatCallback));
+    
+    chatPanel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + chatPanel->getContentSize().width/1.3f,
+                                CCDirector::sharedDirector()->getWinSize().height/2.0f - (chatPanel->getContentSize().height/1.9f*4.0f)));
+    
+    chatPanel->setVisible(false);
+    if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && OptionsPtr->isFacebookConnection())
+        chatPanel->setVisible(true);
     
     livesMenu = CCMenu::create();
     livesMenu->addChild(livesPanel);
+    livesMenu->addChild(chatPanel);
     
     this->addChild(livesMenu, 10);
     
@@ -277,9 +301,14 @@ bool MapMenuLayer::init()
     int temp = OptionsPtr->getLifeCount();
     sprintf(buf, "%d", OptionsPtr->getLifeCount());
     
+    
     livesCount = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_200);
     livesCount->setAnchorPoint(ccp(0.5f, 0.5f));
+#ifdef NEW_ART
+    livesCount->setPosition(ccp(livesPanel->getContentSize().width/5.45f, livesPanel->getContentSize().height/1.8f));
+#else
     livesCount->setPosition(ccp(livesPanel->getContentSize().width/5.8f, livesPanel->getContentSize().height/2.4f));
+#endif
     livesPanel->addChild(livesCount);
     
     if (getScale() != 1.0f)
@@ -714,21 +743,46 @@ void MapMenuLayer::checkMessage(CCNode* pSender)
         FacebookPtr->checkMessages();
 }
 
+void MapMenuLayer::chatCallback(CCObject* pSender)
+{
+    if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && OptionsPtr->isFacebookConnection())
+    {
+        lock = true;
+        isPopup = true;
+        social->showMessageboard();
+        GlobalsPtr->messageShow = true;
+        chatPanel->setVisible(true);
+    }
+}
+
 void MapMenuLayer::showMessageboard()
 {
     if (social->isMessageBoard)
     {
-        lock = false;
-        isPopup = false;
+        if (lock)
+            lock = false;
+        if (isPopup)
+            isPopup = false;
     }
     else
     {
         if (lock)
             return;
-        lock = true;
-        isPopup = true;
         if (!FacebookPtr->messages.empty() && FacebookPtr->sessionIsOpened() && getNetworkStatus() && OptionsPtr->isFacebookConnection())
-            social->showMessageboard();
+        {
+            if (!GlobalsPtr->messageShow)
+            {
+                lock = true;
+                isPopup = true;
+                social->showMessageboard();
+                GlobalsPtr->messageShow = true;
+                chatPanel->setVisible(true);
+            }
+            else
+            {
+                chatPanel->setVisible(true);
+            }
+        }
     }
 }
 
@@ -829,6 +883,9 @@ void MapMenuLayer::changeOrientation()
     
     livesPanel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + livesPanel->getContentSize().width/1.9f,
                                 CCDirector::sharedDirector()->getWinSize().height/2.0f - livesPanel->getContentSize().height/1.9f));
+    
+    chatPanel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + chatPanel->getContentSize().width/1.3f,
+                               CCDirector::sharedDirector()->getWinSize().height/2.0f - (chatPanel->getContentSize().height/1.9f*4.0f)));
     
     livesMenu->setContentSize(WINSIZE);
     livesMenu->setPosition(WINSIZE.width/2.0f, WINSIZE.height/2.0f);
@@ -967,7 +1024,11 @@ void MapMenuLayer::timeCallback(CCNode* sender)
     
     livesCount = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_200);
     livesCount->setAnchorPoint(ccp(0.5f, 0.5f));
+#ifdef NEW_ART
+    livesCount->setPosition(ccp(livesPanel->getContentSize().width/5.45f, livesPanel->getContentSize().height/1.8f));
+#else
     livesCount->setPosition(ccp(livesPanel->getContentSize().width/5.8f, livesPanel->getContentSize().height/2.4f));
+#endif
     livesPanel->addChild(livesCount);
 }
 
@@ -1688,15 +1749,26 @@ void MapMenuLayer::helpModalCallback(CCObject* pSender)
 	help->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)), CCRepeat::create(CCSequence::createWithTwoActions(CCScaleTo::create(0.5f, 1.05f, 0.95f), CCScaleTo::create(0.5f, 1.0f, 1.0f)), 100), NULL));
     
     if (helpModal->isVisible())
+    {
         helpModal->setVisible(false);
+
+        booster_1->setEnabled(true);
+        booster_2->setEnabled(true);
+        booster_3->setEnabled(true);
+        close->setEnabled(true);
+        play->setEnabled(true);
+
+    }
     else
+    {
         helpModal->setVisible(true);
-    
-    booster_1->setEnabled(false);
-    booster_2->setEnabled(false);
-    booster_3->setEnabled(false);
-    close->setEnabled(false);
-    play->setEnabled(false);
+        
+        booster_1->setEnabled(false);
+        booster_2->setEnabled(false);
+        booster_3->setEnabled(false);
+        close->setEnabled(false);
+        play->setEnabled(false);
+    }
 }
 
 void MapMenuLayer::registerWithTouchDispatcher()

@@ -42,12 +42,26 @@ bool LeftDownMenuScene::init()
 	settingBlob->setPosition(ccp(settingBlob->getContentSize().width / 2.0f, settingBlob->getContentSize().height / 2.0f));
 	this->addChild(settingBlob, 10);
 
+#ifdef NEW_ART
+    CCSprite* settingSpriteNormal = CCSprite::create("updateArt/button.png");
+	CCSprite* settingSpriteSelected = CCSprite::create("updateArt/button.png");
+    settingSpriteSelected->setAnchorPoint(ccp(0.5f, 0.5f));
+    settingSpriteSelected->setColor(ccGRAY);
+    settingSpriteSelected->setScale(0.9f);
+    settingSpriteSelected->setPosition(ccp(settingSpriteSelected->getContentSize().width/20.0f, settingSpriteSelected->getContentSize().height/20.0f));
+    
+	setting = CCMenuItemSprite::create(settingSpriteNormal, settingSpriteSelected, this, menu_selector(LeftDownMenuScene::menuSettingCallback));
+	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.0f,
+                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.0f));
+#else
 	CCSprite* settingSpriteNormal = CCSprite::create("gameMap/setting.png");
 	CCSprite* settingSpriteSelected = CCSprite::create("gameMap/setting.png");
-	settingSpriteSelected->setScale(0.9f);
+    settingSpriteSelected->setScale(0.9f);
 	setting = CCMenuItemSprite::create(settingSpriteNormal, settingSpriteSelected, this, menu_selector(LeftDownMenuScene::menuSettingCallback));
-	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.5f,
-		-CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.5f));
+	setting->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width /2.0f + setting->getContentSize().width / 2.6f,
+                             -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.6f));
+    
+#endif
     
     CCSprite* inviteNormal = CCSprite::create("inviteFriends.png");
 	CCSprite* inviteSelected = CCSprite::create("inviteFriends.png");
