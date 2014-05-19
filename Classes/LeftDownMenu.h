@@ -69,6 +69,7 @@ private:
 	CCMenuItemSprite* ask;
 	CCMenuItemSprite* cogwheel;
     CCMenuItemSprite* invite;
+    CCMenuItemSprite* closeLeft;
 	
 	CCMenuItemSprite* tutorialClose;
 

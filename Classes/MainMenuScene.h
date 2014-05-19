@@ -98,6 +98,7 @@ public:
     void closeLoading();
     
     CCMenu* menu;
+    CCMenu* menuLeft;
 private:
     
 
@@ -114,6 +115,7 @@ private:
 	CCMenuItemSprite* ask;
 	CCMenuItemSprite* cogwheel;
     CCMenuItemSprite* invite;
+    CCMenuItemSprite* closeLeft;
     CCMenuItemSprite* moreGames;
 
 	CCMenuItemSprite* close;
@@ -150,8 +152,8 @@ private:
 	bool isSound;
 	bool isMusic;
 
-	CCSprite* soundClose;
-	CCSprite* musicClose;
+	CCNode* soundClose;
+	CCNode* musicClose;
     
     CCSprite* background;
     CCSprite* logo;

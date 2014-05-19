@@ -25,10 +25,8 @@ CCScene* MainMenuScene::scene()
 	{
 		scene = CCScene::create();
 		CC_BREAK_IF(! scene);
-
 		MainMenuScene *layer = MainMenuScene::create();
 		CC_BREAK_IF(! layer);
-
 		scene->addChild(layer);
 	} while (0);
 
@@ -157,9 +155,37 @@ bool MainMenuScene::init()
 	iceBlob->setAnchorPoint(ccp(0.0f, 0.0f));
 	this->addChild(iceBlob, 2);
 
+#ifdef NEW_ART
+    settingBlob = CCSprite::createWithSpriteFrameName("common/panel.png");
+	settingBlob->setPosition(ccp(WINSIZE.width / 2.0f, WINSIZE.height / 2.0f));
+    
+    CCSprite* settingBlobCogwheel = CCSprite::create("updateArt/button.png");
+    settingBlob->addChild(settingBlobCogwheel);
+    settingBlobCogwheel->setPosition(ccp(settingBlob->getContentSize().width/5.0f, settingBlob->getContentSize().height/10.0f*8.5f));
+    
+    CCLabelTTF* labelTTF = CCLabelTTF::create(CCLocalizedString("MENU", NULL), FONT_COMMON, FONT_SIZE_86);
+    labelTTF->setColor(IceCreamBrown2);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    settingBlob->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/2.0f, labelTTF->getParent()->getContentSize().height/10.0f*8.5f));
+    
+    if (LANDSCAPE)
+    {
+        if (IPHONE_4 || IPHONE_5)
+            settingBlob->setScale(0.63f);
+        else
+            settingBlob->setScale(0.75f);
+    }
+    else
+    {
+        settingBlob->setScale(1.0f);
+    }
+    
+#else
 	settingBlob = CCSprite::createWithSpriteFrameName("common/settingBlob.png");
 	settingBlob->setPosition(ccp(settingBlob->getContentSize().width / 2.0f, settingBlob->getContentSize().height / 2.0f));
-	this->addChild(settingBlob, 10);
+#endif
+	this->addChild(settingBlob, 100);
     
     CCSprite* playSpriteNormal = CCSprite::createWithSpriteFrameName("common/redButton.png");
 	CCSprite* playSpriteSelected = CCSprite::createWithSpriteFrameName("common/redButton.png");
@@ -235,6 +261,34 @@ bool MainMenuScene::init()
 
 #endif
 	   
+#ifdef NEW_ART
+    CCSprite *inviteButton = CCSprite::create("buttonSetting.png");
+    inviteButton->setCascadeOpacityEnabled(true);
+    
+    CCSprite *inviteButtonDown = CCSprite::create("buttonSetting.png");
+    inviteButtonDown->setColor(ccGRAY);
+    inviteButtonDown->setCascadeOpacityEnabled(true);
+    
+    CCSprite* mark = CCSprite::create("inviteFriends.png");
+    CCSprite* markDown = CCSprite::create("inviteFriends.png");
+    mark->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    inviteButton->addChild(mark);
+    inviteButtonDown->addChild(markDown);
+
+    
+	invite = CCMenuItemSprite::create(inviteButton, inviteButtonDown, this, menu_selector(MainMenuScene::inviteCallback));
+    if (LANDSCAPE)
+        invite->setPosition(settingBlob->getPositionX() - WINSIZE.width/2.0f, settingBlob->getPositionY()*settingBlob->getScale() - WINSIZE.height/2.0f + invite->getContentSize().height*2.5f*settingBlob->getScale());
+    else
+        invite->setPosition(settingBlob->getPositionX() - WINSIZE.width/2.0f, settingBlob->getPositionY()*settingBlob->getScale() - WINSIZE.height/2.0f + invite->getContentSize().height*1.2f*settingBlob->getScale());
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("INVITE_FRIENDS_BUTTON", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    invite->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.9f, labelTTF->getParent()->getContentSize().height/2.0f));
+#else
     CCSprite* inviteNormal = CCSprite::create("inviteFriends.png");
 	CCSprite* inviteSelected = CCSprite::create("inviteFriends.png");
     inviteSelected->setColor(ccGRAY);
@@ -244,6 +298,7 @@ bool MainMenuScene::init()
 	invite = CCMenuItemSprite::create(inviteNormal, inviteSelected, this, menu_selector(MainMenuScene::inviteCallback));
 	invite->setPosition(ccp(invite->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f - settingBlob->getContentSize().width / 20.0f,
                             -invite->getContentSize().height/1.3f - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height/0.99f));
+#endif
     
     CCSprite* moreGamesNormal = CCSprite::create("moreGames.png");
 	CCSprite* moreGamesSelected = CCSprite::create("moreGames.png");
@@ -255,6 +310,42 @@ bool MainMenuScene::init()
 	moreGames->setPosition(ccp(WINSIZE.width/2.0f - moreGames->getContentSize().width/1.5f, -WINSIZE.height/2.0f + moreGames->getContentSize().height/1.5f));
 
 
+#ifdef NEW_ART
+    CCSprite *soundButton = CCSprite::create("buttonSetting.png");
+    soundButton->setCascadeOpacityEnabled(true);
+    
+    CCSprite *soundButtonDown = CCSprite::create("buttonSetting.png");
+    soundButtonDown->setColor(ccGRAY);
+    soundButtonDown->setCascadeOpacityEnabled(true);
+    
+    mark = CCSprite::createWithSpriteFrameName("common/sound.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/sound_selected.png");
+    mark->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    soundButton->addChild(mark);
+    soundButtonDown->addChild(markDown);
+    
+    
+	sound = CCMenuItemSprite::create(soundButton, soundButtonDown, this, menu_selector(MainMenuScene::soundCallback));
+	sound->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale());
+    sound->setScale(settingBlob->getScale());
+
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SOUND", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    sound->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.9f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    soundClose = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_64);
+    sound->addChild(soundClose);
+	soundClose->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.26f, labelTTF->getParent()->getContentSize().height/2.0f));
+    if (isSound)
+		((CCLabelTTF*)soundClose)->setString(CCLocalizedString("ON", NULL));
+	else
+		((CCLabelTTF*)soundClose)->setString(CCLocalizedString("OFF", NULL));
+
+#else
 	CCSprite* soundNormal = CCSprite::createWithSpriteFrameName("common/sound.png");
 	CCSprite* soundSelected = CCSprite::createWithSpriteFrameName("common/sound_selected.png");
 	
@@ -270,7 +361,44 @@ bool MainMenuScene::init()
 		soundClose->setVisible(false);
 	else
 		soundClose->setVisible(true);
+#endif
 
+#ifdef NEW_ART
+    CCSprite *musicButton = CCSprite::create("buttonSetting.png");
+    musicButton->setCascadeOpacityEnabled(true);
+    
+    CCSprite *musicButtonDown = CCSprite::create("buttonSetting.png");
+    musicButtonDown->setColor(ccGRAY);
+    musicButtonDown->setCascadeOpacityEnabled(true);
+    
+    mark = CCSprite::createWithSpriteFrameName("common/musicButton.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/music_selected.png");
+    mark->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    musicButton->addChild(mark);
+    musicButtonDown->addChild(markDown);
+    
+    
+	music = CCMenuItemSprite::create(musicButton, musicButtonDown, this, menu_selector(MainMenuScene::musicCallback));
+	music->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale()*2.0f);
+    music->setScale(settingBlob->getScale());
+
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("MUSIC", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    music->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.9f, labelTTF->getParent()->getContentSize().height/2.0f));
+    
+    musicClose = CCLabelTTF::create(CCLocalizedString("ON", NULL), FONT_COMMON, FONT_SIZE_64);
+    music->addChild(musicClose);
+	musicClose->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.26f, labelTTF->getParent()->getContentSize().height/2.0f));
+    if (isMusic)
+		((CCLabelTTF*)musicClose)->setString(CCLocalizedString("ON", NULL));
+	else
+		((CCLabelTTF*)musicClose)->setString(CCLocalizedString("OFF", NULL));
+    
+#else
 	CCSprite* musicNormal = CCSprite::createWithSpriteFrameName("common/musicButton.png");
 	CCSprite* musicSelected = CCSprite::createWithSpriteFrameName("common/music_selected.png");
 	musicSelected->setScale(0.9f);
@@ -285,7 +413,35 @@ bool MainMenuScene::init()
 		musicClose->setVisible(false);
 	else
 		musicClose->setVisible(true);
+#endif
 
+#ifdef NEW_ART
+    CCSprite *askButton = CCSprite::create("buttonSetting.png");
+    askButton->setCascadeOpacityEnabled(true);
+    
+    CCSprite *askButtonDown = CCSprite::create("buttonSetting.png");
+    askButtonDown->setColor(ccGRAY);
+    askButtonDown->setCascadeOpacityEnabled(true);
+    
+    mark = CCSprite::createWithSpriteFrameName("common/ask.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/ask_selected.png");
+    mark->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    askButton->addChild(mark);
+    askButtonDown->addChild(markDown);
+    
+    
+	ask = CCMenuItemSprite::create(askButton, askButtonDown, this, menu_selector(MainMenuScene::helpCallback));
+	ask->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale()*3.0f);
+    ask->setScale(settingBlob->getScale());
+
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING_HOW_PLAY", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    ask->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.9f, labelTTF->getParent()->getContentSize().height/2.0f));
+#else
 	CCSprite* askNormal = CCSprite::createWithSpriteFrameName("common/ask.png");
 	CCSprite* askSelected = CCSprite::createWithSpriteFrameName("common/ask_selected.png");
 	askSelected->setScale(0.9f);
@@ -293,16 +449,59 @@ bool MainMenuScene::init()
 	ask = CCMenuItemSprite::create(askNormal, askSelected, this, menu_selector(MainMenuScene::helpCallback));
 	ask->setPosition(ccp(ask->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f + settingBlob->getContentSize().width / 1.7f,
 		-ask->getContentSize().height - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height / 1.6f));
+#endif
 
+#ifdef NEW_ART
+    CCSprite *cogwheelButton = CCSprite::create("buttonSetting.png");
+    cogwheelButton->setCascadeOpacityEnabled(true);
+    
+    CCSprite *cogwheelButtonDown = CCSprite::create("buttonSetting.png");
+    cogwheelButtonDown->setColor(ccGRAY);
+    cogwheelButtonDown->setCascadeOpacityEnabled(true);
+    
+    mark = CCSprite::createWithSpriteFrameName("common/cogwheel.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/cogwheel_selected.png");
+    mark->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    markDown->setPosition(ccp(inviteButton->getContentSize().width/7.0f, inviteButton->getContentSize().height/2.0f));
+    cogwheelButton->addChild(mark);
+    cogwheelButtonDown->addChild(markDown);
+    
+    
+	cogwheel = CCMenuItemSprite::create(cogwheelButton, cogwheelButtonDown, this, menu_selector(MainMenuScene::cogwheelCallback));
+	cogwheel->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale()*4.0f);
+    cogwheel->setScale(settingBlob->getScale());
+
+    
+    labelTTF = CCLabelTTF::create(CCLocalizedString("SETTING", NULL), FONT_COMMON, FONT_SIZE_64);
+    labelTTF->setColor(IceCreamBrown);
+    labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
+    cogwheel->addChild(labelTTF);
+    labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.9f, labelTTF->getParent()->getContentSize().height/2.0f));
+#else
 	CCSprite* cogwheelNormal = CCSprite::createWithSpriteFrameName("common/cogwheel.png");
 	CCSprite* cogwheelSelected = CCSprite::createWithSpriteFrameName("common/cogwheel_selected.png");
-	cogwheelSelected->setScale(0.9f);	
+	cogwheelSelected->setScale(0.9f);
 	cogwheelSelected->setPosition(ccp(cogwheelSelected->getContentSize().width/20.0f, cogwheelSelected->getContentSize().height/20.0f));
 	cogwheel = CCMenuItemSprite::create(cogwheelNormal, cogwheelSelected, this, menu_selector(MainMenuScene::cogwheelCallback));
 	cogwheel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + settingBlob->getContentSize().width - cogwheel->getContentSize().width/1.25f, 
 		cogwheel->getContentSize().height/2.0f - CCDirector::sharedDirector()->getWinSize().height/2.0f));
+#endif
+    
+#ifdef NEW_ART
+    closeLeft = CCMenuItemSprite::create(CCSprite::createWithSpriteFrameName("common/close.png"),
+                                         CCSprite::createWithSpriteFrameName("common/close_on.png"), this, menu_selector(MainMenuScene::menuSettingCallback));
+	closeLeft->setPosition(settingBlob->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + settingBlob->getContentSize().width*settingBlob->getScale() /2.5f,
+                       settingBlob->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height*settingBlob->getScale() /2.3f);
+    closeLeft->setVisible(false);
+    closeLeft->setScale(settingBlob->getScale());
 
-	settingBlob->setPosition(ccp(-settingBlob->getContentSize().width / 2.0f, -settingBlob->getContentSize().height / 2.0f));
+#endif
+
+#ifdef NEW_ART
+	settingBlob->setPosition(ccp(settingBlob->getPositionX(), settingBlob->getPositionY() - WINSIZE.height));
+#else
+    settingBlob->setPosition(ccp(-settingBlob->getContentSize().width / 2.0f, -settingBlob->getContentSize().height / 2.0f));
+#endif
 
 	sound->setVisible(false);
 	music->setVisible(false);
@@ -321,8 +520,11 @@ bool MainMenuScene::init()
 	heapIce->setPosition(ccp(heapIce->getContentSize().width/2.0f, heapIce->getContentSize().height/2.0f));
 	this->addChild(heapIce,1);
 
-	menu = CCMenu::create(play, facebook, gameCenter, setting, sound, music, ask, cogwheel, invite, moreGames, NULL);
+	menu = CCMenu::create(play, facebook, gameCenter, moreGames, NULL);
+    menuLeft = CCMenu::create(setting, sound, music, ask, cogwheel, invite, closeLeft, NULL);
 	this->addChild(menu, 10);
+    this->addChild(menuLeft, 101);
+
 
 	popup = CCSprite::createWithSpriteFrameName("common/panel.png");
 
@@ -376,8 +578,8 @@ bool MainMenuScene::init()
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.9f, labelTTF->getParent()->getContentSize().height/2.0f));
     
     
-    CCSprite *mark = CCSprite::createWithSpriteFrameName("common/markInfo.png");
-    CCSprite *markDown = CCSprite::createWithSpriteFrameName("common/markInfo.png");
+    mark = CCSprite::createWithSpriteFrameName("common/markInfo.png");
+    markDown = CCSprite::createWithSpriteFrameName("common/markInfo.png");
     mark->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
     markDown->setPosition(ccp(buttonFaceConnect->getContentSize().width/7.0f, buttonFaceConnect->getContentSize().height/2.0f));
     
@@ -659,6 +861,20 @@ void MainMenuScene::inviteCallback(CCObject* pSender)
     
 	if (isSetting)
 	{
+#ifdef NEW_ART
+        settingBlob->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -WINSIZE.height))));
+		isSetting = false;
+		sound->setVisible(false);
+		music->setVisible(false);
+		ask->setVisible(false);
+		cogwheel->setVisible(false);
+        closeLeft->setVisible(false);
+        invite->setVisible(false);
+        isLock = true;
+        settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::settingFinished))));
+        setting->setVisible(true);
+        setting->setEnabled(false);
+#else
 		settingBlob->runAction(CCMoveBy::create(0.3f, ccp(-settingBlob->getContentSize().width, -settingBlob->getContentSize().height)));
 		isSetting = false;
 		sound->setVisible(false);
@@ -668,6 +884,7 @@ void MainMenuScene::inviteCallback(CCObject* pSender)
         invite->setVisible(false);
         isLock = true;
         settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::settingFinished))));
+#endif
 	}
     
     menu->setEnabled(false);
@@ -695,9 +912,11 @@ void MainMenuScene::changeOrientation()
 
     this->setContentSize(WINSIZE);
     menu->setContentSize(WINSIZE);
+    menuLeft->setContentSize(WINSIZE);
     
     social->changeOrientation();
     menu->setPosition(WINSIZE.width/2.0f, WINSIZE.height/2.0f);
+    menuLeft->setPosition(WINSIZE.width/2.0f, WINSIZE.height/2.0f);
     tutorialMenu->setContentSize(WINSIZE);
     tutorialMenu->setPosition(WINSIZE.width/2.0f, WINSIZE.height/2.0f);
     popupMenu->setContentSize(WINSIZE);
@@ -718,7 +937,9 @@ void MainMenuScene::changeOrientation()
     
     logo->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width / 1.9f, CCDirector::sharedDirector()->getWinSize().height / 1.4f));
     
+#ifndef NEW_ART
     settingBlob->setPosition(ccp(settingBlob->getContentSize().width / 2.0f, settingBlob->getContentSize().height / 2.0f));
+#endif
     
 	play->setPosition(ccp(0.0f, CCDirector::sharedDirector()->getWinSize().height / 1.4f - CCDirector::sharedDirector()->getWinSize().height/2.0f - logo->getContentSize().height/2.0f));
     
@@ -735,7 +956,8 @@ void MainMenuScene::changeOrientation()
                              -CCDirector::sharedDirector()->getWinSize().height /2.0f + setting->getContentSize().height / 2.6f));
     
 #endif
-    
+
+#ifndef NEW_ART
 	invite->setPosition(ccp(invite->getContentSize().width/1.3f - CCDirector::sharedDirector()->getWinSize().width/2.0f - settingBlob->getContentSize().width / 20.0f,
                             -invite->getContentSize().height/1.3f - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height/0.99f));
 
@@ -750,6 +972,7 @@ void MainMenuScene::changeOrientation()
     
 	cogwheel->setPosition(ccp(-CCDirector::sharedDirector()->getWinSize().width/2.0f + settingBlob->getContentSize().width - cogwheel->getContentSize().width/1.25f,
                               cogwheel->getContentSize().height/2.0f - CCDirector::sharedDirector()->getWinSize().height/2.0f));
+#endif
     
     moreGames->setPosition(ccp(WINSIZE.width/2.0f - moreGames->getContentSize().width/1.5f, -WINSIZE.height/2.0f + moreGames->getContentSize().height/1.5f));
     
@@ -928,6 +1151,44 @@ void MainMenuScene::changeOrientation()
         spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
         this->addChild(spriteLoading, 1000);
     }
+    
+
+#ifdef NEW_ART
+    if (LANDSCAPE)
+    {
+        if (IPHONE_4 || IPHONE_5)
+            settingBlob->setScale(0.63f);
+        else
+            settingBlob->setScale(0.75f);
+    }
+    else
+    {
+        settingBlob->setScale(1.0f);
+    }
+    settingBlob->setPosition(ccp(WINSIZE.width / 2.0f, WINSIZE.height / 2.0f));
+    
+    if (LANDSCAPE)
+        invite->setPosition(settingBlob->getPositionX() - WINSIZE.width/2.0f, settingBlob->getPositionY()*settingBlob->getScale() - WINSIZE.height/2.0f + invite->getContentSize().height*2.5f*settingBlob->getScale());
+    else
+        invite->setPosition(settingBlob->getPositionX() - WINSIZE.width/2.0f, settingBlob->getPositionY()*settingBlob->getScale() - WINSIZE.height/2.0f + invite->getContentSize().height*1.2f*settingBlob->getScale());
+    
+    closeLeft->setPosition(settingBlob->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + settingBlob->getContentSize().width*settingBlob->getScale() /2.5f,
+                           settingBlob->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + settingBlob->getContentSize().height*settingBlob->getScale() /2.3f);
+    cogwheel->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale()*4.0f);
+    ask->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale()*3.0f);
+    music->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale()*2.0f);
+    sound->setPosition(invite->getPositionX(), invite->getPositionY() - invite->getContentSize().height*settingBlob->getScale());
+    
+    closeLeft->setScale(settingBlob->getScale());
+    cogwheel->setScale(settingBlob->getScale());
+    ask->setScale(settingBlob->getScale());
+    music->setScale(settingBlob->getScale());
+    sound->setScale(settingBlob->getScale());
+    invite->setScale(settingBlob->getScale());
+
+    if (!ask->isVisible())
+        settingBlob->setPosition(ccp(settingBlob->getPositionX(), settingBlob->getPositionY() - WINSIZE.height));
+#endif
     
     return;
 }
@@ -1237,6 +1498,8 @@ void MainMenuScene::closeTutorialCallback(CCObject* pSender)
 	tutorialMenu->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -tutorialPopup->getContentSize().height))));
 	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(POPUP_SHOW_TIME), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::tutorialFinished))));
 	menu->setEnabled(true);
+    menuLeft->setEnabled(true);
+    setting->setVisible(true);
 }
 
 void MainMenuScene::nextCallback(CCObject* pSender)
@@ -1555,6 +1818,7 @@ void MainMenuScene::addBonus(CCNode* pSender)
         return;
     }
     
+    setting->setEnabled(true);
     if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
     {
         FacebookPtr->inviteFriends();
@@ -1585,6 +1849,7 @@ void MainMenuScene::unclockMenu(CCNode* pSender)
     menu->setEnabled(true);
     popupMenu->setEnabled(true);
     tutorialMenu->setEnabled(true);
+    setting->setEnabled(true);
 }
 
 void MainMenuScene::facebookPopupConncetion(CCObject* pSender)
@@ -1732,6 +1997,8 @@ void MainMenuScene::closeFinished(CCNode* sender)
  	popup->setVisible(false);
 	popupMenu->setVisible(false);
 	menu->setEnabled(true);
+    menuLeft->setEnabled(true);
+    setting->setVisible(true);
 }
 
 void MainMenuScene::closeSettingCallback(CCObject* pSender)
@@ -1900,19 +2167,27 @@ void MainMenuScene::settingFinished(CCNode* sender)
     {
         sound->setVisible(true);
         sound->setScale(0.1f);
-        sound->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)));
+        sound->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, settingBlob->getScale())));
+
         music->setVisible(true);
         music->setScale(0.1f);
-        music->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)));
+        music->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, settingBlob->getScale())));
+
         ask->setVisible(true);
         ask->setScale(0.1f);
-        ask->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)));
+        ask->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, settingBlob->getScale())));
+
         cogwheel->setVisible(true);
         cogwheel->setScale(0.1f);
-        cogwheel->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)));
+        cogwheel->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, settingBlob->getScale())));
+
+        closeLeft->setVisible(true);
+        closeLeft->setScale(0.1f);
+        closeLeft->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, settingBlob->getScale())));
+
         invite->setVisible(true);
         invite->setScale(0.1f);
-        invite->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, 1.0f)));
+        invite->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, settingBlob->getScale())));
     
     }
     isLock = false;
@@ -1920,6 +2195,39 @@ void MainMenuScene::settingFinished(CCNode* sender)
 
 void MainMenuScene::menuSettingCallback(CCObject* pSender)
 {
+#ifdef NEW_ART
+    if (isLock)
+        return;
+    
+    SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
+    
+    lock();
+    
+	if (isSetting)
+	{
+        settingBlob->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -WINSIZE.height))));
+		isSetting = false;
+		sound->setVisible(false);
+		music->setVisible(false);
+		ask->setVisible(false);
+		cogwheel->setVisible(false);
+        closeLeft->setVisible(false);
+        invite->setVisible(false);
+        menu->setEnabled(true);
+        isLock = true;
+        settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::settingFinished))));
+        setting->setVisible(true);
+	}
+	else
+	{
+		settingBlob->runAction(CCEaseBackOut::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, WINSIZE.height))));
+		isSetting = true;
+		settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::settingFinished))));
+        setting->setVisible(false);
+        menu->setEnabled(false);
+        isLock = true;
+	}
+#else
     if (isLock)
         return;
     
@@ -1942,10 +2250,11 @@ void MainMenuScene::menuSettingCallback(CCObject* pSender)
 	else
 	{
 		settingBlob->runAction(CCMoveBy::create(0.3f, ccp(settingBlob->getContentSize().width, settingBlob->getContentSize().height)));
-		isSetting = true;		
+		isSetting = true;
 		settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::settingFinished))));
         isLock = true;
 	}
+#endif
 }
 
 void MainMenuScene::soundCallback(CCObject* pSender)
@@ -1963,10 +2272,18 @@ void MainMenuScene::soundCallback(CCObject* pSender)
 	}
 	OptionsPtr->setUseSounds(isSound);
 	OptionsPtr->save();
+    
+#ifdef NEW_ART
+    if (isSound)
+		((CCLabelTTF*)soundClose)->setString(CCLocalizedString("ON", NULL));
+	else
+		((CCLabelTTF*)soundClose)->setString(CCLocalizedString("OFF", NULL));
+#else
 	if (isSound)
 		soundClose->setVisible(false);
 	else
 		soundClose->setVisible(true);
+#endif
 }
 
 void MainMenuScene::musicCallback(CCObject* pSender)
@@ -1984,10 +2301,18 @@ void MainMenuScene::musicCallback(CCObject* pSender)
 	}
 	OptionsPtr->setUseMusic(isMusic);
 	OptionsPtr->save();
+    
+#ifdef NEW_ART
+    if (isMusic)
+		((CCLabelTTF*)musicClose)->setString(CCLocalizedString("ON", NULL));
+	else
+		((CCLabelTTF*)musicClose)->setString(CCLocalizedString("OFF", NULL));
+#else
 	if (isMusic)
 		musicClose->setVisible(false);
 	else
 		musicClose->setVisible(true);
+#endif
 }
 
 void MainMenuScene::helpCallback(CCObject* pSender)
@@ -2030,6 +2355,7 @@ void MainMenuScene::helpCallback(CCObject* pSender)
 
 	menuSettingCallback(NULL);
 	menu->setEnabled(false);
+    setting->setVisible(false);
 }
 
 void MainMenuScene::cogwheelCallback(CCObject* pSender)
@@ -2042,6 +2368,7 @@ void MainMenuScene::cogwheelCallback(CCObject* pSender)
     close->setSelectedImage(CCSprite::createWithSpriteFrameName("common/close_on.png"));
     settingState = Setting;
 	menu->setEnabled(false);
+    menuLeft->setEnabled(false);
 	popup->setVisible(true);
 	popupMenu->setVisible(true);
 	
@@ -2054,6 +2381,7 @@ void MainMenuScene::cogwheelCallback(CCObject* pSender)
 
 	settingState = Setting;
 	menuSettingCallback(NULL);
+    setting->setVisible(false);
 }
 
 void MainMenuScene::lock()
@@ -2080,6 +2408,7 @@ void MainMenuScene::registerWithTouchDispatcher()
 
 void MainMenuScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
+#ifndef NEW_ART
     if (isLock)
         return;
     
@@ -2095,5 +2424,6 @@ void MainMenuScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
         isLock = true;
         settingBlob->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::settingFinished))));
 	}
+#endif
 }
 
