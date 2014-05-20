@@ -790,6 +790,16 @@ void MapMenuLayer::closeMessageboard()
 {
     lock = false;
     isPopup = false;
+    
+    bool isNotAccept = false;
+    for (int i = 0; i < FacebookPtr->messages.size(); i++)
+    {
+        if (!FacebookPtr->messages[i].accept)
+            isNotAccept = true;
+    }
+    
+    if (!isNotAccept)
+        chatPanel->setVisible(false);
 }
 
 void MapMenuLayer::hideLive()
@@ -923,6 +933,8 @@ void MapMenuLayer::changeOrientation()
     }
     
     stageSprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+    lastStageSprite->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+
     if (bannerMenu)
     {
         bannerButton->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, CCDirector::sharedDirector()->getWinSize().height/2.0f));
@@ -939,6 +951,9 @@ void MapMenuLayer::changeOrientation()
     
     if (!stageSprite->isVisible())
         stageSprite->setPosition(ccp(stageSprite->getPositionX(), stageSprite->getPositionY() - WINSIZE.height));
+    if (!lastStageSprite->isVisible())
+        lastStageSprite->setPosition(ccp(lastStageSprite->getPositionX(), lastStageSprite->getPositionY() - WINSIZE.height));
+
     
     if (spriteLoading)
     {

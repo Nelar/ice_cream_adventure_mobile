@@ -713,6 +713,7 @@ void LeftDownMenuScene::closeTutorialCallback(CCObject* pSender)
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     isTutorial = false;
     islock = false;
+    isOpen = false;
 	tutorialPopup->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -tutorialPopup->getContentSize().height))));
 	tutorialMenu->runAction(CCEaseBackIn::create(CCMoveBy::create(POPUP_SHOW_TIME, ccp(0.0f, -tutorialPopup->getContentSize().height))));
 	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f), CCCallFuncN::create(this, callfuncN_selector(LeftDownMenuScene::tutorialFinished))));

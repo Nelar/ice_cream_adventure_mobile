@@ -1284,12 +1284,6 @@ void GameMapLayer::registerWithTouchDispatcher()
 
 void GameMapLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
-    if (!menu->isPopup)
-    {
-        if (leftDownMenu->isLock() && !leftDownMenu->buttonIsSelected())
-            leftDownMenu->menuSettingCallback(NULL);
-    }
-    menu->ccTouchesBegan(NULL, NULL);
 }
 
 void GameMapLayer::superLevelCallback(CCObject* pSender)

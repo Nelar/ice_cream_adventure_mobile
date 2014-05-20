@@ -54,7 +54,9 @@ sGameObject::sGameObject(eTypeGameObject nType, eColorGameObject nColor, int nX,
 		sprite = CCSprite::createWithSpriteFrameName("game/shadow/red.png");
 		break;
 	case Yellow:
-		sprite = CCSprite::createWithSpriteFrameName("game/shadow/yellow.png");
+//		sprite = CCSprite::createWithSpriteFrameName("game/shadow/yellow.png");
+        sprite = CCSprite::create("updateArt/yellow.png");
+
 		break;
 	}
 
@@ -102,7 +104,9 @@ void sGameObject::changeColor(eColorGameObject nColor)
 		sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/red.png")->displayFrame());
 		break;
 	case Yellow:
-		sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
+		//sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
+        sprite->setDisplayFrame(CCSprite::create("updateArt/yellow.png")->displayFrame());
+
 		break;
     case Colorurless:
         sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
@@ -139,7 +143,8 @@ void sGameObject::changeColorCancelled(CCNode* sender)
             sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/red.png")->displayFrame());
             break;
         case Yellow:
-            sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
+//            sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
+            sprite->setDisplayFrame(CCSprite::create("updateArt/yellow.png")->displayFrame());
             break;
 	}
 }
@@ -923,7 +928,8 @@ void sGameObject::setNext(CCObject* sender)
             sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/red.png")->displayFrame());
             break;
         case Yellow:
-            sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
+            //sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
+            sprite->setDisplayFrame(CCSprite::create("updateArt/yellow.png")->displayFrame());
             break;
     }
     

@@ -2091,7 +2091,7 @@ void MainMenuScene::menuFacebookCallback(CCObject* pSender)
     FacebookPtr->login();
     
     popupLayer->loading((char*)CCLocalizedString("CONNECTION", NULL));
-    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME/3.0f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeLoading))));
+    this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(CONNECTION_TIME/7.0f), CCCallFuncN::create(this, callfuncN_selector(MainMenuScene::closeLoading))));
     play->setEnabled(false);
     moreGames->setEnabled(false);
     menu->setEnabled(false);
@@ -2142,10 +2142,8 @@ void MainMenuScene::menuPlayCallback(CCObject* pSender)
     this->addChild(labelLoad, 1001);
     spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     this->addChild(spriteLoading, 1000);
-    spriteLoading->setOpacity(0);
-    spriteLoading->runAction(CCFadeIn::create(0.3f));
-    labelLoad->setOpacity(0);
-    labelLoad->runAction(CCFadeIn::create(0.3f));
+    spriteLoading->setOpacity(255);
+    labelLoad->setOpacity(255);
     
     if (getNetworkStatus() && FacebookPtr->sessionIsOpened() && OptionsPtr->isFacebookConnection())
     {

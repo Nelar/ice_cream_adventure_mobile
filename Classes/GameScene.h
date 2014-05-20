@@ -389,6 +389,8 @@ private:
     bool isBeginBanner = false;
     
     CCAction* beginBannerAction = NULL;
+    
+    bool isRunChangeOrient = true;
 };
 
 #endif

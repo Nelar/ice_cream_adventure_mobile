@@ -59,8 +59,16 @@ void SocialLayer::changeOrientation()
     }
     if (messageboard)
     {
-        messageboardDelete(NULL);
-        showMessageboard();
+        if (messageAsk)
+        {
+            messageboardDelete(NULL);
+            showAskMessageboard();
+        }
+        else
+        {
+            messageboardDelete(NULL);
+            showMessageboard();
+        }
     }
     return;
 }
@@ -516,7 +524,7 @@ CCNode* SocialLayer::createMessageboardForAsk()
     
     layer->setContentSize(CCSize(background->getContentSize().width, background->getContentSize().height));
     background->setAnchorPoint(ccp(0.0f, 0.0f));
-    greyBack->setPosition(ccp(layer->getContentSize().width/2.0f-10.0f, layer->getContentSize().height/2.0f));
+    greyBack->setPosition(ccp(layer->getContentSize().width/2.0f-5.0f, layer->getContentSize().height/2.0f));
     
     layer->setAnchorPoint(ccp(0.5f, 0.5f));
     
@@ -548,7 +556,7 @@ CCNode* SocialLayer::createMessageboardForAsk()
     
     checkAll = CCMenuItemSprite::create(spriteNormal, spriteSelected, this, menu_selector(SocialLayer::checkCallback));
     
-    labelTTF = CCLabelTTF::create(CCLocalizedString("CHECK_ALL", NULL), FONT_COMMON, FONT_SIZE_32);
+    labelTTF = CCLabelTTF::create(CCLocalizedString("CHECK_ALL", NULL), FONT_COMMON, FONT_SIZE_48);
     labelTTF->setColor(ccWHITE);
     labelTTF->enableShadow(CCSize(5, -5), 255, 8.0f);
     checkAll->addChild(labelTTF);
@@ -594,6 +602,8 @@ CCNode* SocialLayer::createMessageboardForAsk()
     countMessage = 0;
     messagesGreen.clear();
     
+    CCSprite* back = CCSprite::create("message/message.png");
+    
     for (int i = 0; i < FacebookPtr->friendsScores.size(); i++)
     {
         Leaderboard request = FacebookPtr->friendsScores[i];
@@ -603,8 +613,15 @@ CCNode* SocialLayer::createMessageboardForAsk()
         countMessage++;
     }
     
-    scrollMessage->setContentOffset(ccp(0.0f, container->getContentSize().height));
+    float containerHeight = 270*multiplier * countMessage;
+    
     scrollMessage->setContainer(container);
+    
+    scrollMessage->setContentOffset(ccp(5.0f, -(containerHeight - greyBack->getContentSize().height)));
+    
+    if (IPHONE_4 || IPHONE_5)
+        layer->setScale(0.87f);
+    
     return layer;
 }
 
@@ -672,7 +689,7 @@ CCNode* SocialLayer::createMessageboard()
     
     layer->setContentSize(CCSize(background->getContentSize().width, background->getContentSize().height));
     background->setAnchorPoint(ccp(0.0f, 0.0f));
-    greyBack->setPosition(ccp(layer->getContentSize().width/2.0f-10.0f, layer->getContentSize().height/2.0f));
+    greyBack->setPosition(ccp(layer->getContentSize().width/2.0f-5.0f, layer->getContentSize().height/2.0f));
     
     layer->setAnchorPoint(ccp(0.5f, 0.5f));
     
@@ -749,6 +766,9 @@ CCNode* SocialLayer::createMessageboard()
     container->setContentSize(ccp(greyBack->getContentSize().width, 270*multiplier*countMessage));
     countMessage = 0;
     messagesGreen.clear();
+
+    CCSprite* back = CCSprite::create("message/message.png");
+    
     for (int i = 0; i < FacebookPtr->messages.size(); i++)
     {
         if (!FacebookPtr->messages[i].accept)
@@ -761,9 +781,11 @@ CCNode* SocialLayer::createMessageboard()
         }
     }
     
-    scrollMessage->setContentOffset(ccp(0.0f, container->getContentSize().height));
-
+    float containerHeight = 270*multiplier * countMessage;
+    
     scrollMessage->setContainer(container);
+    
+    scrollMessage->setContentOffset(ccp(5.0f, -(containerHeight - greyBack->getContentSize().height)));
     
     if (IPHONE_4 || IPHONE_5)
         layer->setScale(0.87f);
@@ -991,6 +1013,10 @@ void SocialLayer::acceptCallback(CCObject* pSender)
                     if (OptionsPtr->getLifeCount() < 5) {
                         OptionsPtr->setLifeCount(OptionsPtr->getLifeCount() + 1);
                     }
+                    else
+                    {
+                        FacebookPtr->messages[sender->getTag()].accept = false;
+                    }
                 }
                 else if (FacebookPtr->messages[sender->getTag()].notif == HELP_ME_BOOSTER)
                 {
@@ -1051,7 +1077,7 @@ void SocialLayer::facebookCallback(CCObject* pSender)
 
 void SocialLayer::sendLifeCallback(CCObject* pSender)
 {
-    ((CCNode*)pSender)->setScale(multiplier);
+//    ((CCNode*)pSender)->setScale(multiplier);
     SimpleAudioEngine::sharedEngine()->playEffect("sound/pop_1.mp3");
     CCMenuItemSprite* sendLife = (CCMenuItemSprite*) pSender;
     CCSprite* ok = CCSprite::create("okSend.png");

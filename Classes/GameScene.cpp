@@ -645,8 +645,9 @@ bool GameScene::init(int levNum)
 	fieldLayer->runAction(CCSequence::create(CCDelayTime::create(1.5f),
 		CCEaseOut::create(CCMoveBy::create(0.5f, ccp(-CCDirector::sharedDirector()->getWinSize().width, fieldLayer->getPositionY())), 2.5f),
         NULL));
-    //this->runAction(CCSequence::create(CCDelayTime::create(2.5f),
-    //                                   CCCallFuncN::create(this, callfuncN_selector(GameScene::fieldMoveFinished)), NULL));
+    
+    this->runAction(CCSequence::create(CCDelayTime::create(1.5f),
+                                       CCCallFuncN::create(this, callfuncN_selector(GameScene::fieldMoveFinished)), NULL));
 	
     
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::addingBacground))));
@@ -785,7 +786,8 @@ void GameScene::changeOrientation(void)
     
     for (int i = 0; i < gameObjects.size(); i++)
     {
-        gameObjects[i]->sprite->stopAllActions();
+        if (!isRunChangeOrient)
+            gameObjects[i]->sprite->stopAllActions();
         gameObjects[i]->sprite->setPosition(ccp(gameObjects[i]->y*CELL_WIDTH + xZero, yZero - gameObjects[i]->x*CELL_HEIGHT));
         gameObjects[i]->xZero = xZero;
         gameObjects[i]->yZero = yZero;
@@ -2220,7 +2222,7 @@ void GameScene::timeUpdate(CCNode* sender)
 
 void GameScene::fieldMoveFinished(CCNode* sender)
 {
-    
+    isRunChangeOrient = false;
 }
 
 void GameScene::addingBacground(CCNode* sender)
@@ -6292,7 +6294,19 @@ void GameScene::update(float delta)
             if (!findMatch())
             {
                 if (countReinitField)
-                    this->runAction(CCCallFuncN::create(this, callfuncN_selector(GameScene::lose)));
+                {
+                    if (gameType != Time || gameType != Score)
+                    {
+                        if (menu->getCurrentScore() >= menu->getTargetScore())
+                            this->runAction(CCCallFuncN::create(this, callfuncN_selector(GameScene::win)));
+                        else
+                            this->runAction(CCCallFuncN::create(this, callfuncN_selector(GameScene::lose)));
+                    }
+                    else
+                    {
+                        this->runAction(CCCallFuncN::create(this, callfuncN_selector(GameScene::lose)));
+                    }
+                }
                 
                 reInitField();
                 countReinitField = true;
@@ -7282,12 +7296,6 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 
     if (menu->isLock())
 		return;
-    
-    if (leftDownMenu->isLock())
-    {
-        leftDownMenu->menuSettingCallback(NULL);
-        return;
-    }
 
 	if (lock)
 		return;

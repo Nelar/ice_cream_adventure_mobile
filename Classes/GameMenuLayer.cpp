@@ -128,18 +128,22 @@ bool GameMenuLayer::init(eLevelType ntype)
         upPanel->setPosition(ccp(0.0f,
                                  WINSIZE.height));
         upPanel->setAnchorPoint(ccp(0.0f, 1.0f));
-        
+
+#ifdef NEW_ART
+        downPanel = CCSprite::create("updateArt/gor_panel.png");
+#else
         downPanel = CCSprite::createWithSpriteFrameName("game/gor_panel.png");
+#endif
         downPanel->setPosition(ccp(downPanel->getContentSize().width/2.0f,
                                    WINSIZE.height/2.5f));
         
-        startPolosa_1->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/20.0f));
+        startPolosa_1->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/19.2f));
         startPolosa_1->setRotation(-90.0f);
         
-        startPolosa_2->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/20.0f));
+        startPolosa_2->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/19.2f));
         startPolosa_2->setRotation(-90.0f);
         
-        startPolosa_3->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/1.15f));
+        startPolosa_3->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/1.1f));
         startPolosa_3->setRotation(-90.0f);
     }
     else
@@ -656,21 +660,23 @@ void GameMenuLayer::changeOrientation(void)
         upPanel->setPosition(ccp(0.0f,
                                  WINSIZE.height));
         upPanel->setAnchorPoint(ccp(0.0f, 1.0f));
-        
+
+#ifdef NEW_ART
+        downPanel->setDisplayFrame(CCSprite::create("updateArt/gor_panel.png")->displayFrame());
+#else
         downPanel->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("game/gor_panel.png"));
+#endif
         downPanel->setPosition(ccp(downPanel->getContentSize().width/2.0f,
                                    WINSIZE.height/2.5f));
         
-        startPolosa_1->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/3.2f));
+        startPolosa_1->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/19.2f));
         startPolosa_1->setRotation(-90.0f);
         
-        startPolosa_2->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/1.65f));
+        startPolosa_2->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/19.2f));
         startPolosa_2->setRotation(-90.0f);
         
-        startPolosa_3->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/1.15f));
-        startPolosa_3->setRotation(-90.0f);
-        
-        
+        startPolosa_3->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.4f, downPanel->getContentSize().height/1.1f));
+        startPolosa_3->setRotation(-90.0f);                
     }
     else
     {
@@ -1426,7 +1432,7 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
     if (LANDSCAPE)
     {
         progressBar->setRotation(-90.0f);
-        progressBar->setPosition(ccp(downPanel->getContentSize().width/8.0f*6.975f , downPanel->getContentSize().height/26.0f));
+        progressBar->setPosition(ccp(downPanel->getContentSize().width/8.0f*7.05f , downPanel->getContentSize().height/14.2f));
     }
     else
     {
