@@ -249,6 +249,10 @@ static bool configureCURL(CURL *handle)
     if (code != CURLE_OK) {
         return false;
     }
+	code = curl_easy_setopt(handle, CURLOPT_NOSIGNAL, 1L);
+	if (code != CURLE_OK) {
+		return false;
+	}
     curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 0L);
 
