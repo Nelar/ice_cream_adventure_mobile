@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../Classes/cFacebook.cpp"
-            timestampString = "422287564.401106"
+            filePath = "../Classes/GameMapLayer.cpp"
+            timestampString = "422374244.465809"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "cFacebook::login()"
+            startingLineNumber = "1478"
+            endingLineNumber = "1478"
+            landmarkName = "GameMapLayer::addBonus(CCNode* pSender)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,29 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../Classes/cFacebook.cpp"
-            timestampString = "422287567.326617"
+            filePath = "../Classes/GameMapLayer.cpp"
+            timestampString = "422374245.994854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "cFacebook::login()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Classes/cFacebook.cpp"
-            timestampString = "422287574.97887"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "cFacebook::login()"
+            startingLineNumber = "1471"
+            endingLineNumber = "1471"
+            landmarkName = "GameMapLayer::unclockMenu(CCNode* pSender)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

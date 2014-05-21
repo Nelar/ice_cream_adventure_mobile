@@ -456,13 +456,16 @@ CCNode* SocialLayer::createScoreLayer(int level)
     }
 
     
-    for (int i = 0; i < FacebookPtr->friendsScores.size(); i++)
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus() && OptionsPtr->isFacebookConnection())
     {
-        ScoreboardCell user;
-        user.name = FacebookPtr->friendsScores[i].name;
-        user.uid = FacebookPtr->friendsScores[i].uid;
-        user.score = FacebookPtr->friendsScores[i].scores[level];
-        users.push_back(user);
+        for (int i = 0; i < FacebookPtr->friendsScores.size(); i++)
+        {
+            ScoreboardCell user;
+            user.name = FacebookPtr->friendsScores[i].name;
+            user.uid = FacebookPtr->friendsScores[i].uid;
+            user.score = FacebookPtr->friendsScores[i].scores[level];
+            users.push_back(user);
+        }
     }
     
     std::sort(users.begin(), users.end(), ScoreboardCell::comp);

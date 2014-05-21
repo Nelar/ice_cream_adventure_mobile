@@ -636,6 +636,35 @@ void GameMenuLayer::createSnow()
     }
 }
 
+void GameMenuLayer::addBonus(CCNode* pSender)
+{
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    {
+        FacebookPtr->inviteFriends();
+    }
+    else
+    {
+        FacebookPtr->loginWithInvite();
+    }
+}
+
+void GameMenuLayer::inviteFriend()
+{
+    popupBooster->popupPost((char*)CCLocalizedString("INVITE_FRIENDS_TITLE", NULL), (char*)CCLocalizedString("INVITE_FRIENDS_TEXT", NULL), (char*)CCLocalizedString("INVITE_FRIENDS_BUTTON", NULL), GreenPopup, BombPopBoot,
+                          this, callfuncN_selector(GameMenuLayer::addBonus), this, callfuncN_selector(GameMenuLayer::unlockLeftMenu));
+}
+
+void GameMenuLayer::unlockLeftMenu(CCNode* pSender)
+{
+    ((GameScene*)getParent())->unlockInvite();
+}
+
 void GameMenuLayer::changeOrientation(void)
 {
     popupBooster->changeOrientation();

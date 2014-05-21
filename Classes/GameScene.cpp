@@ -5806,14 +5806,42 @@ void GameScene::refillPortals(CCNode* sender)
                         
 						gameObjects[findGameObject(i, j)]->sprite->
                         runAction(CCSequence::create(CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*countShift)), accel), CCCallFuncN::create(this, callfuncN_selector(GameScene::deletingTeleportingObject)), NULL));
+                        
+                        int currlevel = menu->getCurrentLevel();
 
-                        if (LANDSCAPE)
+                        if (IPHONE_5 || IPHONE_4)
                         {
-                            gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT)));
+                            if (LANDSCAPE)
+                            {
+                                gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT)));
+                            }
+                            else
+                            {
+                                if (currlevel == 77)
+                                    gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/4.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                                if (currlevel == 83)
+                                    gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/1.2f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                                else
+                                    gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                            }
+
                         }
                         else
                         {
-                            gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                            if (LANDSCAPE)
+                            {
+                                gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT)));
+                            }
+                            else
+                            {
+                                if (currlevel == 77)
+                                    gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/4.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                                if (currlevel == 83)
+                                    gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                                else
+                                    gameObjects[findGameObject(i, j)]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[portals[portalEnter].x][ j]->getPositionY() - CELL_HEIGHT/2.0f)));
+                            }
+
                         }
                         newCreateObjects.push_back(gameObjects[findGameObject(i, j)]);
                         
@@ -5831,7 +5859,10 @@ void GameScene::refillPortals(CCNode* sender)
                             }
                             else
                             {
-                                gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT));
+                                if (currlevel == 77)
+                                    gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT/2.5f));
+                                else
+                                    gameObj->node->setClippingRegion(CCRect(0.0f, 0.0f, WINSIZE.width, gameFieldSprites[portals[k].x][portals[k].y]->getPositionY() + CELL_HEIGHT));
                             }
                         }
                         else
@@ -6855,8 +6886,21 @@ void GameScene::afterGetScores()
     endGameMenu->afterGetScores();
 }
 
+void GameScene::unlockInvite()
+{
+    leftDownMenu->setLock(false);
+    leftDownMenu->setVisible(true);
+}
+
 void GameScene::updateMenu(CCNode* sender)
 {
+    if (leftDownMenu->isInvite)
+    {
+        leftDownMenu->setLock(true);
+        leftDownMenu->setVisible(false);
+        leftDownMenu->isInvite = false;
+        menu->inviteFriend();
+    }
     if (leftDownMenu->isLock())
     {
         timesLeftDownLock = true;

@@ -810,6 +810,9 @@ bool CCLayerPanZoom::setPosition(CCPoint  position){
 }
 
 void CCLayerPanZoom::setScale(float scale){
+    if(scale < 0.4f)
+        return;
+    
     if (isnan(scale))
         return;
     CCLayer::setScale(scale);

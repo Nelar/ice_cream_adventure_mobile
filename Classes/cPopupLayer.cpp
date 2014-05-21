@@ -327,8 +327,10 @@ void PopupLayer::changeOrientation()
 {
     if (isPopup)
     {
-        background->setContentSize(WINSIZE);
-        plate->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        if (background)
+            background->setContentSize(WINSIZE);
+        if (plate)
+            plate->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
     }
     return;
 }

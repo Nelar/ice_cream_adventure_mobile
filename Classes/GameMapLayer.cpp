@@ -1311,7 +1311,7 @@ void GameMapLayer::changeOrientation()
 {
     leftDownMenu->changeOrientation();
     menu->changeOrientation();
-    
+    popupLayer->changeOrientation();
     if (IPAD)
     {
         if (LANDSCAPE)
@@ -1475,7 +1475,20 @@ void GameMapLayer::unclockMenu(CCNode* pSender)
 
 void GameMapLayer::addBonus(CCNode* pSender)
 {
-    FacebookPtr->inviteFriends();
+    if (!getNetworkStatus())
+    {
+        alertNetwork();
+        return;
+    }
+    
+    if (FacebookPtr->sessionIsOpened() && getNetworkStatus())
+    {
+        FacebookPtr->inviteFriends();
+    }
+    else
+    {
+        FacebookPtr->loginWithInvite();
+    }
 }
 
 void GameMapLayer::addPostBonus(CCNode* pSender)

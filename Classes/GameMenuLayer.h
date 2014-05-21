@@ -114,6 +114,9 @@ public:
     bool isThirdStar = false;
     CCSprite* bannerSprite;
     bool isLastAction = false;
+    void inviteFriend();
+    void addBonus(CCNode* pSender);
+    void unlockLeftMenu(CCNode* pSender);
 private:
     
     void playOnCallback(CCObject* pSender);

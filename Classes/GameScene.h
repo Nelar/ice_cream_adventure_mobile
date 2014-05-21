@@ -162,6 +162,8 @@ public:
     
     void beginBannerEndCallback(CCNode* sender);
     
+    void unlockInvite();
+    
 private:
     
     void lightingBomb(CCPoint begin, CCPoint end, float scale, float delay);

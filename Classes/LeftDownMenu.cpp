@@ -436,6 +436,8 @@ void LeftDownMenuScene::inviteCallback(CCObject* pSender)
         return;
     }
     
+    menuSettingCallback(NULL);
+    
     isInvite = true;
 }
 
