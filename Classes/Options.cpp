@@ -372,6 +372,15 @@ void Options::load()
         levels[i].isSimple = CCUserDefault::sharedUserDefault()->getBoolForKey(buf, false);
 	}
     
+    int countUidinvites = CCUserDefault::sharedUserDefault()->getIntegerForKey("uidInvited", 0);
+    uidInvited.clear();
+    for (int i = 0; i < countUidinvites; i++)
+    {
+        char buf[255];
+        sprintf(buf, "uidInvited_%d", i);
+        uidInvited.push_back(CCUserDefault::sharedUserDefault()->getStringForKey(buf, ""));
+    }
+    
     levels[0].levelType = Score;
     levels[0].targetScore = 100;
     
@@ -723,6 +732,14 @@ void Options::save()
         sprintf(buf, "isSimple_%d", i);
         CCUserDefault::sharedUserDefault()->setBoolForKey(buf, levels[i].isSimple);
 	}
+    
+    CCUserDefault::sharedUserDefault()->setIntegerForKey("uidInvited", uidInvited.size());
+    for (int i = 0; i < uidInvited.size(); i++)
+    {
+        char buf[255];
+        sprintf(buf, "uidInvited_%d", i);
+		CCUserDefault::sharedUserDefault()->setStringForKey(buf, uidInvited[i]);
+    }
 
     CCUserDefault::sharedUserDefault()->flush();
 }

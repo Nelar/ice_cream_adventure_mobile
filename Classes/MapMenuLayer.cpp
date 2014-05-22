@@ -1055,6 +1055,8 @@ void MapMenuLayer::livesCallback(CCObject* pSender)
 
 void MapMenuLayer::fishingEnded(CCNode* sender)
 {
+    if (currentLevel < 7)
+        return;
     if (currentLevel == OptionsPtr->getCurrentLevel() && OptionsPtr->isFacebookConnection() && FacebookPtr->sessionIsOpened())
     {
         char buf[255];

@@ -128,6 +128,8 @@ public:
     vector<sRequestData> appRequests;
     
     int launchCount = 0;
+    
+    vector<string> uidInvited;
 
 private:
 

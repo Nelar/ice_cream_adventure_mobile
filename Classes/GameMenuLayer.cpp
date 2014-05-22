@@ -943,7 +943,7 @@ void GameMenuLayer::banner(const char* name, const char* text, float delay, ccCo
     if (bannerSprite)
         bannerSprite->removeAllChildrenWithCleanup(true);
 
-	bannerSprite = CCSprite::createWithSpriteFrameName(name);
+	bannerSprite = CCSprite::create(name);
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		CCDirector::sharedDirector()->getWinSize().height + bannerSprite->getContentSize().height/2.0f));
@@ -953,18 +953,11 @@ void GameMenuLayer::banner(const char* name, const char* text, float delay, ccCo
 	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/2.0f, bannerSprite->getContentSize().height/2.0f));
 	labelBan->setColor(color);
 
-    if (LANDSCAPE)
-    {
-        if (WINSIZE.width == 1136)
-        {
-            bannerSprite->setScaleX(1.2f);
-        }
-    }
 	bannerSprite->runAction(CCSequence::create(CCDelayTime::create(delay), 
-                                               CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/2.0f))),
+                                               CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/1.7f))),
                                                CCDelayTime::create(1.0f),
                                                CCMoveBy::create(0.2f, ccp(0.0f, -bannerSprite->getContentSize().height/4.0f)),
-                                               CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/2.0f)), 0.5f),
+                                               CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/1.7f)), 0.5f),
                                                CCFadeOut::create(0.1f), NULL));
 }
 
@@ -973,30 +966,26 @@ void GameMenuLayer::bannerIce(const char* name, float delay, ccColor3B color)
     if (bannerSprite)
         bannerSprite->removeAllChildrenWithCleanup(true);
     
-	bannerSprite = CCSprite::createWithSpriteFrameName(name);
+	bannerSprite = CCSprite::create(name);
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f,
                                   CCDirector::sharedDirector()->getWinSize().height + bannerSprite->getContentSize().height/2.0f));
     
+    CCSprite* icelittle = CCSprite::create("updateArt/icelittleice.png");
+    icelittle->setPosition(ccp(bannerSprite->getContentSize().width/2.0f, bannerSprite->getContentSize().height/0.85f));
+    bannerSprite->addChild(icelittle);
+    
 	labelBan = CCLabelTTF::create(CCLocalizedString("BANNER_TEXT_ICE"), FONT_COMMON, FONT_SIZE_48);
 	bannerSprite->addChild(labelBan);
     bannerSprite->setCascadeOpacityEnabled(true);
-	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/1.6f, bannerSprite->getContentSize().height/2.7f));
+	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/2.0f, bannerSprite->getContentSize().height/2.0f));
 	labelBan->setColor(color);
     
-    
-    if (LANDSCAPE)
-    {
-        if (WINSIZE.width == 1136)
-        {
-            bannerSprite->setScaleX(1.2f);
-        }
-    }
 	bannerSprite->runAction(CCSequence::create(CCDelayTime::create(delay),
-                                               CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/2.0f))),
+                                               CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/1.7f))),
                                                CCDelayTime::create(1.0f),
                                                CCMoveBy::create(0.2f, ccp(0.0f, -bannerSprite->getContentSize().height/4.0f)),
-                                               CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/2.0f)), 0.5f),
+                                               CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/1.7f)), 0.5f),
                                                CCFadeOut::create(0.1f), NULL));
 }
 
@@ -1005,24 +994,21 @@ void GameMenuLayer::bannerBringDown(const char* name, float delay, ccColor3B col
     if (bannerSprite)
         bannerSprite->removeAllChildrenWithCleanup(true);
     
-	bannerSprite = CCSprite::createWithSpriteFrameName(name);
+	bannerSprite = CCSprite::create(name);
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f,
                                   CCDirector::sharedDirector()->getWinSize().height + bannerSprite->getContentSize().height/2.0f));
     
+    CCSprite* icelittle = CCSprite::create("updateArt/icelittle.png");
+    icelittle->setPosition(ccp(bannerSprite->getContentSize().width/12.0f, bannerSprite->getContentSize().height/2.0f));
+    bannerSprite->addChild(icelittle);
+    
 	labelBan = CCLabelTTF::create(CCLocalizedString("BANNER_TEXT_BRING"), FONT_COMMON, FONT_SIZE_48);
 	bannerSprite->addChild(labelBan);
     bannerSprite->setCascadeOpacityEnabled(true);
-	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/1.6f, bannerSprite->getContentSize().height/2.7f));
+	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/1.6f, bannerSprite->getContentSize().height/2.0f));
 	labelBan->setColor(color);
     
-    if (LANDSCAPE)
-    {
-        if (WINSIZE.width == 1136)
-        {
-            bannerSprite->setScaleX(1.2f);
-        }
-    }
 	bannerSprite->runAction(CCSequence::create(CCDelayTime::create(delay),
                                                CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/2.0f))),
                                                CCDelayTime::create(1.0f),

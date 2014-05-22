@@ -327,6 +327,14 @@ void sGameObject::changeType(eTypeGameObject nType)
     {
         
     }
+    else if (type == Horizontal && color == Yellow)
+    {
+        sprite->setDisplayFrame(CCSprite::create("updateArt/horizontal.png")->displayFrame());
+    }
+    else if (type == Vertical && color == Yellow)
+    {
+        sprite->setDisplayFrame(CCSprite::create("updateArt/vertical.png")->displayFrame());
+    }
     else
     {
         sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName(spriteName.c_str())->displayFrame());

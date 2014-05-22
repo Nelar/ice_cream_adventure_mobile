@@ -460,6 +460,25 @@ CCNode* SocialLayer::createScoreLayer(int level)
     {
         for (int i = 0; i < FacebookPtr->friendsScores.size(); i++)
         {
+            bool isExist = false;
+            for (int j = 0; j < FacebookPtr->friendsScores.size(); j++)
+            {
+                if (i == j)
+                    continue;
+                if (FacebookPtr->friendsScores[i].uid == FacebookPtr->friendsScores[j].uid)
+                {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (isExist)
+            {
+                FacebookPtr->friendsScores.erase(FacebookPtr->friendsScores.begin() + i);
+                i--;
+            }
+        }
+        for (int i = 0; i < FacebookPtr->friendsScores.size(); i++)
+        {
             ScoreboardCell user;
             user.name = FacebookPtr->friendsScores[i].name;
             user.uid = FacebookPtr->friendsScores[i].uid;

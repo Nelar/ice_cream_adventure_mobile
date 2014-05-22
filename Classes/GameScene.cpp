@@ -418,43 +418,27 @@ void GameScene::loadLevel(const char* levelName)
     
     if (gameType == Ice)
 	{
-        ccColor3B color;
-        color.r = 0x16;
-        color.g = 0x78;
-        color.b = 0xa6;
-		menu->bannerIce("game/iceBanner.png", 1.0f, color);
+		menu->bannerIce("updateArt/target.png", 1.0f, ccWHITE);
         isBeginBanner = true;
 	}
 	else if (gameType == Score)
 	{
-        ccColor3B color;
-        color.r = 0x8e;
-        color.g = 0x2d;
-        color.b = 0x1a;
 		sprintf(buf, CCLocalizedString("BANNER_TEXT_SCORE"), menu->getTargetScore(), menu->getCountMoves());
-		menu->banner("game/orangeBanner.png", buf, 1.0f, color);
+		menu->banner("updateArt/target.png", buf, 1.0f, ccWHITE);
         isBeginBanner = true;
 
 	}
 	else if (gameType == BringDown)
 	{
-        ccColor3B color;
-        color.r = 0x17;
-        color.g = 0x94;
-        color.b = 0x46;
-		menu->bannerBringDown("game/bringDownBanner.png", 1.0f, color);
+		menu->bannerBringDown("updateArt/target.png", 1.0f, ccWHITE);
 		menu->setBringDownTarget(atoi(root->Attribute("bringDownCount")));
 		menu->setBringDownCurrent(0);
         isBeginBanner = true;
 	}
 	else if (gameType == Time)
 	{
-        ccColor3B color;
-        color.r = 0x5b;
-        color.g = 0x20;
-        color.b = 0x8d;
 		sprintf(buf, CCLocalizedString("BANNER_TEXT_TIME"), menu->getTargetScore(), atoi(root->Attribute("time")));
-		menu->banner("game/violetBanner.png", buf, 1.0f, color);
+		menu->banner("updateArt/target.png", buf, 1.0f, ccWHITE);
         isBeginBanner = true;
 	}
     beginBannerAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::beginBannerEndCallback))));
@@ -887,43 +871,29 @@ void GameScene::changeOrientation(void)
         char buf[255];
         if (gameType == Ice)
         {
-            ccColor3B color;
-            color.r = 0x16;
-            color.g = 0x78;
-            color.b = 0xa6;
-            menu->bannerIce("game/iceBanner.png", 1.0f, color);
+            menu->bannerIce("updateArt/target.png", 1.0f, ccWHITE);
             isBeginBanner = true;
         }
         else if (gameType == Score)
         {
-            ccColor3B color;
-            color.r = 0x8e;
-            color.g = 0x2d;
-            color.b = 0x1a;
             sprintf(buf, CCLocalizedString("BANNER_TEXT_SCORE"), menu->getTargetScore(), menu->getCountMoves());
-            menu->banner("game/orangeBanner.png", buf, 1.0f, color);
+            menu->banner("updateArt/target.png", buf, 1.0f, ccWHITE);
             isBeginBanner = true;
             
         }
         else if (gameType == BringDown)
         {
-            ccColor3B color;
-            color.r = 0x17;
-            color.g = 0x94;
-            color.b = 0x46;
-            menu->bannerBringDown("game/bringDownBanner.png", 1.0f, color);
+            menu->bannerBringDown("updateArt/target.png", 1.0f, ccWHITE);
+            menu->setBringDownCurrent(0);
             isBeginBanner = true;
         }
         else if (gameType == Time)
         {
-            ccColor3B color;
-            color.r = 0x5b;
-            color.g = 0x20;
-            color.b = 0x8d;
             sprintf(buf, CCLocalizedString("BANNER_TEXT_TIME"), menu->getTargetScore(), 60);
-            menu->banner("game/violetBanner.png", buf, 1.0f, color);
+            menu->banner("updateArt/target.png", buf, 1.0f, ccWHITE);
             isBeginBanner = true;
         }
+
     }
     if (beginBannerAction)
     {
@@ -2250,7 +2220,7 @@ void GameScene::reInitField()
     color.r = 0x8e;
     color.g = 0x2d;
     color.b = 0x1a;
-    menu->banner("game/failedBanner.png", CCLocalizedString("BANNER_NO_MATCH"), 0.5f, color);
+    menu->banner("updateArt/target.png", CCLocalizedString("BANNER_NO_MATCH"), 0.5f, ccWHITE);
     lock = true;
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(2.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::reInitFieldCancelled))));
 }
@@ -4811,13 +4781,13 @@ void GameScene::win(CCNode* sender)
     SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
     if (menu->isBannerLock)
     {
-        menu->banner("game/winBanner.png", CCLocalizedString("BANNER_WIN"), 1.5f, color);
+        menu->banner("updateArt/target.png", CCLocalizedString("BANNER_WIN"), 1.5f, ccWHITE);
         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f),
                                                          CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
     }
     else
     {
-        menu->banner("game/winBanner.png", CCLocalizedString("BANNER_WIN"), 0.5f, color);
+        menu->banner("updateArt/target.png", CCLocalizedString("BANNER_WIN"), 0.5f, ccWHITE);
         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
                                                          CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
     }
@@ -4833,7 +4803,7 @@ void GameScene::lose(CCNode* sender)
     color.g = 0x2d;
     color.b = 0x1a;
     SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
-	menu->banner("game/failedBanner.png", CCLocalizedString("BANNER_LOSE"), 0.5f, color);
+	menu->banner("updateArt/target.png", CCLocalizedString("BANNER_LOSE"), 0.5f, ccWHITE);
 	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
 		CCCallFuncN::create(this, callfuncN_selector(GameScene::loseCallback))));
 }

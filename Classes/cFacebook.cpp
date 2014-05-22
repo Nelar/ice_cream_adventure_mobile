@@ -837,7 +837,14 @@ void cFacebook::getFriendScore(const char *uid, const char* name)
                  NSLog(@"NO ERROR");
                  isLoad = true;
              }
-             friendsScores.push_back(scoreFriend);
+             bool isExist = false;
+             for (int i = 0; i < friendsScores.size(); i++)
+             {
+                 if (friendsScores[i].uid == scoreFriend.uid)
+                     isExist = true;
+             }
+             if (!isExist)
+                 friendsScores.push_back(scoreFriend);
          }
      }
      ];
@@ -1135,8 +1142,13 @@ void cFacebook::inviteFriends()
                                                                        // Handle the send request callback
                                                                        NSArray *pairs = [[resultURL query] componentsSeparatedByString:@"&"];
                                                                        NSMutableDictionary *urlParams = [[NSMutableDictionary alloc] init];
+                                                                       vector<string> uidArray;
                                                                        for (NSString *pair in pairs) {
                                                                            NSArray *kv = [pair componentsSeparatedByString:@"="];
+                                                                           NSString* key = kv[0];
+                                                                           if ([key compare:@"request"] != NSOrderedSame)
+                                                                               uidArray.push_back([kv[1] UTF8String]);
+
                                                                            NSString *val =
                                                                            [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                                                                            urlParams[kv[0]] = val;
@@ -1149,9 +1161,30 @@ void cFacebook::inviteFriends()
                                                                            // User clicked the Send button
                                                                            NSString *requestID = [urlParams valueForKey:@"request"];
                                                                            NSLog(@"Request ID: %@", requestID);
+                                                                           bool isInvited = true;
+                                                                           for (int i = 0; i < uidArray.size(); i++)
+                                                                           {
+                                                                               bool flag = false;
+                                                                               for (int j = 0; j < OptionsPtr->uidInvited.size(); j++)
+                                                                               {
+                                                                                   if (uidArray[i] == OptionsPtr->uidInvited[j])
+                                                                                   {
+                                                                                       flag = true;
+                                                                                   }
+                                                                               }
+                                                                               if (!flag)
+                                                                                   isInvited = false;
+                                                                           }
                                                                            
-                                                                           OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
-                                                                           OptionsPtr->save();
+                                                                           if (!isInvited)
+                                                                           {
+                                                                               for (int i = 0; i < uidArray.size(); i++)
+                                                                               {
+                                                                                   OptionsPtr->uidInvited.push_back(uidArray[i]);
+                                                                               }
+                                                                               OptionsPtr->setBombCount(OptionsPtr->getBombCount() + 1);
+                                                                               OptionsPtr->save();
+                                                                           }
                                                                        }
                                                                    }
                                                                }
