@@ -101,8 +101,9 @@ void goToLink(const char* link)
 void sendlocalNotification(float second)
 {
     UILocalNotification *notification = [[UILocalNotification alloc] init];
-    notification.fireDate = [[NSDate date] dateByAddingTimeInterval:second];
+    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:second];
     notification.alertBody = [NSString stringWithUTF8String:CCLocalizedString("SETTING_NOTIF_TEXT", NULL)];
+    notification.timeZone = [NSTimeZone defaultTimeZone];
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
 
@@ -111,7 +112,10 @@ void removeAllNotification()
     UIApplication* app = [UIApplication sharedApplication];
     NSArray *notifications = [app scheduledLocalNotifications];
     if ([notifications count] > 0)
+    {
         [app presentLocalNotificationNow:notifications[0]];
+        [app cancelAllLocalNotifications];
+    }
 }
 
 const char* getCountry()
@@ -146,6 +150,14 @@ const char* networkStatus()
 void alertNetwork()
 {
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithUTF8String:CCLocalizedString("NETWORK_MESSAGE", NULL)]
+                                                   delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
+    [alert release];
+}
+
+void alert(char* text)
+{
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:[NSString stringWithUTF8String:text]
                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     [alert show];
     [alert release];
@@ -215,7 +227,6 @@ void loginGC()
                         NSLog(@"Score loaded");
                         char buf[255];
                         sprintf(buf, "level_%d", i+1);
-                        
                         if (board.localPlayerScore.value < OptionsPtr->getLevelData(i).countScore)
                         {
                             GKScore *myScoreValue = [[[GKScore alloc] initWithCategory:[NSString stringWithUTF8String:buf]] autorelease];
@@ -233,10 +244,13 @@ void loginGC()
                         else
                         {
                             CCLOG("%s score %llu star %llu", buf, board.localPlayerScore.value, board.localPlayerScore.context);
-                            OptionsPtr->setLevelData(i, board.localPlayerScore.context, board.localPlayerScore.value, OptionsPtr->getLevelData(i).levelType);
-                            if (OptionsPtr->getLevelData(i).countScore > 0)
-                                if (OptionsPtr->getCurrentLevel() < i +2)
-                                    OptionsPtr->restoreCurrentLevel(i + 2);
+                            if (board.localPlayerScore.value > 0)
+                            {
+                                OptionsPtr->setLevelData(i, board.localPlayerScore.context, board.localPlayerScore.value, OptionsPtr->getLevelData(i).levelType);
+                                if (OptionsPtr->getLevelData(i).countScore > 0)
+                                    if (OptionsPtr->getCurrentLevel() < i +2)
+                                        OptionsPtr->restoreCurrentLevel(i + 2);
+                            }
                         }
                         
                         if (i == 83)
@@ -259,6 +273,12 @@ void loginGC()
 
         } else {
             NSLog(@"GameCenter Fail %@", [error localizedDescription]);
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Game Center" message:[error localizedDescription]
+                                                           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+            [alert release];
+            CCUserDefault::sharedUserDefault()->setBoolForKey("gameCenterLogin", false);
+            CCUserDefault::sharedUserDefault()->flush();
             if (GlobalsPtr->iceCreamScene == Loading)
             {
                 CCDirector::sharedDirector()->replaceScene(MainMenuScene::scene());
@@ -266,9 +286,9 @@ void loginGC()
             else if (GlobalsPtr->iceCreamScene == Menu)
             {
                 MainMenuScene* layer = ((MainMenuScene*)CCDirector::sharedDirector()->getRunningScene()->getChildren()->objectAtIndex(0));
+                layer->gameCenterButtonShow();
                 layer->closeLoading();
             }
-                
         }
         
     }];

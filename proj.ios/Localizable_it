@@ -1,3 +1,9 @@
+MENU = "Menu";
+SOUND = "Suoni";
+MUSIC = "Musica";
+EXIT = "Abbandona";
+SETTING = "Impostazioni";
+
 PLAY = "Gioca";
 CONNECT = "Collegati";
 SETTING_HOW_PLAY = "Come giocare";
@@ -66,8 +72,8 @@ YOUR_GOT_GIFT = "Hai ricevuto un regalo!";
 GAVE_LIFE = " ti ha regalato una vita!";
 HELP_FRIEND = "Aiuta i tuoi amici ";
 REQUEST_LIFE = " inviando loro delle vite!";
-REQUEST_BOOST = "by sending booster!";
-GAVE_BOOST = "gave you booster!"
+REQUEST_BOOST = "inviando un regalo!";
+GAVE_BOOST = "ti regala un oggetto!"
 CONNECTION = "Collegati";
 OUT_OF_TIME = "Tempo esaurito!"
 OUT_OF_MOVES = "Mosse esaurite!!";
@@ -103,13 +109,21 @@ COMIX_6_1 = "Oh no,\n credo sia stato\n maledetto!";
 COMIX_6_2 = "Dobbiamo aiutarlo!";
 COMIX_6_3 = "Avete sciolto il ghiaccio!";
 COMIX_6_4 = "Grazie, amici miei!\n Finalmente sono libero!";
+
+COMIX_7_1 = "Cos'è\n successo?";
+COMIX_7_2 = "Il ghiaccio\n si è quasi\n sciolto!";
+COMIX_7_3 = "Dobbiamo\n ghiacciare\n la pista!";
+COMIX_7_4 = "Possiamo\n aiutarti,\n credo.";
+COMIX_7_5 = "La pista\n è di nuovo\n ghiacciata!";
+COMIX_7_6 = "Grazie!";
+
 BANNER_TEXT_ICE = "Rimuovi tutto il\n ghiaccio abbinando\n le palline di gelato.";
 BANNER_TEXT_BRING = "Fai scendere fino\n in fondo tutti\n gli ingredienti!";
-BANNER_TEXT_SCORE = "Ottieni %d punti in %d mosse.";
-BANNER_TEXT_TIME = "Ottieni %d punti in %d secondi.";
-BANNER_WIN = "Magnifico! Livello completato!";
-BANNER_LOSE = "Che peccato! Non hai raggiunto l'obiettivo.";
-BANNER_NO_MATCH = "Nessun abbinamento possibile";
+BANNER_TEXT_SCORE = "Ottieni %d punti\n in %d mosse.";
+BANNER_TEXT_TIME = "Ottieni %d punti\n in %d secondi.";
+BANNER_WIN = "Magnifico!\n Livello completato!";
+BANNER_LOSE = "Che peccato!\n Non hai raggiunto l'obiettivo.";
+BANNER_NO_MATCH = "Nessun abbinamento\n possibile";
 SKIP = "Salta";
 
 TUTORIAL_1 = "Trascina questa pallina di\n gelato verso il basso per\n abbinare tre palline uguali.";

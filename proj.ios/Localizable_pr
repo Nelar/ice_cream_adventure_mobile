@@ -1,3 +1,9 @@
+MENU = "Menu";
+SOUND = "Som";
+MUSIC = "Música";
+EXIT = "Sair";
+SETTING = "Configurações";
+
 PLAY = "Jogar";
 CONNECT = "Conectar";
 SETTING_HOW_PLAY = "Como jogar";
@@ -66,8 +72,8 @@ YOUR_GOT_GIFT = "Você ganhou um presente! ";
 GAVE_LIFE = " lhe deu uma vida!";
 HELP_FRIEND = "Ajude seus amigos ";
 REQUEST_LIFE = " enviando vidas!";
-REQUEST_BOOST = "by sending booster!";
-GAVE_BOOST = "gave you booster!"
+REQUEST_BOOST = "mandando um presente!";
+GAVE_BOOST = "lhe dá um presente!"
 CONNECTION = "Conectar";
 OUT_OF_TIME = "Tempo esgotado!"
 OUT_OF_MOVES = "Movimentos esgotados!";
@@ -103,13 +109,21 @@ COMIX_6_1 = "Ah, não, acho que\n ele está amaldiçoado!";
 COMIX_6_2 = "Temos que ajudá-lo!";
 COMIX_6_3 = "Você derreteu o gelo!";
 COMIX_6_4 = "Obrigado, amigos!\n Finalmente, estou livre!";
-BANNER_TEXT_ICE = "Elimine todo o gelo\n fazendo combinações.";
-BANNER_TEXT_BRING = "Colete todos os\n ingredientes no fundo \nda tela!!";
-BANNER_TEXT_SCORE = "Ganhe %d pontos em %d movimentos.";
-BANNER_TEXT_TIME = "Ganhe %d pontos em %d segundos.";
-BANNER_WIN = "Surpreendente! Nível concluído!";
+
+COMIX_7_1 = "O que\n aconteceu?";
+COMIX_7_2 = "O gelo\n quase\n derreteu!";
+COMIX_7_3 = "Temos que\n resfriar o\n gelo do\n rinque!";
+COMIX_7_4 = "Acho que\n consigo ajudar\n você.";
+COMIX_7_5 = "O rinque\n está congelado\n novamente!";
+COMIX_7_6 = "Obrigado!";
+
+BANNER_TEXT_ICE = "Elimine todo\n o gelo fazendo\n combinações.";
+BANNER_TEXT_BRING = "Colete todos\n os ingredientes\n no fundo \nda tela!!";
+BANNER_TEXT_SCORE = "Ganhe %d pontos\n em %d movimentos.";
+BANNER_TEXT_TIME = "Ganhe %d pontos\n em %d segundos.";
+BANNER_WIN = "Surpreendente!\n Nível concluído!";
 BANNER_LOSE = "Que pena!\n Você não atingiu\n o objetivo.";
-BANNER_NO_MATCH = "Sem combinações possíveis";
+BANNER_NO_MATCH = "Sem combinações\n possíveis";
 SKIP = "Pular";
 
 TUTORIAL_1 = "Deslize esta bola de\n sorvete para baixo para\n combinar três iguais.";

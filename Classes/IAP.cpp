@@ -142,7 +142,7 @@ void HttpCatcher::validationServerResponse(HttpClient * client, HttpResponse * r
     string password  = "tPRVWTFA0tCmD9pAh0h7WFXi3cDXBd3s";
     
     string signature = password + ";" +idfa() + ";;" + currency + ";" + base64packet + ";" + project + ";" + do_test + ";" + password;
-//    string signature = password + ";" +idfa() + ";;" + currency + ";" + base64packet + ";" + project + ";" + password;
+ //   string signature = password + ";" +idfa() + ";;" + currency + ";" + base64packet + ";" + project + ";" + password;
     string md5signature = md5(signature);
     string requestData = "project=" + project + "&account=" + idfa() + "&test=" + do_test + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;
 //    string requestData = "project=" + project + "&account=" + idfa() + "&packet=" + base64packet + "&currency=" + currency + "&signature=" + md5signature;

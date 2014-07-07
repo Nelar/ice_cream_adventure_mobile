@@ -874,6 +874,9 @@ void MapMenuLayer::changeOrientation()
         }
     }
     
+    popup->stopAllActions();
+    menu->stopAllActions();
+    
     close->setPosition(popup->getPosition().x - CCDirector::sharedDirector()->getWinSize().width/2.0f + popup->getContentSize().width /2.5f,
                        popup->getPosition().y - CCDirector::sharedDirector()->getWinSize().height/2.0f + popup->getContentSize().height /2.4f);
     
@@ -1930,7 +1933,7 @@ void MapMenuLayer::playAfterLoad(CCNode* pSender)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(5));
     else if (currentLevel == 61 && OptionsPtr->getCurrentLevel() <= currentLevel)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(6));
-    else if (currentLevel == 73/* && OptionsPtr->getCurrentLevel() <= currentLevel*/)
+    else if (currentLevel == 73 && OptionsPtr->getCurrentLevel() <= currentLevel)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(7));
     else if (currentLevel == 85 && OptionsPtr->getCurrentLevel() <= currentLevel)
         CCDirector::sharedDirector()->replaceScene(ComixScene::scene(8));

@@ -135,6 +135,7 @@ private:
     void endStage(CCNode* pSender);
     
     void retryEnd(CCNode* pSender);
+    void nextOldLevel(CCNode* pSender);
     
     SocialLayer* social;
     

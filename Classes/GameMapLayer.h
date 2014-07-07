@@ -64,6 +64,7 @@ public:
     
     void closeMessageBoard();
     
+    void explosionCallback(CCNode* sender);
 
     
 private:

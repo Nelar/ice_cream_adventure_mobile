@@ -1,3 +1,9 @@
+MENU = "Menu";
+SOUND = "Son";
+MUSIC = "Musique";
+EXIT = "Quitter";
+SETTING = "Réglages";
+
 PLAY = "Jouer";
 CONNECT = "Connexion";
 SETTING_HOW_PLAY = "Comment jouer";
@@ -66,8 +72,8 @@ YOUR_GOT_GIFT = "Tu as reçu une vie de la part de ";
 GAVE_LIFE = " !";
 HELP_FRIEND = "Aide tes amis";
 REQUEST_LIFE = " en leur envoyant des vies !";
-REQUEST_BOOST = "by sending booster!";
-GAVE_BOOST = "gave you booster!"
+REQUEST_BOOST = "en envoyant un cadeau !";
+GAVE_BOOST = "te donne un objet"
 CONNECTION = "Connexion";
 OUT_OF_TIME = "Temps écoulé"
 OUT_OF_MOVES = "Plus aucune action disponible !";
@@ -103,13 +109,23 @@ COMIX_6_1 = "Oh, le pauvre !\n Quelqu'un a dû\n lui jeter\n un sort !";
 COMIX_6_2 = "On ne peut pas\n le laisser\n comme ça !";
 COMIX_6_3 = "Vous avez fait\n fondre la glace !";
 COMIX_6_4 = "Merci,\n mes amis !\n Je suis\n enfin libre !";
+
+
+COMIX_7_1 = "Que\n s'est-il\n passé ?";
+COMIX_7_2 = "La glace\n a presque\n entièrement\n fondu !";
+COMIX_7_3 = "La patinoire!\n Il faut la\n recouvrir\n de glace!";
+COMIX_7_4 = "Je pense\n pouvoir\n t'aider.";
+COMIX_7_5 = "La patinoire\n est à nouveau\n recouverte\n de glace!";
+COMIX_7_6 = "Merci!";
+
+
 BANNER_TEXT_ICE = "Élimine toute\n la glace en réalisant\n des combinaisons !";
 BANNER_TEXT_BRING = "Récupère tous les\n ingrédients en bas\n de l'écran !";
-BANNER_TEXT_SCORE = "Réalise un score de %d en %d actions.";
-BANNER_TEXT_TIME = "Réalise un score de %d en %d secondes.";
-BANNER_WIN = "Fantastique ! Niveau terminé !!";
+BANNER_TEXT_SCORE = "Réalise un score\n de %d en %d actions.";
+BANNER_TEXT_TIME = "Réalise un score\n de %d en %d secondes.";
+BANNER_WIN = "Fantastique !\n Niveau terminé !!";
 BANNER_LOSE = "Dommage !\n Tu n'as pas atteint\n la cible !";
-BANNER_NO_MATCH = "Aucune combinaison possible";
+BANNER_NO_MATCH = "Aucune combinaison\n possible";
 SKIP = "Passer";
 
 TUTORIAL_1 = "Fais glisser cette boule\n de glace vers le bas pour\n en regrouper trois identiques";

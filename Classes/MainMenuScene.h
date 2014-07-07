@@ -80,6 +80,8 @@ public:
     
     void facebookButtonHide();
     void gameCenterButtonHide();
+    void gameCenterButtonShow();
+    
     
     void facebookCheck(CCNode* pSender);
     

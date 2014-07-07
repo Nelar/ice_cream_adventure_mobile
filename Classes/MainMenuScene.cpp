@@ -58,6 +58,15 @@ void MainMenuScene::gameCenterButtonHide()
     gameCenter->setEnabled(false);
 }
 
+void MainMenuScene::gameCenterButtonShow()
+{
+    if (gameCenter == NULL)
+        return;
+    gameCenter->setVisible(true);
+    gameCenter->setVisible(true);
+    gameCenter->setEnabled(true);
+}
+
 bool MainMenuScene::init()
 {
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / 60.0f);
@@ -218,6 +227,9 @@ bool MainMenuScene::init()
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     facebook->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.65f, labelTTF->getParent()->getContentSize().height/2.0f));
+    if (CCApplication::sharedApplication()->getCurrentLanguage() == kLanguageSpanish)
+        labelTTF->setFontSize(FONT_SIZE_48);
+        
     
     CCSprite* gameCenterSpriteNormal = CCSprite::createWithSpriteFrameName("common/greenButton.png");
 	CCSprite* gameCenterSpriteSelected = CCSprite::createWithSpriteFrameName("common/greenButton.png");
@@ -239,6 +251,8 @@ bool MainMenuScene::init()
     labelTTF->enableShadow(CCSize(5*MULTIPLIER, -5*MULTIPLIER), 255, 8.0f*MULTIPLIER);
     gameCenter->addChild(labelTTF);
     labelTTF->setPosition(ccp(labelTTF->getParent()->getContentSize().width/1.65f, labelTTF->getParent()->getContentSize().height/2.0f));
+    if (CCApplication::sharedApplication()->getCurrentLanguage() == kLanguageSpanish)
+        labelTTF->setFontSize(FONT_SIZE_48);
 
 #ifdef NEW_ART
     CCSprite* settingSpriteNormal = CCSprite::create("updateArt/button.png");

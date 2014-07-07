@@ -117,6 +117,10 @@ public:
     void inviteFriend();
     void addBonus(CCNode* pSender);
     void unlockLeftMenu(CCNode* pSender);
+    
+    bool isTextBanner = false;
+    
+    void touch();
 private:
     
     void playOnCallback(CCObject* pSender);
@@ -165,8 +169,6 @@ private:
     
     CCLabelTTF* labelBan;
     
-
-
 	CCMenu* comMenu;
     
     bool isPopup;

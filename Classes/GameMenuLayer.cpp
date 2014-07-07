@@ -234,10 +234,8 @@ bool GameMenuLayer::init(eLevelType ntype)
         boosterPlus = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
         char buf[255];
         sprintf(buf, "%d", OptionsPtr->getHammerCount());
-        CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+        CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_108);
         label->setColor(ccWHITE);
-        if (!IPAD)
-            label->setScale(0.5f);
         
         boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
         boosterPlus->addChild(label);
@@ -774,13 +772,13 @@ void GameMenuLayer::changeOrientation(void)
 	colorBlue.b = 0x93;
     
     
-    scoreTitle = CCLabelTTF::create(CCLocalizedString("SCORE"), FONT_COMMON, FONT_SIZE_54);
+    scoreTitle = CCLabelTTF::create(CCLocalizedString("SCORE"), FONT_COMMON, FONT_SIZE_48);
     ((CCLabelTTF*)scoreTitle)->setColor(colorBlue);
     
     if (LANDSCAPE)
-        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*1.8f));
+        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/2.6f, downPanel->getContentSize().height/4.0f*1.6f));
     else
-        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f*3.0f, downPanel->getContentSize().height/4.0f*3.2f));
+        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f*3.0f, downPanel->getContentSize().height/4.0f*3.0f));
     
     downPanel->addChild(scoreTitle);
     
@@ -947,18 +945,23 @@ void GameMenuLayer::banner(const char* name, const char* text, float delay, ccCo
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		CCDirector::sharedDirector()->getWinSize().height + bannerSprite->getContentSize().height/2.0f));
+    
+    
+    CCSprite* icelittle = CCSprite::create("updateArt/icelittle.png");
+    icelittle->setPosition(ccp(bannerSprite->getContentSize().width/12.0f, bannerSprite->getContentSize().height/2.0f));
+    bannerSprite->addChild(icelittle);
 		
 	labelBan = CCLabelTTF::create(text, FONT_COMMON, FONT_SIZE_64);
 	bannerSprite->addChild(labelBan);
-	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/2.0f, bannerSprite->getContentSize().height/2.0f));
+	labelBan->setPosition(ccp(bannerSprite->getContentSize().width/1.6f, bannerSprite->getContentSize().height/2.0f));
 	labelBan->setColor(color);
 
 	bannerSprite->runAction(CCSequence::create(CCDelayTime::create(delay), 
                                                CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/1.7f))),
-                                               CCDelayTime::create(1.0f),
+                                               CCDelayTime::create(1.5f),
                                                CCMoveBy::create(0.2f, ccp(0.0f, -bannerSprite->getContentSize().height/4.0f)),
                                                CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/1.7f)), 0.5f),
-                                               CCFadeOut::create(0.1f), NULL));
+                                               CCHide::create(), NULL));
 }
 
 void GameMenuLayer::bannerIce(const char* name, float delay, ccColor3B color)
@@ -970,6 +973,7 @@ void GameMenuLayer::bannerIce(const char* name, float delay, ccColor3B color)
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f,
                                   CCDirector::sharedDirector()->getWinSize().height + bannerSprite->getContentSize().height/2.0f));
+    
     
     CCSprite* icelittle = CCSprite::create("updateArt/icelittleice.png");
     icelittle->setPosition(ccp(bannerSprite->getContentSize().width/2.0f, bannerSprite->getContentSize().height/0.85f));
@@ -983,10 +987,10 @@ void GameMenuLayer::bannerIce(const char* name, float delay, ccColor3B color)
     
 	bannerSprite->runAction(CCSequence::create(CCDelayTime::create(delay),
                                                CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/1.7f))),
-                                               CCDelayTime::create(1.0f),
+                                               CCDelayTime::create(1.5f),
                                                CCMoveBy::create(0.2f, ccp(0.0f, -bannerSprite->getContentSize().height/4.0f)),
                                                CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/1.7f)), 0.5f),
-                                               CCFadeOut::create(0.1f), NULL));
+                                               CCHide::create(), NULL));
 }
 
 void GameMenuLayer::bannerBringDown(const char* name, float delay, ccColor3B color)
@@ -1011,15 +1015,16 @@ void GameMenuLayer::bannerBringDown(const char* name, float delay, ccColor3B col
     
 	bannerSprite->runAction(CCSequence::create(CCDelayTime::create(delay),
                                                CCEaseBackOut::create(CCMoveBy::create(0.5f, ccp(0, -CCDirector::sharedDirector()->getWinSize().height/2.0f))),
-                                               CCDelayTime::create(1.0f),
+                                               CCDelayTime::create(1.5f),
                                                CCMoveBy::create(0.2f, ccp(0.0f, -bannerSprite->getContentSize().height/4.0f)),
                                                CCEaseOut::create(CCMoveBy::create(0.5f, ccp(0, CCDirector::sharedDirector()->getWinSize().height/2.0f)), 0.5f),
-                                               CCFadeOut::create(0.1f), NULL));
+                                               CCHide::create(), NULL));
 }
 
 void GameMenuLayer::bannerCallback(CCNode* sender)
 {
     isBannerLock = false;
+    isTextBanner = false;
 }
 
 void GameMenuLayer::sugarCrash()
@@ -1031,7 +1036,7 @@ void GameMenuLayer::sugarCrash()
     
     isSugarCrash = true;
     SimpleAudioEngine::sharedEngine()->playEffect("sound/super_crash.mp3");
-	CCSprite* bannerSprite = CCSprite::createWithSpriteFrameName("game/sugarCrash.png");
+	bannerSprite = CCSprite::createWithSpriteFrameName("game/sugarCrash.png");
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		CCDirector::sharedDirector()->getWinSize().height/2.0f));
@@ -1050,10 +1055,12 @@ void GameMenuLayer::sweet()
     if (isBannerLock)
         return;
     
+    isTextBanner = true;
+    
     SimpleAudioEngine::sharedEngine()->playEffect("sound/sweet.mp3");
-	CCSprite* bannerSprite = CCSprite::createWithSpriteFrameName("game/sweet.png");
+	bannerSprite = CCSprite::createWithSpriteFrameName("game/sweet.png");
 	this->addChild(bannerSprite, 5);
-	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
+	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f,
 		CCDirector::sharedDirector()->getWinSize().height/2.0f));
 	bannerSprite->setScale(0.01f);
 	bannerSprite->runAction(CCSequence::create(CCSpawn::createWithTwoActions(CCScaleTo::create(0.3f, 1.0f), CCFadeIn::create(0.3f)), 
@@ -1067,8 +1074,10 @@ void GameMenuLayer::tasty()
     if (isBannerLock)
         return;
     
+    isTextBanner = true;
+
     SimpleAudioEngine::sharedEngine()->playEffect("sound/tasty.mp3");
-	CCSprite* bannerSprite = CCSprite::createWithSpriteFrameName("game/tasty.png");
+	bannerSprite = CCSprite::createWithSpriteFrameName("game/tasty.png");
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		CCDirector::sharedDirector()->getWinSize().height/2.0f));
@@ -1083,9 +1092,11 @@ void GameMenuLayer::divine()
 {
     if (isBannerLock)
         return;
-    
+
+    isTextBanner = true;
+
     SimpleAudioEngine::sharedEngine()->playEffect("sound/divine.mp3");
-	CCSprite* bannerSprite = CCSprite::createWithSpriteFrameName("game/divine.png");
+	bannerSprite = CCSprite::createWithSpriteFrameName("game/divine.png");
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		CCDirector::sharedDirector()->getWinSize().height/2.0f));
@@ -1101,8 +1112,11 @@ void GameMenuLayer::delicious()
 {
     if (isBannerLock)
         return;
+    
+    isTextBanner = true;
+
     SimpleAudioEngine::sharedEngine()->playEffect("sound/delicious.mp3");
-	CCSprite* bannerSprite = CCSprite::createWithSpriteFrameName("game/delicious.png");
+	bannerSprite = CCSprite::createWithSpriteFrameName("game/delicious.png");
 	this->addChild(bannerSprite, 5);
 	bannerSprite->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2.0f, 
 		CCDirector::sharedDirector()->getWinSize().height/2.0f));
@@ -1145,6 +1159,15 @@ int GameMenuLayer::getCountStar()
     return coS;
 }
 
+void GameMenuLayer::touch()
+{
+    if (bannerSprite && bannerSprite->isVisible())
+    {
+        bannerSprite->stopAllActions();
+        bannerSprite->runAction(CCSequence::create(CCFadeOut::create(0.2f), CCHide::create(), NULL));
+    }
+}
+
 
 void GameMenuLayer::booster_1_Callback(CCObject* pSender)
 {
@@ -1175,10 +1198,8 @@ void GameMenuLayer::booster_2_Callback(CCObject* pSender)
             boosterPlus = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
             char buf[255];
             sprintf(buf, "%d", OptionsPtr->getHammerCount());
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_108);
             label->setColor(ccWHITE);
-            if (!IPAD)
-                label->setScale(0.5f);
             
             boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
             boosterPlus->addChild(label);
@@ -1215,11 +1236,9 @@ void GameMenuLayer::addHammer()
     boosterPlus = CCSprite::createWithSpriteFrameName("common/boosterBack.png");
     char buf[255];
     sprintf(buf, "%d", OptionsPtr->getHammerCount());
-    CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+    CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_108);
 
     label->setColor(ccWHITE);
-    if (!IPAD)
-        label->setScale(0.5f);
     
     boosterPlus->setPosition(ccp(booster_2_Button->getContentSize().width / 1.3f, booster_2_Button->getContentSize().height / 9.0f));
     boosterPlus->addChild(label);
@@ -1346,23 +1365,23 @@ void GameMenuLayer::setCountMoves(int nTargetScore)
 	color.g = 0x45;
 	color.b = 0x93;
 
-	movesTitle = CCLabelTTF::create(CCLocalizedString("MOVES"), FONT_COMMON, FONT_SIZE_54);
+	movesTitle = CCLabelTTF::create(CCLocalizedString("MOVES"), FONT_COMMON, FONT_SIZE_48);
     movesTitle->setColor(color);
     
     if (LANDSCAPE)
-        movesTitle->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*3.5f));
+        movesTitle->setPosition(ccp(downPanel->getContentSize().width/2.6f, downPanel->getContentSize().height/4.0f*3.4f));
     else
-        movesTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f, downPanel->getContentSize().height/4.0f*3.2f));
+        movesTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f, downPanel->getContentSize().height/4.0f*3.0f));
     
 	downPanel->addChild(movesTitle);
 
 	char buf[255];
 	sprintf(buf, "%d", nTargetScore);
 
-	labelCountMoves = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_54);
+	labelCountMoves = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_64);
 	labelCountMoves->setColor(color);
     if (LANDSCAPE)
-        labelCountMoves->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*3.0f));
+        labelCountMoves->setPosition(ccp(downPanel->getContentSize().width/2.6f, downPanel->getContentSize().height/4.0f*3.0f));
     else
         labelCountMoves->setPosition(ccp(downPanel->getContentSize().width/4.0f, downPanel->getContentSize().height/4.0f*2.3f));
 
@@ -1371,6 +1390,7 @@ void GameMenuLayer::setCountMoves(int nTargetScore)
     
     if (countMoves <= 5 && type != Time)
     {
+        labelCountMoves->setColor(ccRED);
         if (mig)
         {
             mig->removeFromParentAndCleanup(true);
@@ -1416,14 +1436,14 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
 
 	char buf[255];
 	sprintf(buf, "%d", nTargetScore);
-	labelCurrentScore = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_54);
+	labelCurrentScore = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_64);
 	ccColor3B color;
 	color.r = 0x29;
 	color.g = 0x45;
 	color.b = 0x93;
 	labelCurrentScore->setColor(color);
     if (LANDSCAPE)
-        labelCurrentScore->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*1.0f));
+        labelCurrentScore->setPosition(ccp(downPanel->getContentSize().width/2.6f, downPanel->getContentSize().height/4.0f*1.2f));
     else
         labelCurrentScore->setPosition(ccp(downPanel->getContentSize().width/4.0f*3.0f, downPanel->getContentSize().height/4.0f*2.3f));
 
@@ -1455,12 +1475,53 @@ void GameMenuLayer::setCurrentScore(int nTargetScore)
         progressBar->setPosition(ccp(downPanel->getContentSize().width/6.05f , downPanel->getContentSize().height/5.4f));
     }
     
+    ccBlendFunc blend;
+    blend.dst = GL_ONE;
+    blend.src = GL_ONE;
+    
     if (currentScore >= targetScore)
+    {
+        if (!star1->isVisible())
+        {
+            SimpleAudioEngine::sharedEngine()->playEffect("sound/star_1.mp3");
+            CCParticleSystemQuad* sun =  CCParticleFire::createWithTotalParticles(10);
+            star1->addChild(sun, 10);
+            sun->setPosition(ccp(star1->getContentSize().width/2.0f, star1->getContentSize().height/2.0f));
+            sun->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/snow.png"));
+            sun->setSpeed(0.1f);
+            sun->setBlendAdditive(true);
+            sun->setBlendFunc(blend);
+        }
         star1->setVisible(true);
+    }
     if (currentScore >= secondStar)
+    {
+        if (!star2->isVisible())
+        {
+            SimpleAudioEngine::sharedEngine()->playEffect("sound/star_2.mp3");
+            CCParticleSystemQuad* sun =  CCParticleFire::createWithTotalParticles(10);
+            star2->addChild(sun, 10);
+            sun->setPosition(ccp(star2->getContentSize().width/2.0f, star2->getContentSize().height/2.0f));
+            sun->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/snow.png"));
+            sun->setSpeed(0.1f);
+            sun->setBlendAdditive(true);
+            sun->setBlendFunc(blend);
+        }
         star2->setVisible(true);
+    }
     if (currentScore >= thirdStar)
     {
+        if (!star3->isVisible())
+        {
+            SimpleAudioEngine::sharedEngine()->playEffect("sound/star_3.mp3");
+            CCParticleSystemQuad* sun =  CCParticleFire::createWithTotalParticles(10);
+            star3->addChild(sun, 10);
+            sun->setPosition(ccp(star3->getContentSize().width/2.0f, star3->getContentSize().height/2.0f));
+            sun->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/snow.png"));
+            sun->setSpeed(0.1f);
+            sun->setBlendAdditive(true);
+            sun->setBlendFunc(blend);
+        }
         star3->setVisible(true);
         isThirdStar = true;
     }
@@ -1564,13 +1625,13 @@ void GameMenuLayer::setTargetScore(int nTargetScore)
 	colorBlue.b = 0x93;
     
     
-    scoreTitle = CCLabelTTF::create(CCLocalizedString("SCORE"), FONT_COMMON, FONT_SIZE_54);
+    scoreTitle = CCLabelTTF::create(CCLocalizedString("SCORE"), FONT_COMMON, FONT_SIZE_48);
     ((CCLabelTTF*)scoreTitle)->setColor(colorBlue);
     
     if (LANDSCAPE)
-        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/2.5f, downPanel->getContentSize().height/4.0f*1.8f));
+        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/2.6f, downPanel->getContentSize().height/4.0f*1.6f));
     else
-        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f*3.0f, downPanel->getContentSize().height/4.0f*3.2f));
+        scoreTitle->setPosition(ccp(downPanel->getContentSize().width/4.0f*3.0f, downPanel->getContentSize().height/4.0f*3.0f));
 
 
 

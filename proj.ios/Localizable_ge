@@ -1,10 +1,16 @@
+MENU = "Menü";
+SOUND = "Sound";
+MUSIC = "Musik";
+EXIT = "Beenden";
+SETTING = "Optionen";
+
 PLAY = "Spielen";
 CONNECT = "Verbind";
 SETTING_HOW_PLAY = "Spielanleitung";
 SETTING_ASK = "Häufig gestellte\n Fragen";
 SETTING_RESTORE = "Einkauf\n wiederherstellen";
 SETTING_RESET = "Fortschritt\n zurücksetzen";
-SETTING_NOTIFICATION = "Benachrichtigungen";
+SETTING_NOTIFICATION = "Benachrich\ntigungen";
 HELP_1 = "Berühre die Eiskugeln und\n bewege sie durch Wischen.\n Erziele eine Kombination aus drei\n Kugeln derselben Farbe,\n um sie zu entfernen.";
 HELP_2 = "Erziele eine Kombination\n aus vier oder fünf Eiskugeln\n in verschiedenen Formationen,\n um Spezialeiscreme zu erhalten!";
 HELP_3 = "Kombiniere Spezialeiscremekugeln,\n indem du sie vertauschst und so\n einen zusätzlichen Effekt erzielst.";
@@ -66,8 +72,8 @@ YOUR_GOT_GIFT = "Du hast ein Geschenk erhalten!";
 GAVE_LIFE = "hat dir ein Leben geschenkt!";
 HELP_FRIEND = "Hilf deinen Freunden";
 REQUEST_LIFE = "indem du ihnen Leben schickst!";
-REQUEST_BOOST = "by sending booster!";
-GAVE_BOOST = "gave you booster!"
+REQUEST_BOOST = "indem du ein Geschenk sendest!";
+GAVE_BOOST = "gibt dir ein Objekt!"
 CONNECTION = "Verbinden";
 OUT_OF_TIME = "Keine Zeit mehr!"
 OUT_OF_MOVES = "Keine Spielzüge mehr!";
@@ -103,13 +109,21 @@ COMIX_6_1 = "Oh nein,\n er ist wohl verflucht!";
 COMIX_6_2 = "Wir müssen ihm helfen!";
 COMIX_6_3 = "Ihr habt das Eis \nzum Schmelzen gebracht!";
 COMIX_6_4 = "Danke,\n meine Freunde! \nIch bin endlich frei!";
+
+COMIX_7_1 = "Was ist\n passiert?";
+COMIX_7_2 = "Das Eis\n ist fast\n geschmolzen!";
+COMIX_7_3 = "Wir müssen\n das Eis\n frieren lassen!";
+COMIX_7_4 = "Ich glaube,\n wir können\n dir helfen.";
+COMIX_7_5 = "Das Feld\n ist wieder\n gefroren!";
+COMIX_7_6 = "Danke dir!";
+
 BANNER_TEXT_ICE = "Entferne das Eis,\n indem du Kombinationen\n erzielst.";
 BANNER_TEXT_BRING = "Sammle alle Zutaten\n auf dem Bildschirm\n unten!";
-BANNER_TEXT_SCORE = "Erziele %d Punkte in %d Spielzügen.";
-BANNER_TEXT_TIME = "Erziele %d Punkte in %d Sekunden.";
-BANNER_WIN = "Fantastisch! Level abgeschlossen!";
-BANNER_LOSE = "Leider! Ziel nicht erreicht.";
-BANNER_NO_MATCH = "Spielzug nicht möglich";
+BANNER_TEXT_SCORE = "Erziele %d Punkte\n in %d Spielzügen.";
+BANNER_TEXT_TIME = "Erziele %d Punkte\n in %d Sekunden.";
+BANNER_WIN = "Fantastisch!\n Level abgeschlossen!";
+BANNER_LOSE = "Leider!\n Ziel nicht erreicht.";
+BANNER_NO_MATCH = "Spielzug\n nicht möglich";
 SKIP = "Überspringen";
 
 TUTORIAL_1 = "Wische die Eiskugel \nnach unten, um drei gleiche\n Kugeln zu erhalten.";

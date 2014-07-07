@@ -328,8 +328,12 @@ void AppDelegate::applicationDidEnterBackground()
         second = second - 1800;
     }
     
+    
+    removeAllNotification();
     if (OptionsPtr->getLifeCount() < 5)
+    {
         sendlocalNotification((float)second + 1800.0f*(4 - OptionsPtr->getLifeCount()));
+    }
 }
 
 // this function will be called when the app is active again

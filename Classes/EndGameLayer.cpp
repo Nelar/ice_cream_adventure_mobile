@@ -774,6 +774,8 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
 		startLeft->setScale(6.0f);
 		startLeft->setOpacity(0);
 		startLeft->runAction(CCSequence::create(CCDelayTime::create(0.5f), CCSpawn::create(CCScaleTo::create(0.5f, 1.0f), CCRotateBy::create(0.5f,720), CCFadeIn::create(0.5f), NULL), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::explosionCallback)), NULL));
+        
+        startLeft->setTag(1);
         temp->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.5f), CCFadeOut::create(0.01f)));
 	}
 	else if (countStart == 2)
@@ -792,6 +794,9 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
         CCSprite* star2 = CCSprite::createWithSpriteFrameName("common/star2.png");
 		startLeft->setDisplayFrame(star->displayFrame());
 		startCenter->setDisplayFrame(star2->displayFrame());
+        
+        startLeft->setTag(1);
+        startCenter->setTag(2);
         
 		startLeft->setScale(6.0f);
 		startCenter->setScale(6.0f);
@@ -835,6 +840,11 @@ void EndGameLayer::popupWin(int countStart, int countScore, int currentL)
 		startLeft->setOpacity(0);
 		startCenter->setOpacity(0);
 		startRight->setOpacity(0);
+        
+        startLeft->setTag(1);
+        startCenter->setTag(2);
+        startRight->setTag(3);
+        
 		startLeft->runAction(CCSequence::create(CCDelayTime::create(0.5f), CCSpawn::create(CCScaleTo::create(0.5f, 1.0f), CCRotateBy::create(0.5f,720), CCFadeIn::create(0.5f), NULL), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::explosionCallback)), NULL));
 		startCenter->runAction(CCSequence::create(CCDelayTime::create(1.0f), CCSpawn::create(CCScaleTo::create(0.5f, 1.0f), CCRotateBy::create(0.5f,720), CCFadeIn::create(0.5f), NULL), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::explosionCallback)), NULL));
 		startRight->runAction(CCSequence::create(CCDelayTime::create(1.5f), CCSpawn::create(CCScaleTo::create(0.5f, 1.0f), CCRotateBy::create(0.5f,720), CCFadeIn::create(0.5f), NULL), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::explosionCallback)), NULL));
@@ -993,6 +1003,13 @@ void EndGameLayer::explosionCallback(CCNode* sender)
     sun->setSpeed(0.1f);
     sun->setBlendAdditive(true);
     sun->setBlendFunc(blend);
+    
+    if (sender->getTag() == 1)
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/star_1.mp3");
+    else if (sender->getTag() == 2)
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/star_2.mp3");
+    else if (sender->getTag() == 3)
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/star_3.mp3");
 }
 
 void EndGameLayer::popupLose(int countScore, eLevelType typeLevel, int currentL)
@@ -1405,6 +1422,14 @@ void EndGameLayer::nextCallback(CCObject* pSender)
     }
     
     social->hideScoreBoard();
+    
+    int lastLevel = OptionsPtr->getCurrentLevel();
+    if ((currentLevel + 1) < lastLevel)
+    {
+        menu->setEnabled(false);
+        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextOldLevel))));
+        return;
+    }
         
     if (IPAD)
     {
@@ -1505,6 +1530,73 @@ void EndGameLayer::retryCallback(CCObject* pSender)
     menu->setEnabled(false);
     
     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(1.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::retryEnd))));
+}
+
+void EndGameLayer::nextOldLevel(CCNode* pSender)
+{
+    menu->setEnabled(true);
+    if (OptionsPtr->getLifeCount() == 0)
+    {
+        if (IPAD)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadPortrait.png");
+        }
+        else if (IPAD_MINI)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingiPadMiniLandscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingiPadMiniPortrait.png");
+        }
+        else if (IPHONE_4||IPHONE_5)
+        {
+            if (LANDSCAPE)
+                spriteLoading = CCSprite::create("loadingIphoneLanscape.png");
+            else
+                spriteLoading = CCSprite::create("loadingIphonePortrait.png");
+            spriteLoading->setScale(1.0f/this->getScale());
+        }
+        
+        labelLoad = CCLabelTTF::create(CCLocalizedString("LOADING", NULL), FONT_COMMON, FONT_SIZE_86);
+        labelLoad->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/10.0f));
+        this->addChild(labelLoad,1001);
+        spriteLoading->setPosition(ccp(WINSIZE.width/2.0f, WINSIZE.height/2.0f));
+        this->addChild(spriteLoading, 1000);
+        spriteLoading->setVisible(false);
+        spriteLoading->setOpacity(0);
+        spriteLoading->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+        labelLoad->setVisible(false);
+        labelLoad->setOpacity(0);
+        labelLoad->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME), CCShow::create(), CCFadeIn::create(0.3f),  NULL));
+        
+        afterLoadingType = AfterLoadingTypeLives;
+        
+        if (getNetworkStatus() && FacebookPtr->sessionIsOpened() && OptionsPtr->isFacebookConnection())
+        {
+            GlobalsPtr->isLoadMap = true;
+            FacebookPtr->getScores();
+        }
+        else
+            this->runAction(CCSequence::create(CCDelayTime::create(POPUP_SHOW_TIME*3.0f), CCCallFuncN::create(this, callfuncN_selector(EndGameLayer::nextWithLivePanel)), NULL));
+        return;
+    }
+    if ((currentLevel + 1) < 106)
+    {
+        if (OptionsPtr->getLevelData(currentLevel).levelType != Score)
+            levelPopup(currentLevel + 1, OptionsPtr->getLevelData(currentLevel).countStar, OptionsPtr->getLevelData(currentLevel).targetScore, OptionsPtr->getLevelData(currentLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        else
+            levelPopup(currentLevel + 1, OptionsPtr->getLevelData(currentLevel).countStar, OptionsPtr->getLevelData(currentLevel).targetScore, OptionsPtr->getLevelData(currentLevel).levelType, BoosterCrystal, BoosterBomb, BoosterNone);
+    }
+    else
+    {
+        if (OptionsPtr->getLevelData(currentLevel + 1).levelType != Score)
+            levelPopup(currentLevel + 1, OptionsPtr->getLevelData(currentLevel + 1).countStar, OptionsPtr->getLevelData(currentLevel + 1).targetScore, OptionsPtr->getLevelData(currentLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
+        else
+            levelPopup(currentLevel + 1, OptionsPtr->getLevelData(currentLevel + 1).countStar, OptionsPtr->getLevelData(currentLevel + 1).targetScore, OptionsPtr->getLevelData(currentLevel).levelType, BoosterCrystal, BoosterBomb, BoosterNone);
+    }
 }
 
 void EndGameLayer::retryEnd(CCNode* pSender)

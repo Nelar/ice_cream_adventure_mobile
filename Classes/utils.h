@@ -28,6 +28,7 @@ const char* getCountry();
 bool getNetworkStatus();
 const char* networkStatus();
 void alertNetwork();
+void alert(char* text);
 int networkSignal();
 std::string push_enabled();
 std::string getIsFirstTimeRunning();

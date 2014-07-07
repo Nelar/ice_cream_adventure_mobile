@@ -1,3 +1,9 @@
+MENU = "Menu";
+SOUND = "Sound";
+MUSIC = "Music";
+EXIT = "Quit";
+SETTING = "Settings";
+
 PLAY = "Play";
 CONNECT = "Connect";
 SETTING_HOW_PLAY = "How to play";
@@ -66,8 +72,8 @@ YOUR_GOT_GIFT = "You got a gift!";
 GAVE_LIFE = "gave you live!";
 HELP_FRIEND = "Help your friends";
 REQUEST_LIFE = " by sending lives!";
-REQUEST_BOOST = "by sending booster!";
-GAVE_BOOST = "gave you booster!"
+REQUEST_BOOST = "by sending a gift!";
+GAVE_BOOST = "gives you an item!"
 CONNECTION = "Connect";
 OUT_OF_TIME = "Out of time!"
 OUT_OF_MOVES = "Out of moves!!";
@@ -103,13 +109,21 @@ COMIX_6_1 = "Ouch.\n Seems like he is cursed!";
 COMIX_6_2 = "We have to help him!";
 COMIX_6_3 = "Ice should melt!";
 COMIX_6_4 = "Thank you guys,\n now I am finally free!";
+
+COMIX_7_1 = "What\n happened?";
+COMIX_7_2 = "The ice\n has almost\n melted!";
+COMIX_7_3 = "We have\n to freeze th\ne ice on the\n rink!";
+COMIX_7_4 = "I think\n we can\n help you.";
+COMIX_7_5 = "The rink\n is frozen\n again!";
+COMIX_7_6 = "Thank you!";
+
 BANNER_TEXT_ICE = "Clear all the ice.\n Match over the ice\n to remove it.";
-BANNER_TEXT_BRING = "Bring down all\n ingredients to the bottom!";
-BANNER_TEXT_SCORE = "Get points %d in %d moves";
-BANNER_TEXT_TIME = "Get points %d in %d seconds";
-BANNER_WIN = "Wonderful! Level complete!";
-BANNER_LOSE = "Level failed! You didn't reach goal!";
-BANNER_NO_MATCH = "No possible match";
+BANNER_TEXT_BRING = "Bring down all\n ingredients to\n the bottom!";
+BANNER_TEXT_SCORE = "Get points %d\n in %d moves";
+BANNER_TEXT_TIME = "Get points %d\n in %d seconds";
+BANNER_WIN = "Wonderful!\n Level complete!";
+BANNER_LOSE = "Level failed!\n You didn't reach goal!";
+BANNER_NO_MATCH = "No possible\n match";
 SKIP = "Skip";
 
 TUTORIAL_1 = "Swipe this ice cream\n to the down to match 3\n of the same";

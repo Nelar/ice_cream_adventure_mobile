@@ -306,7 +306,7 @@ void Options::load()
     donutCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("donutCount", 0);
     lastTime = CCUserDefault::sharedUserDefault()->getFloatForKey("lastTime", 0);
     firstGame = CCUserDefault::sharedUserDefault()->getBoolForKey("firstGame", true);
-    hammerCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("hammerCount", 0);
+    hammerCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("hammerCount", 3);
     lastGameLevel = CCUserDefault::sharedUserDefault()->getIntegerForKey("lastGameLevel", 1);
     launchCount = CCUserDefault::sharedUserDefault()->getIntegerForKey("launchCount", 0);
     

@@ -642,6 +642,7 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
             star_1->setScale(0.3f);
 			level->addChild(star_1);
 			star_1->setPosition(ccp(star_1->getPositionX() - 80*multiplier + level->getContentSize().width/2.0f, star_1->getPositionY() - 10*multiplier));
+            star_1->setTag(10);
 		}
 		else if (OptionsPtr->getLevelData(i).countStar == 2)
 		{
@@ -649,11 +650,14 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
 			level->addChild(star_1);
             star_1->setScale(0.3f);
 			star_1->setPosition(ccp(star_1->getPositionX() - 80*multiplier + level->getContentSize().width/2.0f, star_1->getPositionY() - 10*multiplier));
+            star_1->setTag(10);
+
 
 			CCSprite* star_2 = CCSprite::createWithSpriteFrameName("common/star2.png");
 			level->addChild(star_2);
             star_2->setScale(0.3f);
 			star_2->setPosition(ccp(star_2->getPositionX() + level->getContentSize().width/2.0f, star_2->getPositionY() - 40*multiplier));
+            star_2->setTag(11);
 		}
 		else if (OptionsPtr->getLevelData(i).countStar >= 3)
 		{
@@ -661,16 +665,21 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
 			level->addChild(star_1);
             star_1->setScale(0.3f);
 			star_1->setPosition(ccp(star_1->getPositionX() - 80*multiplier + level->getContentSize().width/2.0f, star_1->getPositionY() - 10*multiplier));
+            star_1->setTag(10);
+
 
 			CCSprite* star_2 = CCSprite::createWithSpriteFrameName("common/star2.png");
 			level->addChild(star_2);
             star_2->setScale(0.3f);
 			star_2->setPosition(ccp(star_2->getPositionX() + level->getContentSize().width/2.0f, star_2->getPositionY() - 40*multiplier));
+            star_2->setTag(11);
+
 
 			CCSprite* star_3 = CCSprite::createWithSpriteFrameName("common/star3.png");
 			level->addChild(star_3);
             star_3->setScale(0.3f);
 			star_3->setPosition(ccp(star_3->getPositionX() + 80*multiplier + level->getContentSize().width/2.0f, star_3->getPositionY() - 10*multiplier));
+            star_3->setTag(12);
 		}
         
         if (OptionsPtr->isFacebookConnection() && getNetworkStatus() && FacebookPtr->sessionIsOpened())
@@ -800,7 +809,7 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
     
     layerGradient->addChild(boy, 10);
     
-    if (nextLevel > 0  && !reinit)
+    if (nextLevel > 0 && !reinit)
     {
         if (nextLevel == 25 || nextLevel == 37 || nextLevel == 49 || nextLevel == 61 || nextLevel == 73 || nextLevel == 85)
         {
@@ -813,6 +822,20 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
             CCNode* node = CCNode::create();
             node->setTag(nextLevelForSender);
             levelCallback(node);
+        }
+        else if (nextLevel != OptionsPtr->getCurrentLevel())
+        {
+            boy->setPosition(ccp(path[OptionsPtr->getCurrentLevel() - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),
+                                 path[OptionsPtr->getCurrentLevel() - 1].y + boy->getContentSize().height/1.5f*boy->getScale()));
+            if (nextLevel == -111)
+            {
+                isBuyLive = true;
+                menu->livesCallback(NULL);
+            }
+            
+            CCNode* node = CCNode::create();
+            node->setTag(nextLevel - 1);
+            this->runAction(CCSequence::create(CCDelayTime::create(0.1f), CCCallFuncO::create(this, callfuncO_selector(GameMapLayer::levelCallback), node), NULL));
         }
         else
         {
@@ -831,14 +854,14 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
     }
     else
     {
-        boy->setPosition(ccp(path[OptionsPtr->getLastGameLevel() - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),
-                             path[OptionsPtr->getLastGameLevel() - 1].y + boy->getContentSize().height/1.5f*boy->getScale()));
+        boy->setPosition(ccp(path[OptionsPtr->getCurrentLevel() - 1].x - boy->getContentSize().width/2.5f*boy->getScale(),
+                             path[OptionsPtr->getCurrentLevel() - 1].y + boy->getContentSize().height/1.5f*boy->getScale()));
         if (nextLevel == -111)
         {
             isBuyLive = true;
             menu->livesCallback(NULL);
         }
-        nextLevel = OptionsPtr->getLastGameLevel();
+        nextLevel = OptionsPtr->getCurrentLevel();
     }
     
     layerGradient->setPosition(ccp(layerGradient->getPositionX(),
@@ -993,6 +1016,30 @@ bool GameMapLayer::init(int nextLevel, bool reinit)
         
 	return true;
 }
+
+void GameMapLayer::explosionCallback(CCNode* sender)
+{
+    ccBlendFunc blend;
+    blend.dst = GL_ONE;
+    blend.src = GL_ONE;
+    
+    
+    CCParticleSystemQuad* sun =  CCParticleFire::createWithTotalParticles(10);
+    sender->addChild(sun, 10);
+    sun->setPosition(ccp(0.0f, 0.0f));
+    sun->setTexture(CCTextureCache::sharedTextureCache()->addImage("particle/snow.png"));
+    sun->setSpeed(0.1f);
+    sun->setBlendAdditive(true);
+    sun->setBlendFunc(blend);
+    
+    if (sender->getTag() == 1)
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/star_1.mp3");
+    else if (sender->getTag() == 2)
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/star_2.mp3");
+    else if (sender->getTag() == 3)
+        SimpleAudioEngine::sharedEngine()->playEffect("sound/star_3.mp3");
+}
+
 
 
 void GameMapLayer::extraLevelsDraw()
@@ -1995,8 +2042,8 @@ void GameMapLayer::levelCallback(CCObject* pSender)
 	int numLevel = ((CCMenuItemSprite*)pSender)->getTag();
     if (numLevel == 84)
         menu->showLastStage(84);
-/*    else if (OptionsPtr->getLevelData(numLevel).lock)
-        menu->showUnlock(numLevel);*/
+    else if (OptionsPtr->getLevelData(numLevel).lock)
+        menu->showUnlock(numLevel);
     else if (OptionsPtr->getLevelData(numLevel).levelType != Score)
         menu->levelPopup(numLevel + 1, OptionsPtr->getLevelData(numLevel).countStar, OptionsPtr->getLevelData(numLevel).targetScore, OptionsPtr->getLevelData(numLevel).levelType, BoosterCrystal, BoosterBomb, BoosterFish);
     else

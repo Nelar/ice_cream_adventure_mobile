@@ -36,7 +36,7 @@
 
 #define POPUP_SHOW_TIME 0.5f
 
-#define ELEMENT_SCALE ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?0.85f*IPHONE_MULTIPLIER:0.85f*IPHONE_MULTIPLIER)
+#define ELEMENT_SCALE ((CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?0.8f*IPHONE_MULTIPLIER:0.8f*IPHONE_MULTIPLIER)
 
 #define WINSIZE CCDirector::sharedDirector()->getWinSize()
 
@@ -45,6 +45,7 @@
 
 #define FONT_SIZE_200 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?170:85
 #define FONT_SIZE_140 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?140:70
+#define FONT_SIZE_108 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?108:54
 #define FONT_SIZE_86 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?86:43
 #define FONT_SIZE_64 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?64:32
 #define FONT_SIZE_72 (CCDirector::sharedDirector()->getWinSize().height == 2048 || CCDirector::sharedDirector()->getWinSize().width == 2048)?72:36

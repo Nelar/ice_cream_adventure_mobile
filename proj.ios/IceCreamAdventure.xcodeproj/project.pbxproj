@@ -1589,6 +1589,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0430;
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = 9H89X43H49;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "IceCreamAdventure" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1921,7 +1926,7 @@
 				);
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "7182E2FC-BF0B-4E50-9490-9516EA345775";
+				PROVISIONING_PROFILE = "627C13A2-EA47-498D-84B4-EF666B9850C8";
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../Classes/MMP/ $(SRCROOT)/../Classes/MMP/Common $(SRCROOT)/../Classes/MMP/Event $(SRCROOT)/../Classes/MMP/Json $(SRCROOT)/../Classes/MMP/jsoncpp $(SRCROOT)/../Classes/MMP/Network $(SRCROOT)/../Classes/MMP/Update $(SRCROOT)/../Classes/MMP/Utils";
@@ -1989,7 +1994,7 @@
 				);
 				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_NAME = IceCream;
-				PROVISIONING_PROFILE = "7182E2FC-BF0B-4E50-9490-9516EA345775";
+				PROVISIONING_PROFILE = "627C13A2-EA47-498D-84B4-EF666B9850C8";
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../Classes/MMP/ $(SRCROOT)/../Classes/MMP/Common $(SRCROOT)/../Classes/MMP/Event $(SRCROOT)/../Classes/MMP/Json $(SRCROOT)/../Classes/MMP/jsoncpp $(SRCROOT)/../Classes/MMP/Network $(SRCROOT)/../Classes/MMP/Update $(SRCROOT)/../Classes/MMP/Utils";

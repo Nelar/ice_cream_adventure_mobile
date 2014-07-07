@@ -487,6 +487,7 @@ void MMP::tutorialStepCompleted(int num, string name)
 
 void MMP::levelStarted(int num, string name)
 {
+    CCLog("%d %s", num, name.c_str());
     if (!getNetworkStatus())
         return;
     

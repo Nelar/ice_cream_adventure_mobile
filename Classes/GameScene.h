@@ -79,6 +79,8 @@ public:
 	bool checkField();
     bool checkFieldLast();
 	bool checkFieldFirst();
+    bool checkFieldBringDown();
+    
 	bool checkElement(int i);
 	void afterDeleting();
     void afterDeletingForCrystalStripe(sGameObject* currObj);
@@ -368,7 +370,7 @@ private:
     
     float stencilOffsetWidth = 0;
     
-    CCLabelBMFont* boosterTitle;
+    CCLabelTTF* boosterTitle;
     
     bool lastFish = false;
     bool isWasFish = false;
@@ -393,6 +395,13 @@ private:
     CCAction* beginBannerAction = NULL;
     
     bool isRunChangeOrient = true;
+    
+    bool isFinalBanner = false;
+    
+    bool isLoseSpeed = false;
+    bool isWinSpeed = false;
+    
+    CCAction* endAction = NULL;
 };
 
 #endif

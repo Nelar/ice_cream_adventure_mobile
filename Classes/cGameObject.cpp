@@ -54,8 +54,8 @@ sGameObject::sGameObject(eTypeGameObject nType, eColorGameObject nColor, int nX,
 		sprite = CCSprite::createWithSpriteFrameName("game/shadow/red.png");
 		break;
 	case Yellow:
-//		sprite = CCSprite::createWithSpriteFrameName("game/shadow/yellow.png");
-        sprite = CCSprite::create("updateArt/yellow.png");
+		sprite = CCSprite::createWithSpriteFrameName("yellow");
+//        sprite = CCSprite::create("updateArt/yellow.png");
 
 		break;
 	}
@@ -104,9 +104,7 @@ void sGameObject::changeColor(eColorGameObject nColor)
 		sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/red.png")->displayFrame());
 		break;
 	case Yellow:
-		//sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
-        sprite->setDisplayFrame(CCSprite::create("updateArt/yellow.png")->displayFrame());
-
+		sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("yellow")->displayFrame());
 		break;
     case Colorurless:
         sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
@@ -143,8 +141,7 @@ void sGameObject::changeColorCancelled(CCNode* sender)
             sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/red.png")->displayFrame());
             break;
         case Yellow:
-//            sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
-            sprite->setDisplayFrame(CCSprite::create("updateArt/yellow.png")->displayFrame());
+            sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("yellow")->displayFrame());
             break;
 	}
 }
@@ -284,13 +281,13 @@ void sGameObject::changeType(eTypeGameObject nType)
 			switch(type)
 			{
 			case Simple:
-				spriteName = "game/shadow/yellow.png";
+				spriteName = "yellow";
 				break;
 			case Vertical:
-                spriteName = "game/shadow/yellow_vertical.png";
+                spriteName = "yellow_vertical";
                 break;
 			case Horizontal:
-				spriteName = "game/shadow/yellow_horizontal.png";
+				spriteName = "yellow_horizontal";
 				break;
 			case Bomb:
 				spriteName = "game/shadow/yellow_bomb.png";
@@ -326,14 +323,6 @@ void sGameObject::changeType(eTypeGameObject nType)
     else if (type == Bomb && (isZombieBomb || isMegaBomb))
     {
         
-    }
-    else if (type == Horizontal && color == Yellow)
-    {
-        sprite->setDisplayFrame(CCSprite::create("updateArt/horizontal.png")->displayFrame());
-    }
-    else if (type == Vertical && color == Yellow)
-    {
-        sprite->setDisplayFrame(CCSprite::create("updateArt/vertical.png")->displayFrame());
     }
     else
     {
@@ -393,16 +382,34 @@ void sGameObject::changeType(eTypeGameObject nType)
                 break;
         }
         
-        for (int i = 1; i < 7; i++)
+        if (color == Yellow)
         {
-            char buf[255];
-            sprintf(buf, "game/stripe/%s_horizontal (%d).png", colorStr.c_str(), i);
-            stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
-            stripes[stripes.size() - 1]->setVisible(false);
-            
-            stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
-            stripes[i - 1]->setScale(0.33f);
-            sprite->addChild(stripes[i - 1]);
+            for (int i = 1; i < 7; i++)
+            {
+                char buf[255];
+                sprintf(buf, "%s_horizontal_%d", colorStr.c_str(), i);
+                stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                stripes[stripes.size() - 1]->setVisible(false);
+                
+                stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                stripes[i - 1]->setScale(0.33f);
+                sprite->addChild(stripes[i - 1]);
+            }
+
+        }
+        else
+        {
+            for (int i = 1; i < 7; i++)
+            {
+                char buf[255];
+                sprintf(buf, "game/stripe/%s_horizontal (%d).png", colorStr.c_str(), i);
+                stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                stripes[stripes.size() - 1]->setVisible(false);
+                
+                stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                stripes[i - 1]->setScale(0.33f);
+                sprite->addChild(stripes[i - 1]);
+            }
         }
     }
     
@@ -431,16 +438,34 @@ void sGameObject::changeType(eTypeGameObject nType)
                 break;
         }
         
-        for (int i = 1; i < 7; i++)
+        if (color == Yellow)
         {
-            char buf[255];
-            sprintf(buf, "game/stripe/%s_vertical (%d).png", colorStr.c_str(), i);
-            stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
-            stripes[stripes.size() - 1]->setVisible(false);
-            
-            stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
-            stripes[i - 1]->setScale(0.33f);
-            sprite->addChild(stripes[i - 1]);
+            for (int i = 1; i < 7; i++)
+            {
+                char buf[255];
+                sprintf(buf, "%s_vertical_%d", colorStr.c_str(), i);
+                stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                stripes[stripes.size() - 1]->setVisible(false);
+                
+                stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                stripes[i - 1]->setScale(0.33f);
+                sprite->addChild(stripes[i - 1]);
+            }
+
+        }
+        else
+        {
+            for (int i = 1; i < 7; i++)
+            {
+                char buf[255];
+                sprintf(buf, "game/stripe/%s_vertical (%d).png", colorStr.c_str(), i);
+                stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                stripes[stripes.size() - 1]->setVisible(false);
+                
+                stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                stripes[i - 1]->setScale(0.33f);
+                sprite->addChild(stripes[i - 1]);
+            }
         }
     }
 
@@ -499,7 +524,7 @@ void sGameObject::destroy(float delayC)
     
 	char buf[255];
     float delay = delayDestroy;
-	if (type == Simple ||  type == Cookie || type == Crystal)
+	if (type == Simple ||  type == Crystal)
 	{
         delay = delayDestroy;
         sprintf(buf, "sound/pop_%d.mp3", 2 + rand()%12);
@@ -518,7 +543,13 @@ void sGameObject::destroy(float delayC)
 	}
     else if (type == Cookie)
 	{
+        delay = delayDestroy;
+        sprintf(buf, "sound/pop_%d.mp3", 2 + rand()%12);
+        SimpleAudioEngine::sharedEngine()->playEffect(buf);
         
+        sprite->removeAllChildrenWithCleanup(true);
+        
+		this->sprite->setVisible(false);
     }
     else if (type == Fish)
 	{
@@ -595,16 +626,35 @@ void sGameObject::destroy(float delayC)
             }
 
             float offset = 2;
-            for (int i = 1; i < 7; i++)
+            if (color == Yellow)
             {
-                char buf[255];
-                sprintf(buf, "game/stripe/%s_horizontal (%d).png", colorStr.c_str(), i);
-                stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
-                stripes[stripes.size() - 1]->setVisible(true);
-                stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
-                stripes[i - 1]->setAnchorPoint(ccp(0.5f, 0.5f));
-                stripes[i - 1]->setScale(0.33f);
-                sprite->addChild(stripes[i - 1]);
+                for (int i = 1; i < 7; i++)
+                {
+                    char buf[255];
+                    sprintf(buf, "%s_horizontal_%d", colorStr.c_str(), i);
+                    stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                    stripes[stripes.size() - 1]->setVisible(true);
+                    stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                    stripes[i - 1]->setAnchorPoint(ccp(0.5f, 0.5f));
+                    stripes[i - 1]->setScale(0.33f);
+                    sprite->addChild(stripes[i - 1]);
+                }
+
+            }
+            else
+            {
+                for (int i = 1; i < 7; i++)
+                {
+                    char buf[255];
+                    sprintf(buf, "game/stripe/%s_horizontal (%d).png", colorStr.c_str(), i);
+                    stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                    stripes[stripes.size() - 1]->setVisible(true);
+                    stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                    stripes[i - 1]->setAnchorPoint(ccp(0.5f, 0.5f));
+                    stripes[i - 1]->setScale(0.33f);
+                    sprite->addChild(stripes[i - 1]);
+                }
+
             }
             char buf[255];
             sprintf(buf, "game/stripes/%sHorizontal.png", colorStr.c_str());
@@ -664,17 +714,35 @@ void sGameObject::destroy(float delayC)
                     break;
             }
             
-            
-            for (int i = 1; i < 7; i++)
+            if (color == Yellow)
             {
-                char buf[255];
-                sprintf(buf, "game/stripe/%s_vertical (%d).png", colorStr.c_str(), i);
-                stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
-                sprite->addChild(stripes[i - 1]);
-                stripes[stripes.size() - 1]->setVisible(false);
-                stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
-                stripes[i - 1]->setAnchorPoint(ccp(0.5f, 0.5f));
-                stripes[i - 1]->setScale(0.33f);
+                for (int i = 1; i < 7; i++)
+                {
+                    char buf[255];
+                    sprintf(buf, "%s_vertical_%d", colorStr.c_str(), i);
+                    stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                    sprite->addChild(stripes[i - 1]);
+                    stripes[stripes.size() - 1]->setVisible(false);
+                    stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                    stripes[i - 1]->setAnchorPoint(ccp(0.5f, 0.5f));
+                    stripes[i - 1]->setScale(0.33f);
+                }
+
+            }
+            else
+            {
+                for (int i = 1; i < 7; i++)
+                {
+                    char buf[255];
+                    sprintf(buf, "game/stripe/%s_vertical (%d).png", colorStr.c_str(), i);
+                    stripes.push_back(CCSprite::createWithSpriteFrameName(buf));
+                    sprite->addChild(stripes[i - 1]);
+                    stripes[stripes.size() - 1]->setVisible(false);
+                    stripes[i - 1]->setPosition(ccp(sprite->getContentSize().width/2.0f, sprite->getContentSize().height/2.0f));
+                    stripes[i - 1]->setAnchorPoint(ccp(0.5f, 0.5f));
+                    stripes[i - 1]->setScale(0.33f);
+                }
+
             }
             
             char buf[255];
@@ -936,8 +1004,7 @@ void sGameObject::setNext(CCObject* sender)
             sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/red.png")->displayFrame());
             break;
         case Yellow:
-            //sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("game/shadow/yellow.png")->displayFrame());
-            sprite->setDisplayFrame(CCSprite::create("updateArt/yellow.png")->displayFrame());
+            sprite->setDisplayFrame(CCSprite::createWithSpriteFrameName("yellow")->displayFrame());
             break;
     }
     

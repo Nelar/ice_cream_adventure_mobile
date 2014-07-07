@@ -146,7 +146,27 @@ void GameScene::loadLevel(const char* levelName)
     
     char buf[255];
     sprintf(buf, "%d", menu->getCurrentLevel());
-    MMPPtr->levelStarted(menu->getCurrentLevel(), string(buf));
+
+    if (menu->getCurrentLevel() > 105)
+    {
+        if (menu->getCurrentLevel() == 106)
+            MMPPtr->levelStarted(30, "30E");
+        else if (menu->getCurrentLevel() == 107)
+            MMPPtr->levelStarted(24, "24E");
+        else if (menu->getCurrentLevel() == 108)
+            MMPPtr->levelStarted(36, "36E");
+        else if (menu->getCurrentLevel() == 109)
+            MMPPtr->levelStarted(48, "48E");
+        else if (menu->getCurrentLevel() == 110)
+            MMPPtr->levelStarted(60, "60E");
+        else if (menu->getCurrentLevel() == 111)
+            MMPPtr->levelStarted(72, "72E");
+    }
+    else
+    {
+        MMPPtr->levelStarted(menu->getCurrentLevel(), string(buf));
+    }
+    
     if (menu->getCurrentLevel() >= 8)
     {
         for (int j = 0; j < columnCount; j++)
@@ -543,6 +563,42 @@ bool GameScene::init(int levNum)
     
     CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("common.plist", batchTexture);
     
+    CCSprite* yellow = CCSprite::create("updateArt/yellow.png");
+    
+    CCSprite* yellow_vertical = CCSprite::create("updateArt/vertical.png");
+    CCSprite* yellow_vertical_1 = CCSprite::create("updateArt/vertical_1.png");
+    CCSprite* yellow_vertical_2 = CCSprite::create("updateArt/vertical_2.png");
+    CCSprite* yellow_vertical_3 = CCSprite::create("updateArt/vertical_3.png");
+    CCSprite* yellow_vertical_4 = CCSprite::create("updateArt/vertical_4.png");
+    CCSprite* yellow_vertical_5 = CCSprite::create("updateArt/vertical_5.png");
+    CCSprite* yellow_vertical_6 = CCSprite::create("updateArt/vertical_6.png");
+    
+    CCSprite* yellow_horizontal = CCSprite::create("updateArt/horizontal.png");
+    CCSprite* yellow_horizontal_1 = CCSprite::create("updateArt/horizontal_1.png");
+    CCSprite* yellow_horizontal_2 = CCSprite::create("updateArt/horizontal_2.png");
+    CCSprite* yellow_horizontal_3 = CCSprite::create("updateArt/horizontal_3.png");
+    CCSprite* yellow_horizontal_4 = CCSprite::create("updateArt/horizontal_4.png");
+    CCSprite* yellow_horizontal_5 = CCSprite::create("updateArt/horizontal_5.png");
+    CCSprite* yellow_horizontal_6 = CCSprite::create("updateArt/horizontal_6.png");
+    
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow->displayFrame(), "yellow");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical->displayFrame(), "yellow_vertical");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical_1->displayFrame(), "yellow_vertical_1");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical_2->displayFrame(), "yellow_vertical_2");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical_3->displayFrame(), "yellow_vertical_3");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical_4->displayFrame(), "yellow_vertical_4");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical_5->displayFrame(), "yellow_vertical_5");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_vertical_6->displayFrame(), "yellow_vertical_6");
+    
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal->displayFrame(), "yellow_horizontal");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal_1->displayFrame(), "yellow_horizontal_1");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal_2->displayFrame(), "yellow_horizontal_2");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal_3->displayFrame(), "yellow_horizontal_3");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal_4->displayFrame(), "yellow_horizontal_4");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal_5->displayFrame(), "yellow_horizontal_5");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(yellow_horizontal_6->displayFrame(), "yellow_horizontal_6");
+    
+    
     CCTextureCache::reloadAllTextures();
     
     batchTexture->setAntiAliasTexParameters();
@@ -865,7 +921,10 @@ void GameScene::changeOrientation(void)
         }
     }
     
-    if (isBeginBanner)
+    if (menu->getCurrentLevel() <= 6)
+        menu->bannerSprite->setVisible(false);
+    
+    if (isBeginBanner && (menu->getCurrentLevel() > 6))
     {
         menu->bannerSprite->setVisible(false);
         char buf[255];
@@ -902,6 +961,11 @@ void GameScene::changeOrientation(void)
     }
     beginBannerAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f), CCCallFuncN::create(this, callfuncN_selector(GameScene::beginBannerEndCallback))));
 
+    
+    if (menu->isTextBanner || isFinalBanner)
+    {
+        menu->bannerSprite->setVisible(false);
+    }
     
     if (IPHONE_5 || IPHONE_4)
     {
@@ -2780,11 +2844,9 @@ bool GameScene::checkElement(int idx)
             
             char buf[255];
             sprintf(buf, "%d", 200);
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getParent()->addChild(label,10);
             label->setPosition(gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getPosition());
-            if (!IPAD)
-                label->setScale(0.5f);
             ccColor3B col;
             col.r = 0xb6;
             col.g = 0xff;
@@ -2815,11 +2877,10 @@ bool GameScene::checkElement(int idx)
                 
                 char buf[255];
                 sprintf(buf, "%d", 200);
-                CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+                CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
                 gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getParent()->addChild(label,10);
                 label->setPosition(gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getPosition());
-                if (!IPAD)
-                    label->setScale(0.5f);
+
                 ccColor3B col;
                 col.r = 0xb6;
                 col.g = 0xff;
@@ -2852,11 +2913,10 @@ bool GameScene::checkElement(int idx)
                 
                 char buf[255];
                 sprintf(buf, "%d", 120);
-                CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+                CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
                 gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getParent()->addChild(label,10);
                 label->setPosition(gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getPosition());
-                if (!IPAD)
-                    label->setScale(0.5f);
+
                 ccColor3B col;
                 col.r = 0xb6;
                 col.g = 0xff;
@@ -2889,11 +2949,10 @@ bool GameScene::checkElement(int idx)
                 
                 char buf[255];
                 sprintf(buf, "%d", 120);
-                CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+                CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
                 gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getParent()->addChild(label,10);
                 label->setPosition(gameFieldSprites[gameObjects[idx]->x][gameObjects[idx]->y]->getPosition());
-                if (!IPAD)
-                    label->setScale(0.5f);
+
                 ccColor3B col;
                 col.r = 0xb6;
                 col.g = 0xff;
@@ -3047,12 +3106,9 @@ void GameScene::afterDeletingForCrystalStripe(sGameObject* currObj)
             {
                 char buf[255];
                 sprintf(buf, "%d", SIMPLE_SCORE*(sweetCount+1));
-                CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+                CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
                 gameObjects[allDeletedChain[i]]->sprite->getParent()->getParent()->addChild(label,10);
                 label->setPosition(gameObjects[allDeletedChain[i]]->sprite->getPosition());
-
-                if (!IPAD)
-                    label->setScale(0.3f);
 
                 if (gameObjects[allDeletedChain[i]]->color == Green)
                 {
@@ -3381,7 +3437,7 @@ void GameScene::afterDeletingForCrystalStripe(sGameObject* currObj)
     float maxDelay = 0.0f;
     for (int i = 0; i < allDeletedChain.size(); i++)
     {
-        if (gameObjects[allDeletedChain[i]]->isTime)
+        if (gameObjects[allDeletedChain[i]]->isTime && !isFinalAction)
             menu->time+=6;
         
         if (gameObjects[allDeletedChain[i]]->delayDestroy > maxDelay)
@@ -3475,12 +3531,9 @@ void GameScene::afterDeleting()
             {
                 char buf[255];
                 sprintf(buf, "%d", SIMPLE_SCORE*(sweetCount+1));
-                CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+                CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
                 gameObjects[allDeletedChain[i]]->sprite->getParent()->getParent()->addChild(label,10);
                 label->setPosition(gameObjects[allDeletedChain[i]]->sprite->getPosition());
-
-                if (!IPAD)
-                    label->setScale(0.3f);
 
                 if (gameObjects[allDeletedChain[i]]->color == Green)
                 {
@@ -4466,7 +4519,7 @@ void GameScene::afterDeleting()
     float maxDelay = 0.0f;
     for (int i = 0; i < allDeletedChain.size(); i++)
     {
-        if (gameObjects[allDeletedChain[i]]->isTime)
+        if (gameObjects[allDeletedChain[i]]->isTime  && !isFinalAction)
             menu->time+=6;
         
         if (gameObjects[allDeletedChain[i]]->delayDestroy > maxDelay)
@@ -4609,6 +4662,8 @@ void GameScene::end()
 
 void GameScene::winCallback(CCNode* sender)
 {
+    isWinSpeed = false;
+    isLoseSpeed = false;
     endGameMenu->setVisible(true);
     lock = true;
     fieldLayer->setVisible(false);
@@ -4645,6 +4700,8 @@ void GameScene::winCallback(CCNode* sender)
 
 void GameScene::loseCallback(CCNode* sender)
 {
+    isWinSpeed = false;
+    isLoseSpeed = false;
     endGameMenu->setVisible(true);
     lock = true;
     fieldLayer->setVisible(false);
@@ -4769,7 +4826,26 @@ void GameScene::win(CCNode* sender)
 {
     char buf[255];
     sprintf(buf, "%d",menu->getCurrentLevel());
-    MMPPtr->levelCompleted(menu->getCurrentLevel(), string(buf));
+    
+    if (menu->getCurrentLevel() > 105)
+    {
+        if (menu->getCurrentLevel() == 106)
+            MMPPtr->levelCompleted(30, "30E");
+        else if (menu->getCurrentLevel() == 107)
+            MMPPtr->levelCompleted(24, "24E");
+        else if (menu->getCurrentLevel() == 108)
+            MMPPtr->levelCompleted(36, "36E");
+        else if (menu->getCurrentLevel() == 109)
+            MMPPtr->levelCompleted(48, "48E");
+        else if (menu->getCurrentLevel() == 110)
+            MMPPtr->levelCompleted(60, "60E");
+        else if (menu->getCurrentLevel() == 111)
+            MMPPtr->levelCompleted(72, "72E");
+    }
+    else
+    {
+        MMPPtr->levelCompleted(menu->getCurrentLevel(), string(buf));
+    }
     
     SimpleAudioEngine::sharedEngine()->playEffect("sound/level_completed.mp3");
 	lock = true;
@@ -4779,22 +4855,26 @@ void GameScene::win(CCNode* sender)
     color.g = 0x2d;
     color.b = 0x1a;
     SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+    isWinSpeed = true;
     if (menu->isBannerLock)
     {
-        menu->banner("updateArt/target.png", CCLocalizedString("BANNER_WIN"), 1.5f, ccWHITE);
-        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(4.0f),
+        isFinalBanner = true;
+        menu->banner("updateArt/target.png", CCLocalizedString("BANNER_WIN"), 0.0f, ccWHITE);
+        endAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
                                                          CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
     }
     else
     {
-        menu->banner("updateArt/target.png", CCLocalizedString("BANNER_WIN"), 0.5f, ccWHITE);
-        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
+        isFinalBanner = true;
+        menu->banner("updateArt/target.png", CCLocalizedString("BANNER_WIN"), 0.0f, ccWHITE);
+        endAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
                                                          CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
     }
 }
 
 void GameScene::lose(CCNode* sender)
 {
+    isLoseSpeed = true;
     SimpleAudioEngine::sharedEngine()->playEffect("sound/level_failed.mp3");
 	lock = true;
 	end();
@@ -4803,8 +4883,9 @@ void GameScene::lose(CCNode* sender)
     color.g = 0x2d;
     color.b = 0x1a;
     SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
-	menu->banner("updateArt/target.png", CCLocalizedString("BANNER_LOSE"), 0.5f, ccWHITE);
-	this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
+    isFinalBanner = true;
+	menu->banner("updateArt/target.png", CCLocalizedString("BANNER_LOSE"), 0.0f, ccWHITE);
+	endAction = this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(3.0f),
 		CCCallFuncN::create(this, callfuncN_selector(GameScene::loseCallback))));
 }
 
@@ -4886,7 +4967,7 @@ void GameScene::checkCellSimple(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", ICE_SCORE*(sweetCount+1));
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->addChild(label,10);
             label->setPosition(ccp(gameFieldSprites[i][j]->getPositionX(), gameFieldSprites[i][j]->getPositionY() - 100));
             label->setScale(0.3f);
@@ -4908,7 +4989,7 @@ void GameScene::checkCellSimple(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", CAGE_SCORE*(sweetCount+1));
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->getParent()->getParent()->addChild(label,10);
             label->setPosition(ccp(gameFieldSprites[i][j]->getPositionX(), gameFieldSprites[i][j]->getPositionY() - 100));
             label->setScale(0.3f);
@@ -4956,7 +5037,7 @@ void GameScene::checkCellSimple(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", CAGE_SCORE*(sweetCount+1));
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->getParent()->getParent()->addChild(label,10);
             label->setPosition(ccp(gameFieldSprites[i][j]->getPositionX(), gameFieldSprites[i][j]->getPositionY() - 100));
             label->setScale(0.3f);
@@ -5045,7 +5126,7 @@ void GameScene::checkCellSimple(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", MEGA_SCORE*(sweetCount+1));
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->addChild(label,10);
             label->setPosition(ccp(gameFieldSprites[i][j]->getPositionX(), gameFieldSprites[i][j]->getPositionY() - 100));
             label->setScale(0.3f);
@@ -5132,7 +5213,7 @@ void GameScene::checkCellLock(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", MEGA_SCORE);
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->addChild(label,10);
             label->setPosition(gameFieldSprites[i][j]->getPosition());
             ccColor3B col;
@@ -5140,8 +5221,6 @@ void GameScene::checkCellLock(int i, int j)
             col.g = 0xff;
             col.b = 0x38;
             label->setColor(col);
-            if (!IPAD)
-                label->setScale(0.5f);
             
             label->runAction(CCSequence::createWithTwoActions(CCSpawn::createWithTwoActions(CCMoveBy::create(0.7f, ccp(0.0f, 50.0f)), CCFadeOut::create(2.0f)), CCHide::create()));
             menu->setCurrentScore(menu->getCurrentScore() + MEGA_SCORE*(sweetCount+1));
@@ -5188,7 +5267,7 @@ void GameScene::checkCellLock(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", STONE_SCORE);
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->addChild(label,10);
             label->setPosition(gameFieldSprites[i][j]->getPosition());
             ccColor3B col;
@@ -5196,8 +5275,6 @@ void GameScene::checkCellLock(int i, int j)
             col.g = 0xff;
             col.b = 0x38;
             label->setColor(col);
-            if (!IPAD)
-                label->setScale(0.5f);
             
             label->runAction(CCSequence::createWithTwoActions(CCSpawn::createWithTwoActions(CCMoveBy::create(0.7f, ccp(0.0f, 50.0f)), CCFadeOut::create(2.0f)), CCHide::create()));
             menu->setCurrentScore(menu->getCurrentScore() + STONE_SCORE*(sweetCount+1));
@@ -5239,7 +5316,7 @@ void GameScene::checkCellLock(int i, int j)
             
             char buf[255];
             sprintf(buf, "%d", CHOCOLATE_SCORE);
-            CCLabelBMFont* label = CCLabelBMFont::create(buf, "fonts/Script MT Bold 22.fnt");
+            CCLabelTTF* label = CCLabelTTF::create(buf, FONT_COMMON, FONT_SIZE_86);
             gameFieldSprites[i][j]->getParent()->addChild(label,10);
             label->setPosition(gameFieldSprites[i][j]->getPosition());
             ccColor3B col;
@@ -5247,8 +5324,6 @@ void GameScene::checkCellLock(int i, int j)
             col.g = 0xff;
             col.b = 0x38;
             label->setColor(col);
-            if (!IPAD)
-                label->setScale(0.5f);
             
             label->runAction(CCSequence::createWithTwoActions(CCSpawn::createWithTwoActions(CCMoveBy::create(0.7f, ccp(0.0f, 50.0f)), CCFadeOut::create(2.0f)), CCHide::create()));
             menu->setCurrentScore(menu->getCurrentScore() + CHOCOLATE_SCORE*(sweetCount+1));
@@ -5360,12 +5435,15 @@ void GameScene::refillObject(CCNode* sender)
 	int maxCountEmptyCell = 0;
     float deltaMove = 0.3f;
     float afterDeltaMove = 0.0f;
-    float accel = 0.40f;
+    float accel = 0.37f;
+    
+    float multi = 1.37f;
     
     bool isTeleport = false;
     
 	for (int i = 0; i < columnCount; i++)
 	{
+        bool isLastBerry = false;
         if (i == notRefill || i == notRefill - 1 || i == notRefill + 1)
             continue;
         
@@ -5409,6 +5487,31 @@ void GameScene::refillObject(CCNode* sender)
 				{
 					int countShift = 0;
 					int countEmpty = 0;
+                    if (gameObjects[currObj]->type == Cookie)
+                    {
+                        isLastBerry = true;
+                        for(int n = j + 1; n < rowCount; n++)
+                        {
+                            if (isLockCell(gameField[n][i]))
+                            {
+                                isLastBerry = false;
+                                break;
+                            }
+                            
+                            if (lockPortal.x == n && lockPortal.y == i)
+                            {
+                                isLastBerry = false;
+                                break;
+                            }
+                            
+                            if (findGameObject(n,i) >= 0)
+                            {
+                                isLastBerry = false;
+                                break;
+                            }
+                        }
+                    }
+                    
 					for(int n = j + 1; n < rowCount; n++)
 					{
 						if (gameField[n][i] == NoneCell)
@@ -5436,6 +5539,11 @@ void GameScene::refillObject(CCNode* sender)
 							countShift++;
 						}
 					}
+                    if (isLastBerry)
+                    {
+                        countShift++;
+                    }
+                    
                     if (countShift == 1)
 						deltaMove = 0.35f;
                     else if (countShift == 2)
@@ -5447,16 +5555,36 @@ void GameScene::refillObject(CCNode* sender)
                     else
                         deltaMove = 0.7f;
                     
-                    deltaMove*=1.37f;
+                    deltaMove*=multi;
 
 					if (countShift > 0)
 					{
                         lastRefillObjects.push_back(currObj);
-						gameObjects[currObj]->sprite->
-                        runAction(CCSequence::create(CCDelayTime::create(afterDeltaMove), CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*countShift)), accel),
-							CCMoveBy::create(0.1f, ccp(0.0f, 3.0f)), CCMoveBy::create(0.1f, ccp(0.0f, -3.0f)),NULL));
+                        if (isLastBerry)
+                        {
+                            int n = rowCount-1;
+                            for (n = rowCount-1; n >= 0; n--)
+                                if (gameField[n][i] != NoneCell && gameField[n][i] != LockCell)
+                                    break;
+                            
+                            if (LANDSCAPE)
+                            {
+                                gameObjects[currObj]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[n][i]->getPositionY() - CELL_HEIGHT, WINSIZE.width, WINSIZE.height - (gameFieldSprites[n][i]->getPositionY() - CELL_HEIGHT)));
+                            }
+                            else
+                            {
+                                gameObjects[currObj]->node->setClippingRegion(CCRect(0.0f, gameFieldSprites[n][i]->getPositionY() - CELL_HEIGHT/2.0f, WINSIZE.width, WINSIZE.height - (gameFieldSprites[n][i]->getPositionY()  - CELL_HEIGHT/2.0f)));
+                            }
+                            gameObjects[currObj]->sprite->runAction(CCSequence::create(CCDelayTime::create(afterDeltaMove), CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*countShift)), accel), CCMoveBy::create(0.1f, ccp(0.0f, 5.0f)), CCMoveBy::create(0.1f, ccp(0.0f, -5.0f)), NULL));
+                        }
+                        else
+                        {
+                            gameObjects[currObj]->sprite->runAction(CCSequence::create(CCDelayTime::create(afterDeltaMove), CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*countShift)), accel), CCMoveBy::create(0.1f, ccp(0.0f, 5.0f)), CCMoveBy::create(0.1f, ccp(0.0f, -5.0f)),NULL));
+                        }
 						gameObjects[currObj]->x += countShift;
                         flagAfter = true;
+                        isLastBerry = false;
+
 					}
 				}
 				else
@@ -5612,12 +5740,12 @@ void GameScene::refillObject(CCNode* sender)
                     else
                         deltaMove = 0.7f;
                     
-                    deltaMove*=1.37f;
+                    deltaMove*=multi;
                     
                     lastRefillObjects.push_back(gameObjects.size() - 1);
 
 					gameObj->sprite->runAction(CCSequence::create(CCDelayTime::create(afterDeltaMove), CCEaseOut::create(CCMoveBy::create(deltaMove, ccp(0.0f, - CELL_HEIGHT*(currentEmptyCell + noneCellCount))), accel),
-						CCMoveBy::create(0.1f, ccp(0.0f, 3.0f)), CCMoveBy::create(0.1f, ccp(0.0f, -3.0f)),NULL));
+						CCMoveBy::create(0.1f, ccp(0.0f, 5.0f)), CCMoveBy::create(0.1f, ccp(0.0f, -5.0f)),NULL));
                     flagAfter = true;
 				}
 			}
@@ -5636,7 +5764,7 @@ void GameScene::refillObject(CCNode* sender)
         deltaMove = 0.7f;
     deltaMove = deltaMove + afterDeltaMove;
     
-    deltaMove*=1.37f;
+    deltaMove*=multi;
 	SimpleAudioEngine::sharedEngine()->playEffect("sound/item_fall.mp3");
     refillDelay.clear();
     
@@ -5669,6 +5797,13 @@ void GameScene::refillObject(CCNode* sender)
         }
     }
     
+    /*
+    if (checkFieldBringDown())
+    {
+        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(deltaMove-0.2f), CCCallFuncN::create( this, callfuncN_selector(GameScene::afterDeleting))));
+        return;
+    }
+     */
     
     if (isTeleport)
     {
@@ -6029,6 +6164,7 @@ void GameScene::refillLockObject(CCNode* sender)
 	}
 	else
 	{
+        timesLock = false;
 		this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(MOVE_DELTA/2.0f-0.1f), CCCallFuncN::create( this,
 			callfuncN_selector(GameScene::destroyFinished))));
 	}
@@ -6598,6 +6734,7 @@ void GameScene::destroyFinished(CCNode* sender)
     }
     else
 	{
+        timesLock = false;
         if (isFishNeedRun)
         {
             runFish(gameObjects[rand()%gameObjects.size()], 2.5f, 0.3f);
@@ -6755,15 +6892,15 @@ bool GameScene::endConditionCheck()
                                     if (stepCountCurr >= stepCount)
                                     {
                                         stepCountCurr -= stepCount;
-                                        runFish(gameObjects[findGameObject(k, n)], 4.5f, time);
+                                        runFish(gameObjects[findGameObject(k, n)], 2.4f, time);
                                         fgObject.push_back(findGameObject(k, n));
-                                        time += 0.3f;
+                                        time += 0.1f;
                                         this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time), CCCallFuncN::create(this, callfuncN_selector(GameScene::decrementMovesEnded))));
                                         count++;
                                         movesFish--;
                                         if ((count > gameObjects.size() - 1) || movesFish <= 0)
                                         {
-                                            this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time + 4.5f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
+                                            this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time + 2.4f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
                                             return true;
                                         }
                                     }
@@ -6783,15 +6920,15 @@ bool GameScene::endConditionCheck()
                                 
                                 if (flag)
                                 {
-                                    runFish(gameObjects[idxFish], 4.5f, time);
+                                    runFish(gameObjects[idxFish], 2.4f, time);
                                     fgObject.push_back(idxFish);
-                                    time += 0.3f;
+                                    time += 0.1f;
                                     this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time), CCCallFuncN::create(this, callfuncN_selector(GameScene::decrementMovesEnded))));
                                     count++;
                                     movesFish--;
                                     if ((count > gameObjects.size() - 1) || movesFish <= 0)
                                     {
-                                        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time + 4.5f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
+                                        this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(time + 2.4f), CCCallFuncN::create(this, callfuncN_selector(GameScene::fishingEnded))));
                                         return true;
                                     }
                                 }
@@ -7134,6 +7271,55 @@ bool GameScene::checkFieldLast()
 	return !allDeletedChain.empty();
 }
 
+bool GameScene::checkFieldBringDown()
+{
+    bool result = false;
+    for (int i = 0; i < gameObjects.size(); i++)
+	{
+		if (gameObjects[i]->type == Cookie)
+        {
+			if (gameObjects[i]->x == (rowCount - 1))
+			{
+                result = true;
+				allDeletedChain.push_back(i);
+				menu->setBringDownCurrent(menu->getBringDownCurrent() + 1);
+                int countCookie = 0;
+                for (int n = 0; n < gameObjects.size(); n++)
+                {
+                    if (gameObjects[n]->type == Cookie && gameObjects[i] != gameObjects[n])
+                        countCookie++;
+                }
+				if (menu->getBringDownCurrent() + countCookie < menu->getBringDownTarget())
+					isNeedCookie = true;
+			}
+            else
+            {
+                bool flag = false;
+                for (int n = gameObjects[i]->x + 1; n < rowCount; n++)
+                {
+                    if (!isNoneCell(n, gameObjects[i]->y))
+                        flag = true;
+                }
+                if (!flag)
+                {
+                    result = true;
+                    allDeletedChain.push_back(i);
+                    menu->setBringDownCurrent(menu->getBringDownCurrent() + 1);
+                    int countCookie = 0;
+                    for (int n = 0; n < gameObjects.size(); n++)
+                    {
+                        if (gameObjects[n]->type == Cookie)
+                            countCookie++;
+                    }
+                    if (menu->getBringDownCurrent() + countCookie < menu->getBringDownTarget())
+                        isNeedCookie = true;
+                }
+            }
+        }
+	}
+    return result;
+}
+
 bool GameScene::checkField()
 {
 	lock = true;
@@ -7304,6 +7490,26 @@ void GameScene::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
     if (endGameMenu != NULL)
         endGameMenu->ccTouchesBegan(NULL, NULL);
+    
+    if (menu)
+    {
+        menu->touch();
+        if (isFinalBanner)
+        {
+            if (isWinSpeed)
+            {
+                this->stopAction(endAction);
+                this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f),
+                                                                     CCCallFuncN::create(this, callfuncN_selector(GameScene::winCallback))));
+            }
+            else if (isLoseSpeed)
+            {
+                this->stopAction(endAction);
+                this->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(0.3f),
+                                                                 CCCallFuncN::create(this, callfuncN_selector(GameScene::loseCallback))));
+            }
+        }
+    }
     
 	if (!menu->getCountMoves())
 		return;
@@ -8928,6 +9134,7 @@ void GameScene::renderField()
                     continue;
                 
                 CCSprite* cell = CCSprite::create("game/cell.png");
+                
                 CCPoint temp = ccp(j*CELL_WIDTH + xZero,
                                    yZero - i*CELL_HEIGHT);
                 
