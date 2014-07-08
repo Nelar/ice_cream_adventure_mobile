@@ -83,7 +83,7 @@ enum IceCreamScene
 class Globals : public cSingleton<Globals>
 {
 public:
-	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false), bannerShow(false), messageShow(false) {};
+	Globals():iceCreamScene(Invalid), booster_1(false), booster_2(false), booster_3(false), bannerShow(false), messageShow(false),currentBackground(-1) {};
 	~Globals(){};
     IceCreamScene iceCreamScene;
     vector<sMoreGames> globalMoreGames;
@@ -93,6 +93,7 @@ public:
     bool bannerShow;
     
     bool messageShow;
+    int currentBackground;
 
     
     string currency;

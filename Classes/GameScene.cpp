@@ -62,7 +62,8 @@ void GameScene::loadLevel(const char* levelName)
 	TiXmlElement* root = doc.RootElement();
 	columnCount = atoi(root->Attribute("width"));
 	rowCount = atoi(root->Attribute("height"));
-
+    int backNum = atoi(root->Attribute("background"));
+    
 	sprintf(bufBackground, "backgrounds/%s.png", root->Attribute("background"));
     
 	if (!strcmp(root->Attribute("type"), "score"))
@@ -75,8 +76,19 @@ void GameScene::loadLevel(const char* levelName)
 		gameType = BringDown;
 
 	menu->setLevelType(gameType);
+    
+    
+    if (backNum != GlobalsPtr->currentBackground)
+    {
+        if (CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("levelBackground"))
+            CCSpriteFrameCache::sharedSpriteFrameCache()->removeSpriteFrameByName("levelBackground");
+        
+        CCSprite* levelBack = CCSprite::create(bufBackground);
+        CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFrame(levelBack->displayFrame(), "levelBackground");
+        GlobalsPtr->currentBackground = backNum;
+    }
 
-	backDown = CCSprite::create(bufBackground);
+	backDown = CCSprite::createWithSpriteFrameName("levelBackground");
 	backDown->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width / 2.0f, CCDirector::sharedDirector()->getWinSize().height / 2.0f));
     backDown->setBlendFunc((ccBlendFunc){GL_ONE, GL_ZERO});
     
